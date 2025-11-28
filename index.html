@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Gavári Mini Translator</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #0b1020;
+      color: #f5f5f5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 1rem 3rem;
+    }
+
+    h1 { 
+      margin-bottom: 0.25rem; 
+    }
+
+    .subtitle {
+      opacity: 0.8;
+      margin-bottom: 1.5rem;
+      font-size: 0.95rem;
+    }
+
+    .card {
+      background: #151a2b;
+      border-radius: 12px;
+      padding: 1.5rem;
+      max-width: 780px;
+      width: 100%;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+      border: 1px solid #272f47;
+    }
+
+    label {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 120px;
+      margin: 0.35rem 0 0.9rem;
+      border-radius: 8px;
+      border: 1px solid #272f47;
+      background: #0f1423;
+      color: #f5f5f5;
+      padding: 0.75rem;
+      resize: vertical;
+      font-family: inherit;
+      font-size: 0.95rem;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: #3f82ff;
+      box-shadow: 0 0 0 1px #3f82ff44;
+    }
+
+    button {
+      background: #3f82ff;
+      border: none;
+      border-radius: 999px;
+      padding: 0.55rem 1.4rem;
+      color: white;
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    button:hover {
+      background: #3269d1;
+    }
+
+    button:active {
+      transform: translateY(1px);
+    }
+
+    .output-label {
+      margin-top: 1.1rem;
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    .output {
+      min-height: 90px;
+      margin-top: 0.35rem;
+      padding: 0.75rem;
+      border-radius: 8px;
+      background: #0f1423;
+      border: 1px solid #272f47;
+      font-size: 1rem;
+      white-space: pre-wrap;
+    }
+
+    .hint {
+      margin-top: 0.85rem;
+      font-size: 0.8rem;
+      opacity: 0.75;
+      line-height: 1.4;
+    }
+
+    code {
+      font-family: "JetBrains Mono", Menlo, Monaco, Consolas, monospace;
+      font-size: 0.8rem;
+      background: #111727;
+      padding: 0.05rem 0.3rem;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Gavári Mini Translator</h1>
+  <div class="subtitle">English ➜ Gavári</div>
+
+  <div class="card">
+    <label for="inputText">English text</label>
+    <textarea id="inputText" placeholder="Type something like: You guys want to do something later?"></textarea>
+
+    <button id="translateBtn">Translate ➜ Gavári</button>
+
+    <div class="output-label">Gavári output</div>
+    <div id="outputText" class="output"></div>
+
+    <div class="hint">
+      <strong>How it works:</strong> This is a simple word-by-word translator using a
+      small lexicon and a few rules. To expand it, edit the <code>lexicon</code>
+      object inside the script.
+    </div>
+  </div>
+
+  <script>
+    // --- BASIC GAVÁRI LEXICON ---
+    const lexicon = {
+      // pronouns
+      "i": "mi",
+      "my": "mi",
+      "you": "ti",
+      "we": "min",
+      "they": "lin",
+      "he": "io",
+      "she": "yona",
+
+      // connectors / helpers
+      "not": "noa",
+      "no": "noa",
+      "and": "onu",
+      "but": "beli",
+      "also": "tambu",
+      "too": "tambu",
+      "because": "noku",
+      "here": "nia",
+      "there": "nua",
+      "when": "nagu",
+      "where": "lam",
+      "why": "kap",
+      "which": "wohu",
+      "what": "wohanu",
+      "how": "kalu",
+
+      // time
+      "day": "ramua",
+      "later": "larug",
+      "after": "yalu",
+      "before": "baru",
+      "always": "saru",
+      "now": "keia",
+
+      // verbs (base -o)
+      "be": "navo",
+      "am": "navo",
+      "are": "navo",
+      "is": "navo",
+      "have": "tavo",
+      "go": "gavo",
+      "see": "wero",
+      "eat": "kailo",
+      "drink": "inuo",
+      "love": "aluo",
+      "want": "wivo",
+      "do": "pavo",
+      "work": "vahro",
+      "study": "haluno",
+      "buy": "nuaio",
+
+      // nouns
+      "thing": "karol",
+      "food": "fanu",
+      "house": "domi",
+      "home": "domi",
+      "car": "car",
+      "money": "kala",
+      "job": "vahri",
+      "backpack": "saku",
+      "person": "figur",
+      "mother": "monuah",
+      "today": "ramu",
+
+      // adjectives/adverbs
+      "good": "bilu",
+      "bad": "nelu",
+      "beautiful": "melo",
+      "nice": "melo",
+      "big": "faru",
+      "small": "kani",
+      "cold": "geli",
+      "hot": "heni",
+      "tired": "lena",
+      "new": "rinu",
+      "old": "jina",
+      "many": "muia",
+      "few": "poa",
+      "again": "galua",
+      "very": "vuia",
+      "right": "eroa",
+      "left": "leroa"
+    };
+
+    // Words to ignore (articles, filler)
+    const ignoreWords = new Set(["a", "an", "the", "to", "of"]);
+
+    // Translate a single token, keeping punctuation if possible
+    function translateToken(word, lower) {
+      if (lexicon[lower]) return lexicon[lower];
+
+      // handle word + punctuation (e.g. "house," → "domi,")
+      const match = lower.match(/^([a-z']+)([.,!?])$/i);
+      if (match) {
+        const base = match[1];
+        const punct = match[2];
+        if (lexicon[base]) {
+          return lexicon[base] + punct;
+        }
+      }
+
+      // unknown word → return original
+      return word;
+    }
+
+    function translateSentence(input) {
+      const tokens = input.split(/\s+/);
+      const out = [];
+
+      for (let i = 0; i < tokens.length; i++) {
+        const original = tokens[i];
+        if (!original.trim()) continue;
+
+        const lower = original.toLowerCase();
+        const next = (tokens[i + 1]) ? tokens[i + 1].toLowerCase() : "";
+
+        // ignore simple filler
+        if (ignoreWords.has(lower)) continue;
+
+        // "would have" → "wa tavo"
+        if (lower === "would" && next === "have") {
+          out.push("wa", "tavo");
+          i++; // skip "have"
+          continue;
+        }
+
+        // "will have" → "fa tavo"
+        if (lower === "will" && next === "have") {
+          out.push("fa", "tavo");
+          i++; // skip "have"
+          continue;
+        }
+
+        // default: dictionary lookup
+        out.push(translateToken(original, lower));
+      }
+
+      return out.join(" ");
+    }
+
+    // Hook up UI
+    document.getElementById("translateBtn").addEventListener("click", function () {
+      const input = document.getElementById("inputText").value.trim();
+      const output = document.getElementById("outputText");
+
+      if (!input) {
+        output.textContent = "";
+        return;
+      }
+
+      output.textContent = translateSentence(input);
+    });
+  </script>
+</body>
+</html>
