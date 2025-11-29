@@ -300,6 +300,10 @@
       "be able to": "polno", 
       "was able to": "pa polno", 
       "would be able to": "wa polno",
+      "were able to": "pa polno", 
+      "are able to": "polno",
+      "is able to": "polno", 
+      "will be able to": "fa polno", 
       "could": "pa polno",
       "to bring": "tanluo",
       "bring": "tanluo",
@@ -451,6 +455,14 @@
           continue;
         }
 
+        // "will be able to"
+        if (lower === "will" && nextLower === "be" && 
+          next2Lower === "able" && tokens [i + 3]?.toLowerCase() === "to") {
+          out.push("fa", "polno");
+          i += 3; // skip "will be able to"
+          continue;
+        }
+
         // --- 3-WORD PHRASES ---
         if (nextOriginal && next2Original) {
           const base1 = lower.replace(/[.,!?]$/, "");
@@ -495,6 +507,7 @@
   </script>
 </body>
 </html>
+
 
 
 
