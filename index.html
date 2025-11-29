@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>English-Gavari Translator</title>
+  <title>English - Gavári Translator</title>
   <style>
     body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -136,7 +136,6 @@
   <script>
     // --- BASIC GAVÁRI LEXICON ---
     const lexicon = {
-      // PHRASES (English → Gavári)
       "this morning": "veran",
 
       // pronouns
@@ -161,9 +160,8 @@
       "her": "yona",
       "hers": "yona",
       "you all": "tin",
-      "you all's": "tin",
 
-      // connectors / helpers
+      // connectors
       "not": "noa",
       "no": "noa",
       "and": "onu",
@@ -180,22 +178,20 @@
       "what": "wohanu",
       "how": "kalu",
       "with": "talu",
-      "inside": "hanu", 
+      "inside": "hanu",
       "outside": "lanu",
-      "in": "ke", 
-      "on": "ke", 
+      "in": "ke",
+      "on": "ke",
       "at": "ke",
-      "this": "ni", 
-      "that": "na", 
-      "these": "niis", 
-      "those": "naas", 
-      "of": "mo", 
-      "about": "mo", 
-      "from": "mo", 
+      "this": "ni",
+      "that": "na",
+      "these": "niis",
+      "those": "naas",
+      "of": "mo",
+      "about": "mo",
+      "from": "mo",
       "above": "alun",
-      "below": "belun", 
-      "duran": "during",
-      "to": "sap",
+      "below": "belun",
 
       // time
       "day": "ramua",
@@ -207,122 +203,75 @@
       "today": "ramu",
       "morning": "veru",
       "sun": "veru",
-      "afternoon": "daru", 
-      "this-afternoon": "daran", 
-      "evening": "noru", 
+      "afternoon": "daru",
+      "this-afternoon": "daran",
+      "evening": "noru",
       "night": "noru",
       "this evening": "noran",
-      "tonight": "noran", 
-      "tomorrow": "apono", 
-      "yesterday": "nehine", 
-      "verdag": "weekend", 
+      "tonight": "noran",
+      "tomorrow": "apono",
+      "yesterday": "nehine",
+      "verdag": "weekend",
 
-      // verbs (base -o)
+      // verbs
       "to be": "navo",
       "was": "pa",
-      "was tired": "pa navo lena",
       "will": "fa",
-      "would": "wa",  
+      "would": "wa",
       "to have": "tavo",
       "to go": "gavo",
       "am going": "gavo",
       "went": "pa gavo",
-      "to see": "wero",
       "see": "wero",
-      "is seeing": "wero",
-      "sees": "wero",
-      "saw": "pa wero", 
-      "to eat": "kailo",
-      "eats": "kailo", 
-      "eat": "kailo",
       "ate": "pa kailo",
+      "eat": "kailo",
+      "drink": "inuo",
       "to drink": "inuo",
-      "drink": "inuo", 
-      "drinks": "inuo",
-      "drank": "pa inuo",
-      "to love": "aluo",
-      "love": "aluo", 
-      "loves": "aluo",
-      "loved": "pa aluo",
       "to want": "wivo",
-      "want": "wivo", 
-      "wants": "wivo", 
-      "is wanting": "wivo", 
+      "want": "wivo",
       "wanted": "pa wivo",
       "to do": "pavo",
-      "do": "pavo",
-      "does": "pavo", 
-      "is doing": "pavo", 
       "did": "pa pavo",
       "to make": "pavo",
-      "make": "pavo", 
-      "makes": "pavo", 
-      "making": "pavo", 
-      "made": "pa pavo",
       "to work": "vahro",
-      "is working": "vahro", 
-      "work": "vahro", 
-      "works": "vahro", 
-      "worked": "pa vahro",
       "to study": "haluno",
-      "study": "haluno", 
-      "studies": "haluno", 
-      "is studying": "haluno",
       "studied": "pa haluno",
       "to buy": "nuaio",
-      "is buying": "nuaio", 
-      "buys": "nuiao", 
-      "buy": "nuaio", 
       "bought": "pa nuaio",
       "to tell": "savo sap",
-      "tell": "savo sap", 
-      "tells": "savo sap", 
-      "is telling": "savo sap", 
+      "tell": "savo sap",
       "told": "pa savo sap",
       "to say": "savo",
-      "say": "savo", 
-      "says that": "savo", 
-      "says to": "savo sap",
-      "said that": "pa-savo", 
-      "said to": "pa savo sap", 
+      "said": "pa savo",
       "to talk": "fulo",
       "talk": "fulo",
-      "said": "pa savo",
       "to like": "haluo",
-      "likes": "haluo",
       "liked": "pa haluo",
       "to need": "lango",
-      "need": "lango",
-      "needs": "lango",
-      "needed": "pa lango",
-      "had needed": "pa lango",
       "to get": "maguo",
       "can": "polno",
-      "to be able to": "polno", 
-      "to bring": "tanluo", 
-      "to take": "tanluo", 
+      "to bring": "tanluo",
+      "to take": "tanluo",
       "to sleep": "napao",
       "to drive": "keheo",
-      "to help": "ajulo", 
+      "to help": "ajulo",
       "to give": "daro",
-      "gives": "daro", 
 
       // nouns
       "thing": "karol",
       "food": "fanu",
       "mother": "monuah",
-      "father": "fonuah", 
-      "brother": "bonu", 
+      "father": "fonuah",
+      "brother": "bonu",
       "sister": "sonu",
       "child": "conuah",
       "children": "conuahlan",
-      "children's": "conuhlan",
       "store": "nuai",
-      "water": "hona", 
+      "water": "hona",
       "friend": "amun",
       "friends": "amunlan",
-      "school": "skolu", 
-      "street": "pesta", 
+      "school": "skolu",
+      "street": "pesta",
       "house": "domi",
       "home": "domi",
       "car": "car",
@@ -330,15 +279,13 @@
       "job": "vahri",
       "backpack": "saku",
       "person": "figur",
-          
-      // adjectives/adverbs
+
+      // adjectives
       "good": "bilu",
       "bad": "nelu",
       "happy": "felin",
-      "hey": "salo", 
-      "hi": "salo", 
+      "hey": "salo",
       "hello": "salo",
-      "what's up": "navo bilu",
       "beautiful": "belo",
       "nice": "belo",
       "big": "faru",
@@ -349,37 +296,28 @@
       "new": "ninu",
       "old": "oina",
       "many": "muia",
-      "a lot": "muia",
       "few": "poa",
-      "a little": "poa",
       "again": "galua",
       "very": "vuia",
       "right": "eroa",
       "left": "leroa"
     };
 
-    // Words to ignore (articles, filler)
     const ignoreWords = new Set(["a", "an", "the"]);
 
-    // Translate a single token, keeping punctuation if possible
     function translateToken(word, lower) {
       if (lexicon[lower]) return lexicon[lower];
 
-      // handle word + punctuation (e.g. "house," → "domi,")
       const match = lower.match(/^([a-z']+)([.,!?])$/i);
       if (match) {
         const base = match[1];
         const punct = match[2];
-        if (lexicon[base]) {
-          return lexicon[base] + punct;
-        }
+        if (lexicon[base]) return lexicon[base] + punct;
       }
-
-      // unknown word → return original
       return word;
     }
 
-    // Translate a full sentence, supporting 2-word AND 3-word English phrases
+    // --- FULL 3-WORD TRANSLATION ENGINE ---
     function translateSentence(input) {
       if (!input || !input.trim()) return "";
 
@@ -392,82 +330,72 @@
 
         const lower = original.toLowerCase();
         const nextOriginal  = tokens[i + 1] || "";
-        const nextLower     = nextOriginal ? nextOriginal.toLowerCase() : "";
+        const nextLower     = nextOriginal.toLowerCase() || "";
         const next2Original = tokens[i + 2] || "";
-        const next2Lower    = next2Original ? next2Original.toLowerCase() : "";
+        const next2Lower    = next2Original.toLowerCase() || "";
 
-        // ignore simple filler
         if (ignoreWords.has(lower)) continue;
 
-        // "would have" → "wa tavo"
+        // "would have"
         if (lower === "would" && nextLower === "have") {
           out.push("wa", "tavo");
-          i++; // skip "have"
+          i++;
           continue;
         }
 
-        // "will have" → "fa tavo"
+        // "will have"
         if (lower === "will" && nextLower === "have") {
           out.push("fa", "tavo");
-          i++; // skip "have"
+          i++;
           continue;
         }
 
-        // --- 3-word phrase, e.g. "going to want" ---
+        // --- 3-WORD PHRASES ---
         if (nextOriginal && next2Original) {
           const base1 = lower.replace(/[.,!?]$/, "");
           const base2 = nextLower.replace(/[.,!?]$/, "");
-          const base3 = next2Lower.replace/[.,!?]$/, "");
-          const phrase3Key = base1 + " " + base2 + " " + base3;
+          const base3 = next2Lower.replace(/[.,!?]$/, "");
+          const phrase3 = base1 + " " + base2 + " " + base3;
 
-          if (lexicon[phrase3Key]) {
-            // punctuation from the THIRD word
-            const punctMatch3 = next2Original.match(/[.,!?]$/);
-            const punct3 = punctMatch3 ? punctMatch3[0] : "";
-            out.push(lexicon[phrase3Key] + punct3);
-            i += 2; // skip next two words
+          if (lexicon[phrase3]) {
+            const punct = next2Original.match(/[.,!?]$/)?.[0] || "";
+            out.push(lexicon[phrase3] + punct);
+            i += 2;
             continue;
           }
         }
 
-        // --- 2-word phrase, e.g. "this morning", "to go" ---
+        // --- 2-WORD PHRASES ---
         if (nextOriginal) {
           const base1 = lower.replace(/[.,!?]$/, "");
           const base2 = nextLower.replace(/[.,!?]$/, "");
-          const phraseKey = base1 + " " + base2;
+          const phrase2 = base1 + " " + base2;
 
-          if (lexicon[phraseKey]) {
-            // punctuation from the SECOND word
-            const punctMatch = nextOriginal.match(/[.,!?]$/);
-            const punct = punctMatch ? punctMatch[0] : "";
-            out.push(lexicon[phraseKey] + punct);
-            i++; // skip the next word
+          if (lexicon[phrase2]) {
+            const punct = nextOriginal.match(/[.,!?]$/)?.[0] || "";
+            out.push(lexicon[phrase2] + punct);
+            i++;
             continue;
           }
         }
 
-        // default: dictionary lookup
+        // fallback
         out.push(translateToken(original, lower));
       }
 
       return out.join(" ");
     }
 
-    // Hook up UI
-    document.getElementById("translateBtn").addEventListener("click", function () {
+    document.getElementById("translateBtn").addEventListener("click", () => {
       const input = document.getElementById("inputText").value.trim();
       const output = document.getElementById("outputText");
-
-      if (!input) {
-        output.textContent = "";
-        return;
-      }
-
-      output.textContent = translateSentence(input);
+      output.textContent = input ? translateSentence(input) : "";
     });
   </script>
 </body>
 </html>
+
+
 
 
 
