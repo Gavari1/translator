@@ -359,7 +359,7 @@
     };
 
     // Words to ignore (articles, filler)
-    const ignoreWords = new Set(["a", "an", "is", "are", "be", "the"]);
+    const ignoreWords = new Set(["a", "an", "the"]);
 
     // Translate a single token, keeping punctuation if possible
     function translateToken(word, lower) {
@@ -379,7 +379,7 @@
       return word;
     }
 
-    // Translate a full sentence, supporting 2-word English phrases
+    // Translate a full sentence, supporting 2-word AND 3-word English phrases
     function translateSentence(input) {
       if (!input || !input.trim()) return "";
 
@@ -391,8 +391,10 @@
         if (!original.trim()) continue;
 
         const lower = original.toLowerCase();
-        const nextOriginal = tokens[i + 1];
-        const nextLower = nextOriginal ? nextOriginal.toLowerCase() : "";
+        const nextOriginal  = tokens[i + 1] || "";
+        const nextLower     = nextOriginal ? nextOriginal.toLowerCase() : "";
+        const next2Original = tokens[i + 2] || "";
+        const next2Lower    = next2Original ? next2Original.toLowerCase() : "";
 
         // ignore simple filler
         if (ignoreWords.has(lower)) continue;
@@ -411,14 +413,31 @@
           continue;
         }
 
-        // Try 2-word phrase like "this morning", "good morning"
+        // --- 3-word phrase, e.g. "going to want" ---
+        if (nextOriginal && next2Original) {
+          const base1 = lower.replace(/[.,!?]$/, "");
+          const base2 = nextLower.replace(/[.,!?]$/, "");
+          const base3 = next2Lower.replace/[.,!?]$/, "");
+          const phrase3Key = base1 + " " + base2 + " " + base3;
+
+          if (lexicon[phrase3Key]) {
+            // punctuation from the THIRD word
+            const punctMatch3 = next2Original.match(/[.,!?]$/);
+            const punct3 = punctMatch3 ? punctMatch3[0] : "";
+            out.push(lexicon[phrase3Key] + punct3);
+            i += 2; // skip next two words
+            continue;
+          }
+        }
+
+        // --- 2-word phrase, e.g. "this morning", "to go" ---
         if (nextOriginal) {
           const base1 = lower.replace(/[.,!?]$/, "");
           const base2 = nextLower.replace(/[.,!?]$/, "");
           const phraseKey = base1 + " " + base2;
 
           if (lexicon[phraseKey]) {
-            // Attach trailing punctuation if it was on the second word
+            // punctuation from the SECOND word
             const punctMatch = nextOriginal.match(/[.,!?]$/);
             const punct = punctMatch ? punctMatch[0] : "";
             out.push(lexicon[phraseKey] + punct);
@@ -449,6 +468,8 @@
   </script>
 </body>
 </html>
+
+
 
 
 
