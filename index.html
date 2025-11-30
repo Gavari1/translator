@@ -516,7 +516,7 @@
       "sad": "sasu", 
     };
 
-    const ignoreWords = new Set(["a", "an", "the", "is", "are"]);
+    const ignoreWords = new Set(["a", "an", "the", "is", "it", "are"]);
 
     function translateToken(word, lower) {
       if (lexicon[lower]) return lexicon[lower];
@@ -593,6 +593,7 @@
   </script>
 </body>
 </html>
+
 
 
 
