@@ -636,7 +636,7 @@
         out.push(translateToken(tokens[i], lower));
       }
 
-      return out.join(" ");
+      return out.join(" ").charAt(0).toUpperCase() + out.slice(1);
     }
 
     document.getElementById("translateBtn").addEventListener("click", () => {
@@ -647,6 +647,7 @@
   </script>
 </body>
 </html>
+
 
 
 
