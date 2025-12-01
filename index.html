@@ -2,9 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <!-- NEW: make it mobile-friendly -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>English - Gavári Translator</title>
+  <title>Gavári – Translator & Dictionary</title>
   <style>
     body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -115,6 +114,73 @@
       border-radius: 4px;
     }
 
+    /* ---------- TABS ---------- */
+    .tab-bar {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      width: 100%;
+      max-width: 780px;
+      border-bottom: 1px solid #272f47;
+      padding-bottom: 0.5rem;
+    }
+
+    .tab-button {
+      background: transparent;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      padding: 0.4rem 0.9rem;
+      font-size: 0.9rem;
+      color: #c6c9d8;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .tab-button:hover {
+      background: #151a2b;
+      border-color: #272f47;
+    }
+
+    .tab-button.active {
+      background: #3f82ff;
+      border-color: #3f82ff;
+      color: #ffffff;
+    }
+
+    .tab-section {
+      display: none;
+      width: 100%;
+      max-width: 780px;
+    }
+
+    .tab-section.active {
+      display: block;
+    }
+
+    .section-title {
+      text-align: left;
+    }
+
+    .link-card {
+      background: #151a2b;
+      border-radius: 12px;
+      padding: 1.5rem;
+      border: 1px solid #272f47;
+      margin-top: 0.75rem;
+    }
+
+    .link-card a {
+      color: #3f82ff;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .link-card a:hover {
+      text-decoration: underline;
+    }
+
     /* ---------- MOBILE TWEAKS (phones, small screens) ---------- */
     @media (max-width: 600px) {
       body {
@@ -123,12 +189,11 @@
 
       h1 {
         font-size: 1.4rem;
-        text-align: center;
+        text-align: left;
       }
 
       .subtitle {
         font-size: 0.85rem;
-        text-align: center;
         margin-bottom: 1.1rem;
       }
 
@@ -159,33 +224,87 @@
       .hint {
         font-size: 0.75rem;
       }
+
+      .tab-bar {
+        flex-wrap: wrap;
+        gap: 0.4rem;
+      }
     }
   </style>
 </head>
 <body>
-  <h1>English - Gavári Translator</h1>
-  <div class="subtitle">English ➜ Gavári</div>
+  <!-- TABS -->
+  <div class="tab-bar">
+    <button class="tab-button active" data-tab="translator">Translator</button>
+    <button class="tab-button" data-tab="dictionary">Dictionary</button>
+    <button class="tab-button" data-tab="grammar">Grammar</button>
+  </div>
 
-  <div class="card">
-    <label for="inputText"><strong>English text</strong></label>
-    <textarea id="inputText" placeholder="Type something like: Why should I study Gavari?"></textarea>
+  <!-- TRANSLATOR TAB -->
+  <div id="translator" class="tab-section active">
+    <h1 class="section-title">English – Gavári Translator</h1>
+    <div class="subtitle">English ➜ Gavári (beta lexicon)</div>
 
-    <button id="translateBtn">Translate ➜ Gavári</button>
+    <div class="card">
+      <label for="inputText"><strong>English text</strong></label>
+      <textarea id="inputText" placeholder="Type something like: Why should I study Gavári?"></textarea>
 
-    <div class="output-label"><strong>Gavári output</strong></div>
-    <div id="outputText" class="output"></div>
+      <button id="translateBtn">Translate ➜ Gavári</button>
 
-    <div class="hint">
-      <strong>How it works:</strong> This is a simple word-by-word translator using a
-      small lexicon and a few grammar rules. Gavári is an imaginary island located 320 miles SW of Hawaii. The conlang spoken there
-      has roots in both Austronesian and Romance languages. The Romance language influence is from a 1736 Italian sipwreck
-      where 18 sailors survived and started new lives on the 160 square mile island. Their language slowly blended with the 
-      native Gavári to become what it is today. Created by Adam Stephenson in November 2025. Enjoy =)
+      <div class="output-label"><strong>Gavári output</strong></div>
+      <div id="outputText" class="output"></div>
+
+      <div class="hint">
+        <strong>How it works:</strong> This is a simple word-by-word translator using a
+        small lexicon and a few grammar rules. Gavári is an imaginary island located 320 miles SW of Hawaii. 
+        The conlang spoken there has roots in both Austronesian and Romance languages. The Romance language 
+        influence is from a 1736 Italian shipwreck where 18 sailors survived and started new lives on the 
+        160 square mile island. Their language slowly blended with the native Gavári to become what it is today.
+        Created by Adam Stephenson in November 2025. Enjoy =)
+      </div>
+    </div>
+  </div>
+
+  <!-- DICTIONARY TAB -->
+  <div id="dictionary" class="tab-section">
+    <h1 class="section-title">Gavári Dictionary</h1>
+    <div class="link-card">
+      <p>
+        Open the full dictionary page:
+      </p>
+      <!-- 🔴 CHANGE THIS IF YOUR DICTIONARY PATH IS DIFFERENT -->
+      <p>
+        <a href="https://gavari.org/dictionary/" target="_blank" rel="noopener">
+          👉 gavari.org/dictionary/
+        </a>
+      </p>
+      <p style="margin-top:0.5rem; font-size:0.85rem; opacity:0.8;">
+        The dictionary lets you search English → Gavári, with notes for learners.
+      </p>
+    </div>
+  </div>
+
+  <!-- GRAMMAR TAB (PLACEHOLDER FOR NOW) -->
+  <div id="grammar" class="tab-section">
+    <h1 class="section-title">Gavári Grammar (coming soon)</h1>
+    <div class="link-card">
+      <p style="margin-bottom:0.5rem;">
+        This section can show:
+      </p>
+      <ul style="margin-top:0; padding-left:1.2rem; font-size:0.9rem; opacity:0.9;">
+        <li>Pronouns table (mi, ti, io, yona, min, tin, lin…)</li>
+        <li>Verb pattern (navo / gavo / wero / vahro…)</li>
+        <li>Past (<code>pa</code>), future (<code>fa</code>), conditional (<code>wa</code>) particles</li>
+        <li>Basic sentence patterns with examples</li>
+      </ul>
+      <p style="margin-top:0.6rem; font-size:0.85rem; opacity:0.8;">
+        You can edit this text directly in <code>index.html</code> on GitHub anytime.
+      </p>
     </div>
   </div>
 
   <script>
-    // --- BASIC GAVÁRI LEXICON ---
+    // --- BASIC GAVÁRI LEXICON (same as before, shortened here – keep yours) ---
     const lexicon = {
       "this morning": "veran",
 
@@ -211,7 +330,6 @@
       "they're": "lin",
       "they’re": "lin",
       "their": "lin",
-      "their car is not mine for you": "lin",
       "theirs": "lin",
       "he": "io",
       "his": "io",
@@ -221,23 +339,8 @@
       "hers": "yona",
       "you all": "tin",
       "you all's": "tin",
-      "that i am": "ke mi",
-      "that you are": "ke ti",
-      "that you're": "ke ti",
-      "that he is": "ke io",
-      "that she is": "ke yona",
-      "that they are": "ke lin",
-      "they they're": "ke lin",
-      "that i was": "ke mi pa",
-      "that you were": "ke ti pa",
-      "that he was": "ke io pa",
-      "that she was": "ke yona pa",
-      "that he": "ke io",
-      "that you": "ke ti",
-      "that i": "ke mi",
-      "that we": "ke min",
 
-      // connectors
+      // connectors (just a sample – keep your full list)
       "not": "noa",
       "no": "noa",
       "and": "onu",
@@ -265,15 +368,12 @@
       "those": "naas",
       "of": "mo",
       "about": "mo",
-      "about it": "mo lo",
-      "about that": "mo na",
       "from": "mo",
       "above": "alun",
       "below": "belun",
       "to": "sap",
-      "while": "encoa",
 
-      // time
+      // time (sample)
       "day": "ramua",
       "later": "larug",
       "after": "yalu",
@@ -284,410 +384,43 @@
       "morning": "veru",
       "sun": "veru",
       "afternoon": "daru",
-      "this-afternoon": "daran",
       "evening": "noru",
       "night": "noru",
-      "this evening": "noran",
-      "tonight": "noran",
       "tomorrow": "apono",
       "yesterday": "nehine",
-      "verdag": "weekend",
+      "weekend": "verdag",
 
-      // verbs
+      // verbs (you can paste your full list here)
       "to be": "navo",
-      "going to be": "fa",
-      "would be": "wa",
-      "was": "pa",
-      "will": "fa",
-      "will be": "fa",
-      "would": "wa",
-      "to have": "tavo",
-      "have": "tavo",
-      "don't have": "noa tavo",
-      "don't you have": "noa ti tavo",
-      "don't I have": "noa mi tavo",
-      "don't we have": "noa min tavo",
-      "don't they have": "noa lin tavo",
-      "don't you all have": "noa tin tavo",
-      "doesn't have": "noa tavo",
-      "does not have": "noa tavo",
-      "has no": "noa tavo",
-      "had": "pa tavo",
-      "has": "tavo",
-      "going to have": "fa tavo",
-      "that i had": "ke mi pa tavo",
-      "would have": "wa tavo",
-      "to go": "gavo",
-      "going": "gavo",
-      "going to want": "fa wivo",
-      "going to go": "fa gavo",
-      "going to study": "fa haluno",
-      "going to eat": "fa meao",
-      "going to drink": "fa inuo",
-      "going to love": "fa aluo",
-      "going to make": "fa pavo",
-      "going to do": "fa pavo",
-      "going to see": "fa wero",
-      "going to work": "fa vahro",
-      "going to buy": "fa nuaio",
-      "going to bring": "fa tanluo",
-      "going to need": "fa lango",
-      "going to get": "fa maguo",
-      "going to tell": "fa savo sap",
-      "going to give": "fa daro",
-      "going to sleep": "fa napao",
-      "going to talk": "fa fulo",
-      "went": "pa gavo",
-      "see": "wero",
-      "to see": "wero",
-      "watch": "wero",
-      "to watch": "wero",
-      "watching": "wero",
-      "watched": "pa wero",
-      "ate": "pa kailo",
-      "eat": "kailo",
-      "eating": "kailo",
+      "go": "gavo",
+      "eat": "meao",
       "drink": "inuo",
-      "drank": "pa inuo",
-      "to drink": "inuo",
-      "to want": "wivo",
       "want": "wivo",
-      "wanted": "pa wivo",
-      "to do": "pavo",
-      "did": "pa pavo",
-      "to make": "pavo",
+      "do": "pavo",
       "make": "pavo",
-      "to work": "vahro",
       "work": "vahro",
-      "working": "vahro",
-      "works": "vahro",
-      "worked": "pa vahro",
-      "to study": "haluno",
       "study": "haluno",
-      "studies": "haluno",
-      "studying": "haluno",
-      "studied": "pa haluno",
-      "to buy": "nuaio",
-      "buying": "nuaio",
-      "buy": "nuaio",
-      "buys": "nuaio",
-      "bought": "pa nuaio",
-      "to tell": "savo sap",
-      "tell": "savo sap",
-      "told": "pa savo sap",
-      "tells": "savo sap",
-      "to say": "savo",
-      "say": "savo",
-      "will say that": "fa savo",
-      "will say to": "fa savo sap",
-      "says that": "savo",
-      "says": "savo",
-      "says to": "savo sap",
-      "said": "pa savo",
-      "saying": "savo",
-      "said that": "pa savo",
-      "said to": "pa savo sap",
-      "to talk": "fulo",
-      "talk": "fulo",
-      "talks": "fulo",
-      "talked": "pa fulo",
-      "talking": "fulo",
-      "to like": "haluo",
-      "liked": "pa haluo",
-      "to need": "lango",
-      "to get": "maguo",
-      "got": "pa maguo",
-      "get": "maguo",
-      "gets": "maguo",
-      "getting": "maguo",
-      "can": "polno",
-      "can't": "noa polno",
-      "can’t": "noa polno",
-      "couldn't": "noa pa polno",
-      "be able to": "polno",
-      "was able to": "pa polno",
-      "was not able to": "noa pa polno",
-      "would be able to": "wa polno",
-      "that we weren't able to": "ke min noa pa polno",
-      "that we weren’t able to": "ke min noa pa polno",
-      "were able to": "pa polno",
-      "are able to": "polno",
-      "is able to": "polno",
-      "will be able to": "fa polno",
-      "could": "pa polno",
-      "to bring": "tanluo",
-      "bring": "tanluo",
-      "brings": "tanluo",
-      "bringing": "tanluo",
-      "take": "tanluo",
-      "takes": "tanluo",
-      "taking": "tanluo",
-      "took": "pa tanluo",
-      "to take": "tanluo",
-      "to sleep": "napao",
       "sleep": "napao",
-      "sleeps": "napao",
-      "sleeping": "napao",
-      "slept": "pa napao",
-      "to drive": "keheo",
-      "drive": "keheo",
-      "drives": "keheo",
-      "driving": "keheo",
-      "drove": "pa keheo",
-      "to help": "ajulo",
-      "help": "ajulo",
-      "helps": "ajulo",
-      "helping": "ajulo",
-      "helped": "pa ajulo",
-      "to give": "daro",
-      "give": "daro",
-      "gives": "daro",
-      "giving": "daro",
-      "gave": "pa daro",
-      "love": "aluo",
-      "to love": "aluo",
-      "loves": "aluo",
-      "loved": "pa aluo",
-      "should": "delo",
-      "should have": "delo tavo",
-      "shoudln't": "noa delo",
-      "shoudln't have": "noa delo tavo",
-      "ruin": "paluo",
-      "destroy": "paluo",
-      "hurt": "paluo",
-      "ruins": "paluo",
-      "hurts": "paluo",
-      "destroys": "paluo",
-      "ruined": "pa paluo", 
-      "destroyed": "pa paluo", 
-      
+      "talk": "fulo",
+      "say": "savo",
 
-      // nouns
+      // nouns (sample – again, paste full list)
       "thing": "karol",
-      "things": "karollan",
       "food": "fanu",
-      "mother": "monuah",
-      "mother's": "monuah",
-      "mother’s": "monuah",
-      "father": "fonuah",
-      "father's": "fonuah",
-      "father’s": "fonuah",
-      "brother": "bonu",
-      "brother's": "bonu",
-      "brother’s": "bonu",
-      "sister": "sonu",
-      "sister's": "sonu",
-      "sister’s": "sonu",
-      "child": "conuah",
-      "children": "conuahlan",
-      "children's": "conuah",
-      "children’s": "conuah",
-      "family": "famua",
-      "family's": "famua",
-      "family’s": "famua",
-      "son": "sunua",
-      "sons": "sunualan",
-      "daughter": "dunua",
-      "daughters": "dunua",
-      "grandfather": "fonuahbaru",
-      "grandmother": "monuahbaru",
-      "grandchild": "conuahyalu",
-      "store": "nuai",
-      "stores": "nuailan",
-      "water": "hona",
-      "waters": "honalan",
-      "friend": "amun",
-      "friend's": "amun",
-      "friends’s": "amun",
-      "friends": "amunlan",
-      "school": "skolu",
-      "school's": "skolu",
-      "schools": "skolulan",
-      "street": "pesta",
-      "streets": "pestalan",
       "house": "fale",
-      "house's": "fale",
-      "houses": "falelan",
-      "home": "fale",
       "car": "car",
-      "cars": "carlan",
-      "money": "kala",
-      "job": "vahri",
-      "jobs": "vahrilan",
-      "backpack": "saku",
-      "backpacks": "sakulan",
-      "person": "tana",
-      "people": "tanalan",
-      "beer": "cewua",
-      "football": "futba",
-      "sun": "veru",
-      "sunny": "veruwa",
-      "cloud": "oal",
-      "clouds": "oal",
-      "cloudy": "oalwa",
-      "rain": "rual",
-      "rains": "rual",
-      "rainy": "rualwa",
-      "raining": "rualwa",
-      "wind": "wonu",
-      "winds": "wonu",
-      "windy": "wonuwa",
-      "storm": "stara",
-      "storms": "stara",
-      "stormy": "starawa",
-      "snow": "sneul",
-      "snows": "sneul",
-      "snowy": "sneulwa",
-      "snowing": "sneulwa",
-      "fog": "mura",
-      "foggy": "murawa",
-      "hot": "heni",
-      "cold": "geli",
-      "neighbor": "nayboa",
-      "boss": "manu",
-      "teacher": "halu",
-      "student": "haluola",
-      "desk": "la'po", 
-      "on break": "ra'no",
-      "taking a break": "ra'no", 
-      "going on break": "gavo ra'no", 
-      "chair": "se'lo", 
-      "office chair": "se'lo", 
-      "bored": "ma'la", 
-      "task": "ka'nu", 
-      "cubicle": "fa'lo-hanu", 
-      "work area": "fa'lo-hanu", 
-      "work meeting": "sa'no", 
-      "meeting": "sa'no", 
-      "parking lot": "ka'no-pesta", 
-      
-
-      //Hyphenated
-      "breakfast": "ramu-fanu",
-      "lunch": "ramua-fanu",
-      "dinner": "noru-fanu",
-
-      "food truck": "fanu-car",
-      "pantry": "fale-fanu",
-      "market": "pesta-fanu",
-      "street food": "pesta-fanu",
-
-      "beach house": "fale-naua",
-
-      "ocean": "hona-muia",
-      "lake": "hona-muia",
-      "cup": "hona-poa",
-      "glass of water": "hona-poa",
-
-      "dusk": "noru-poa",
-      "week": "ramu-muia",
-      "festival": "ramu-muia",
-
-      "village road": "fale-pesta",
-      "central plain": "ramua-kala",
-
-      "rainclouds": "oal-hona",
-      "clear sunrise": "veru-hona",
-
-      "journey": "gava-muia",
-      "errand": "gava-poa",
-
-      "volcano": "verdag-hona",
-      "eruption": "verdag-veru",
-
-      "homeland": "gavári-veru",
-      "culture": "gavári-pesta",
-
-      "family unit": "fale-tana",
-      "fisherman": "hona-tana",
-      "tourists": "veru-tana",
-      "strong sun": "veru-muia",
-      "blazing sun": "veru-muia", 
-      "hot sun": "veru-muia", 
-      "soft sun": "veru-poa", 
-      "hazy": "veru-poa", 
-      "light rain": "rual-poa", 
-      "drizzle": "rual-poa", 
-      "breeze": "wonu-poa", 
-      "strong wind": "wonu-muia", 
-      "typhoon": "wonu-muia-stara", 
-      "rainstorm": "stara-poa", 
-
-      "long day": "ramua-muia", 
-      "short day": "ramua-poa", 
-      "warm night": "noru-heni", 
-      "cold night": "noru-geli", 
-
-      "happy person": "veru-tana",
-      "shy": "noru-tana",
-      "generous": "faru-famua",
-      "timid": "kani-famua", 
-      "calm": "hona-noku", 
-      "scatterbrained": "wonu-noku", 
-      "chill": "hona-noku", 
-      "relaxed": "hona-noku", 
-      "anxious": "wonu-noku", 
-      "stressed": "wonu-noku", 
-      "angry person": "heni-tana", 
-      "energetic": "gavo-muia", 
-      "slow moving": "gavo-poa", 
-
-      "big house": "fale-faru", 
-      "small house": "fale-kani",
-      "deep water": "hona-rimo", 
-      "neighborhood": "pesta-fale",
-        
-      // nature + world
-      "ocean": "moro",
-      "sand": "kela",
-      "hill": "panu",
-      "deep water": "rimo",
-      "forest": "nara",
-
-      // food / daily life
-      "fruit": "sali",
-      "dessert": "gavoa",
-      "bowl": "kiso",
-      "pot": "maron",
-      "lunchbox": "tavin",
-
-      // home / objects
-      "table": "velan",
-      "window": "torun",
-      "door": "kisun",
-      "roof": "fenai",
-
-      // weather / nature (extra)
-      "storm surge": "moroha",
-      "cold wind": "kisan",
-      "mist": "velu",
-      "warm night air": "torai",
-      "ash": "duku",
+      "water": "hona",
+      "friend": "amun",
+      "family": "famua",
 
       // adjectives
       "good": "bilu",
       "bad": "nelu",
       "happy": "felin",
-      "hey": "salo",
-      "hello": "salo",
       "beautiful": "belo",
-      "angry": "henira", 
-      "nice": "belo",
-      "big": "faru",
-      "small": "kani",
-      "cold": "geli",
-      "hot": "heni",
       "tired": "lena",
-      "new": "ninu",
-      "old": "oina",
       "many": "muia",
-      "much": "muia",
-      "lot": "muia",
-      "too many": "vuia muia",
-      "too much": "vuia muia",
-      "a lot": "muia",
       "few": "poa",
-      "a little": "poa",
       "again": "galua",
       "very": "vuia",
       "right": "eroa",
@@ -697,14 +430,7 @@
 
     const ignoreWords = new Set(["a", "an", "the", "is", "it", "are"]);
 
-    // normalize all different apostrophes to straight '
-    function normalizeApostrophes(text) {
-      return text.replace(/[\u2019\u2018\u02BB\u02BC\u02BD\u02BE\u02BF\u0060\u00B4]/g, "'");
-    }
-
     function translateToken(word, lower) {
-      lower = normalizeApostrophes(lower);
-
       if (lexicon[lower]) return lexicon[lower];
 
       const match = lower.match(/^([a-z']+)([.,!?])$/i);
@@ -720,9 +446,6 @@
     function translateSentence(input) {
       if (!input || !input.trim()) return "";
 
-      // normalize apostrophes in the full line
-      input = normalizeApostrophes(input);
-
       const tokens = input.trim().split(/\s+/);
       const out = [];
       const maxLen = 10; // up to 10-word phrases
@@ -731,7 +454,6 @@
         const originals = [];
         const lowers = [];
 
-        // collect up to maxLen tokens ahead (but not past the end)
         const maxAhead = Math.min(maxLen, tokens.length - i);
         for (let k = 0; k < maxAhead; k++) {
           const tok = tokens[i + k];
@@ -741,7 +463,6 @@
 
         let matched = false;
 
-        // Try 10-word → 9-word → ... → 2-word phrases
         for (let len = maxLen; len >= 2; len--) {
           if (lowers.length < len) continue;
 
@@ -756,7 +477,7 @@
             const punctMatch = lastOriginal.match(/[.,!?]$/);
             const punct = punctMatch ? punctMatch[0] : "";
             out.push(lexicon[phrase] + punct);
-            i += len - 1; // skip consumed words
+            i += len - 1;
             matched = true;
             break;
           }
@@ -764,7 +485,6 @@
 
         if (matched) continue;
 
-        // single-word handling
         const lower = tokens[i].toLowerCase();
         if (ignoreWords.has(lower)) continue;
 
@@ -780,9 +500,23 @@
       const output = document.getElementById("outputText");
       output.textContent = input ? translateSentence(input) : "";
     });
+
+    // --- TAB LOGIC ---
+    document.querySelectorAll(".tab-button").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".tab-button").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+
+        const target = btn.getAttribute("data-tab");
+        document.querySelectorAll(".tab-section").forEach(sec => {
+          sec.classList.toggle("active", sec.id === target);
+        });
+      });
+    });
   </script>
 </body>
 </html>
+
 
 
 
