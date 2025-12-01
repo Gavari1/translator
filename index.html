@@ -305,6 +305,18 @@
       margin: 0 0 0.4rem;
       font-size: 1rem;
     }
+.chip-columns {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-top: 0.75rem;
+}
+
+.chip-col {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
 
     .about-text {
       margin: 0.25rem 0 0.7rem;
@@ -346,16 +358,46 @@
         <h1>Republic of Gavári</h1>
         <p>Official portal for the island nation and its language.</p>
         <div class="chip-row">
-          <span class="chip">
-            <span class="chip-dot"></span>
+          <div class="chip-columns">
+
+    <!-- LEFT COLUMN -->
+    <div class="chip-col">
+        <span class="chip">
+            <span class="chip-dot">•</span>
             Pacific island · volcanic homeland
-          </span>
-        
-          <span class="chip">
-            🌋 National language: Gavári
-          </span>
-        </div>
-      </div>
+        </span>
+
+        <span class="chip">
+            <span class="chip-dot">•</span>
+            Population · 26,819
+        </span>
+
+        <span class="chip">
+            <span class="chip-dot">•</span>
+            Currency · Gavári Kala
+        </span>
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div class="chip-col">
+        <span class="chip">
+            <span class="chip-dot">•</span>
+            National language · Gavári
+        </span>
+
+        <span class="chip">
+            <span class="chip-dot">•</span>
+            Total area · 160 square miles
+        </span>
+
+        <span class="chip">
+            <span class="chip-dot">•</span>
+            Capital · Gavári City
+        </span>
+    </div>
+
+</div>
+
     </header>
 
     <main>
@@ -444,6 +486,7 @@
   </div>
 </body>
 </html>
+
 
 
 
