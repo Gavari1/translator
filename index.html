@@ -551,7 +551,7 @@
       <a href="/translator/">Open the Translator</a>
     </footer>
   </div>
-        <script>
+<script>
 const phrases = [
   { gavari: "Mi gavo sap nuai.", english: "I'm going to the store." },
   { gavari: "Mi amunlan hanu na car.", english: "My friends are in that car." },
@@ -561,15 +561,40 @@ const phrases = [
   { gavari: "Io noa tavo kala.", english: "He doesn’t have money." }
 ];
 
-function getRandomPhrase() {
-  const random = phrases[Math.floor(Math.random() * phrases.length)];
-  document.getElementById("phrase-gavari").textContent = random.gavari;
-  document.getElementById("phrase-english").textContent = random.english;
+// ===== SHUFFLE MODE =====
+
+let shuffled = [];
+let index = 0;
+
+function shufflePhrases() {
+  shuffled = [...phrases];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  index = 0;
 }
+
+function getRandomPhrase() {
+  if (shuffled.length === 0 || index >= shuffled.length) {
+    shufflePhrases();
+  }
+
+  const item = shuffled[index];
+  index++;
+
+  document.getElementById("phrase-gavari").textContent = item.gavari;
+  document.getElementById("phrase-english").textContent = item.english;
+}
+
+// Run the first shuffle on page load
+shufflePhrases();
 </script>
+
 
 </body>
 </html>
+
 
 
 
