@@ -823,7 +823,7 @@ const phraseMap = {
   "lot of": "muia",
   "going to + verb": "fa",
   };
-    const ignoreWords = new Set(["a", "an", "the", "is", "it", "are"]);
+    const ignoreWords = new Set(["a", "an", "the", "is", "it", "of", "are"]);
 
     function translateToken(word, lower) {
       if (lexicon[lower]) return lexicon[lower];
