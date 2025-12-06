@@ -506,10 +506,12 @@
     const alphaBar = document.getElementById("alphaBar");
 
     function normalize(str) {
-      return str
-        .toLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "");
+      if (str == null) return "";
+
+      return String(str)
+         .toLowerCas()
+         .normalize("NFD")
+         .replace(/[\u0300-\u036f]/g, "");
     }
 
     function buildGroupedDictionary(entries) {
