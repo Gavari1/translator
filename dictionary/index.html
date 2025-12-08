@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Aurilingua Noun Decliner</title>
+  <title>Aurilingua Noun & Pronoun Decliner</title>
   <style>
     body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -22,7 +22,7 @@
       opacity: 0.8;
       margin-bottom: 1.5rem;
       text-align: center;
-      max-width: 480px;
+      max-width: 520px;
       font-size: 0.95rem;
     }
 
@@ -30,7 +30,7 @@
       background: #181f35;
       padding: 1.5rem;
       border-radius: 0.75rem;
-      max-width: 520px;
+      max-width: 540px;
       width: 100%;
       box-shadow: 0 10px 30px rgba(0,0,0,0.35);
     }
@@ -89,25 +89,26 @@
   </style>
 </head>
 <body>
-  <h1>Aurilingua Noun Decliner</h1>
+  <h1>Aurilingua Decliner</h1>
   <div class="subtitle">
-    Type an English word like <strong>wolf</strong>, <strong>child</strong>, <strong>heart</strong>, or <strong>book</strong>.<br/>
-    The tool will show the Aurilingua lemma and its full declension using the Rex / Murus system.
+    Type an English <strong>noun</strong> like <strong>wolf</strong>, <strong>child</strong>, <strong>heart</strong>, <strong>book</strong>,<br/>
+    or a <strong>pronoun</strong> like <strong>me, you, he, she, it, we, they</strong>.<br/>
+    The tool shows the Aurilingua forms and full declension.
   </div>
 
   <div class="card">
     <label for="lookupInput">English word:</label>
-    <input id="lookupInput" type="text" placeholder="wolf, child, heart, book..." />
-    <button onclick="lookupNoun()">Decline</button>
+    <input id="lookupInput" type="text" placeholder="wolf, heart, book, me, you, he, she..." />
+    <button onclick="lookupWord()">Decline</button>
 
     <div id="error" class="error"></div>
     <pre id="output"></pre>
   </div>
 
   <script>
-    // --- Aurilingua mini-dictionary ---
+    // --- Aurilingua noun mini-dictionary ---
     // class: "rex" (animate) or "murus" (inanimate)
-    const aurilinguaDict = {
+    const aurilinguaNouns = {
       "wolf":   { lemma: "lupōr",   cls: "rex"   },
       "child":  { lemma: "puerōr",  cls: "rex"   },
       "man":    { lemma: "sapiōr",  cls: "rex"   },
@@ -118,43 +119,80 @@
       "book":   { lemma: "librum",  cls: "murus" },
       "stone":  { lemma: "lapidum", cls: "murus" },
       "house":  { lemma: "domum",   cls: "murus" }
-      // Add more entries here as you grow the lexicon
+      // Add more nouns here as Aurilingua grows
     };
 
+    // --- Aurilingua pronoun dictionary ---
+    // Each English key can map to multiple pronoun entries (sg/pl, animate/inanimate)
+    // Forms: nominative, accusative, oblique
+    const aurilinguaPronouns = {
+      "i": [
+        { lemma: "ego", gloss: "I / me (1sg)", nom: "ego", acc: "em",  obl: "mei" }
+      ],
+      "me": [
+        { lemma: "ego", gloss: "I / me (1sg)", nom: "ego", acc: "em",  obl: "mei" }
+      ],
+      "we": [
+        { lemma: "nōs", gloss: "we / us (1pl)", nom: "nōs", acc: "nōsem", obl: "nōri" }
+      ],
+      "us": [
+        { lemma: "nōs", gloss: "we / us (1pl)", nom: "nōs", acc: "nōsem", obl: "nōri" }
+      ],
+      "you": [
+        { lemma: "tū",  gloss: "you (singular)", nom: "tū",  acc: "tem",   obl: "tei" },
+        { lemma: "vōs", gloss: "you (plural)",   nom: "vōs", acc: "vōsem", obl: "vōri" }
+      ],
+      "he": [
+        { lemma: "ilōr", gloss: "he / she / they (animate sg)", nom: "ilōr", acc: "ilōr", obl: "ilōrī" }
+      ],
+      "she": [
+        { lemma: "ilōr", gloss: "he / she / they (animate sg)", nom: "ilōr", acc: "ilōr", obl: "ilōrī" }
+      ],
+      "it": [
+        { lemma: "idum", gloss: "it (inanimate sg)", nom: "idum", acc: "idum", obl: "idī" }
+      ],
+      "they": [
+        { lemma: "ilōrēs", gloss: "they (animate pl)",   nom: "ilōrēs", acc: "ilōrēs", obl: "ilōrum" },
+        { lemma: "ida",    gloss: "they (inanimate pl)", nom: "ida",    acc: "ida",    obl: "idōrum" }
+      ],
+      "them": [
+        { lemma: "ilōrēs", gloss: "them (animate pl)",   nom: "ilōrēs", acc: "ilōrēs", obl: "ilōrum" },
+        { lemma: "ida",    gloss: "them (inanimate pl)", nom: "ida",    acc: "ida",    obl: "idōrum" }
+      ]
+    };
+
+    // --- Noun declension engines ---
+
     function declineRex(lemma) {
-      // lemma already ends in -ōr (e.g., lupōr, puerōr)
+      // Rex: Nom = Acc = -ōr; Oblique = -ōrī; Plural: -ōrēs / -ōrum
       const nomSg = lemma;
       const accSg = lemma;
-      const oblSg = lemma + "ī";    // lupōr + ī = lupōrī
+      const oblSg = lemma + "ī";     // lupōrī
 
-      const nomPl = lemma + "ēs";   // lupōrēs
-      const accPl = lemma + "ēs";   // lupōrēs
-      const oblPl = lemma + "um";   // lupōrum
+      const nomPl = lemma + "ēs";    // lupōrēs
+      const accPl = lemma + "ēs";
+      const oblPl = lemma + "um";    // lupōrum
 
-      return {
-        nomSg, accSg, oblSg,
-        nomPl, accPl, oblPl
-      };
+      return { nomSg, accSg, oblSg, nomPl, accPl, oblPl };
     }
 
     function declineMurus(lemma) {
-      // lemma ends in -um (e.g., cordum, librum)
+      // Murus: Nom = Acc = -um; Oblique = -ī; Pl: -a / -ōrum
       const nomSg = lemma;
       const accSg = lemma;
       const stem = lemma.endsWith("um") ? lemma.slice(0, -2) : lemma;
 
       const oblSg = stem + "ī";       // cordī
       const nomPl = stem + "a";       // corda
-      const accPl = stem + "a";       // corda
+      const accPl = stem + "a";
       const oblPl = stem + "ōrum";    // cordōrum
 
-      return {
-        nomSg, accSg, oblSg,
-        nomPl, accPl, oblPl
-      };
+      return { nomSg, accSg, oblSg, nomPl, accPl, oblPl };
     }
 
-    function formatDeclension(entry, forms) {
+    // --- Formatting helpers ---
+
+    function formatNoun(entry, forms) {
       const { lemma, cls } = entry;
       const classLabel = cls === "rex" ? "Rex (animate)" : "Murus (inanimate)";
 
@@ -173,8 +211,28 @@
       ].join("\n");
     }
 
-    function lookupNoun() {
-      const input = document.getElementById("lookupInput").value.trim().toLowerCase();
+    function formatPronouns(entries, englishForm) {
+      const lines = [];
+      lines.push(`English: “${englishForm}” (pronoun)`);
+      lines.push("");
+
+      entries.forEach((p, idx) => {
+        const label = entries.length > 1 ? `Form ${idx + 1}` : "Form";
+        lines.push(`${label}: ${p.lemma} — ${p.gloss}`);
+        lines.push(`  Nom – ${p.nom}`);
+        lines.push(`  Acc – ${p.acc}`);
+        lines.push(`  Obl – ${p.obl}`);
+        lines.push("");
+      });
+
+      return lines.join("\n").trimEnd();
+    }
+
+    // --- Main lookup ---
+
+    function lookupWord() {
+      const raw = document.getElementById("lookupInput").value.trim();
+      const input = raw.toLowerCase();
       const outputEl = document.getElementById("output");
       const errorEl = document.getElementById("error");
 
@@ -182,13 +240,21 @@
       errorEl.textContent = "";
 
       if (!input) {
-        errorEl.textContent = "Type an English word to look up.";
+        errorEl.textContent = "Type an English noun or pronoun to look up.";
         return;
       }
 
-      const entry = aurilinguaDict[input];
+      // 1) Check pronouns first
+      if (aurilinguaPronouns[input]) {
+        const text = formatPronouns(aurilinguaPronouns[input], raw);
+        outputEl.textContent = text;
+        return;
+      }
+
+      // 2) Then check nouns
+      const entry = aurilinguaNouns[input];
       if (!entry) {
-        errorEl.textContent = `No Aurilingua entry found for “${input}”. Add it to aurilinguaDict in the code.`;
+        errorEl.textContent = `No Aurilingua noun or pronoun found for “${raw}”. Add it to aurilinguaNouns or aurilinguaPronouns in the code.`;
         return;
       }
 
@@ -202,9 +268,8 @@
         return;
       }
 
-      outputEl.textContent = formatDeclension(entry, forms);
+      outputEl.textContent = formatNoun(entry, forms);
     }
   </script>
 </body>
 </html>
-
