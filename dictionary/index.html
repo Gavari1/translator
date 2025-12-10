@@ -275,17 +275,21 @@
       flex-direction: column;
       align-items: flex-end;
       gap: 0.16rem;
+      max-width: 100%;
     }
 
     .symbol-display {
       font-size: 1.2rem;
-      letter-spacing: 0.06em;
+      letter-spacing: 0.08em;
       padding: 0.22rem 0.55rem;
       border-radius: 999px;
       border: 1px solid rgba(126, 255, 255, 0.5);
       background: radial-gradient(circle at top, #1d2c4b 0, #050713 60%);
       box-shadow: 0 0 16px rgba(90, 230, 255, 0.35);
       white-space: nowrap;
+      max-width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
     }
 
     .symbol-label {
@@ -351,9 +355,8 @@
   </div>
 
   <script>
-    // Core data: add / remove / tweak entries here.
     const ENTRIES = [
-     {
+      {
         term: "I (self/speaker)",
         type: "Perspective",
         symbol: "U",
@@ -378,36 +381,36 @@
         term: "vector/toward",
         type: "Relation",
         symbol: "ᐅ",
-        description: 
-           "Directional relation indicating orientation, trajectory, or movement toward a state."
+        description:
+          "Directional relation indicating orientation, trajectory, or movement toward a state."
       },
       {
         term: "separation/movement away",
         type: "Relation",
         symbol: "ᐗ",
-        description: 
-           "Directional relation indicating orientation, trajectory, or movement away from a state."
+        description:
+          "Directional relation indicating orientation, trajectory, or movement away from a state."
       },
       {
         term: "nourishment/intake",
         type: "Qualifier",
         symbol: "ᔭ",
-        description: 
-            "Energy intake; sustenance; consuming to maintain function or momentum."
+        description:
+          "Energy intake; sustenance; consuming to maintain function or momentum."
       },
       {
         term: "living/vitality",
         type: "state",
         symbol: "ᐱ",
-        description: 
-             "Biological presence; life-state; active living systems and embodied existence."
+        description:
+          "Biological presence; life-state; active living systems and embodied existence."
       },
       {
         term: "obligation/formality",
         type: "mode",
         symbol: "ᒝ",
         description:
-             "Structured obligation; transactional mode; formal systems, duties, or responsibilities."
+          "Structured obligation; transactional mode; formal systems, duties, or responsibilities."
       },
       {
         term: "constructed place",
@@ -457,7 +460,7 @@
         term: "they in a constructed place",
         shorthand: "|U| + ᒤᐱᒊ",
         type: "Combined",
-        symbol: "|U|ᒤᐱᒊ",
+        symbol: "|U|ᓨᐱᒊ",
         description:
           "Others (they/he/she) are in a built / solid place such as home, work, or any indoor structure."
       },
@@ -560,94 +563,95 @@
     }
 
     function renderEntries(filterText = "") {
-  const query = normalize(filterText);
+      const query = normalize(filterText);
 
-  // ✅ Use ENTRIES in the order you wrote them
-  const ordered = ENTRIES;
+      const ordered = ENTRIES;
 
-  const filtered = ordered.filter((entry) => {
-    if (!query) return true;
-    const haystack = (
-      (entry.term || "") +
-      " " +
-      (entry.shorthand || "") +
-      " " +
-      (entry.description || "")
-    ).toLowerCase();
-    return haystack.includes(query);
-  });
+      const filtered = ordered.filter((entry) => {
+        if (!query) return true;
+        const haystack = (
+          (entry.term || "") +
+          " " +
+          (entry.shorthand || "") +
+          " " +
+          (entry.description || "")
+        ).toLowerCase();
+        return haystack.includes(query);
+      });
 
-  // Clear the list
-  listEl.innerHTML = "";
+      listEl.innerHTML = "";
 
-  if (!filtered.length) {
-    const empty = document.createElement("div");
-    empty.className = "empty-state";
-    empty.textContent = "No entries match that search yet.";
-    listEl.appendChild(empty);
-  } else {
-    filtered.forEach((entry) => {
-      const li = document.createElement("li");
-      li.className = "entry";
+      if (!filtered.length) {
+        const empty = document.createElement("div");
+        empty.className = "empty-state";
+        empty.textContent = "No entries match that search yet.";
+        listEl.appendChild(empty);
+      } else {
+        filtered.forEach((entry) => {
+          const li = document.createElement("li");
+          li.className = "entry";
 
-      const main = document.createElement("div");
-      main.className = "entry-main";
+          const main = document.createElement("div");
+          main.className = "entry-main";
 
-      const term = document.createElement("div");
-      term.className = "entry-term";
-      term.textContent = entry.term;
+          const term = document.createElement("div");
+          term.className = "entry-term";
+          term.textContent = entry.term;
 
-      const meta = document.createElement("div");
-      meta.className = "entry-meta";
+          const meta = document.createElement("div");
+          meta.className = "entry-meta";
 
-      const chip = document.createElement("span");
-      chip.className = "entry-chip";
-      chip.textContent = entry.type;
+          const chip = document.createElement("span");
+          chip.className = "entry-chip";
+          chip.textContent = entry.type;
 
-      meta.appendChild(chip);
+          meta.appendChild(chip);
 
-      if (entry.shorthand) {
-        const shorthand = document.createElement("span");
-        shorthand.className = "entry-shorthand";
-        shorthand.textContent = `shorthand: ${entry.shorthand}`;
-        meta.appendChild(shorthand);
+          if (entry.shorthand) {
+            const shorthand = document.createElement("span");
+            shorthand.className = "entry-shorthand";
+            shorthand.textContent = `shorthand: ${entry.shorthand}`;
+            meta.appendChild(shorthand);
+          }
+
+          const desc = document.createElement("div");
+          desc.className = "entry-desc";
+          desc.textContent = entry.description;
+
+          main.appendChild(term);
+          main.appendChild(meta);
+          main.appendChild(desc);
+
+          const symbolBox = document.createElement("div");
+          symbolBox.className = "entry-symbol";
+
+          const symbol = document.createElement("div");
+          symbol.className = "symbol-display";
+          symbol.textContent = entry.symbol;
+
+          const label = document.createElement("div");
+          label.className = "symbol-label";
+          label.textContent = "symbol";
+
+          symbolBox.appendChild(symbol);
+          symbolBox.appendChild(label);
+
+          li.appendChild(main);
+          li.appendChild(symbolBox);
+
+          listEl.appendChild(li);
+        });
       }
 
-      const desc = document.createElement("div");
-      desc.className = "entry-desc";
-      desc.textContent = entry.description;
+      entryCountLabel.textContent =
+        filtered.length === 1 ? "1 entry" : `${filtered.length} entries`;
+    }
 
-      main.appendChild(term);
-      main.appendChild(meta);
-      main.appendChild(desc);
-
-      const symbolBox = document.createElement("div");
-      symbolBox.className = "entry-symbol";
-
-      const symbol = document.createElement("div");
-      symbol.className = "symbol-display";
-      symbol.textContent = entry.symbol;
-
-      const label = document.createElement("div");
-      label.className = "symbol-label";
-      label.textContent = "symbol";
-
-      symbolBox.appendChild(symbol);
-      symbolBox.appendChild(label);
-
-      li.appendChild(main);
-      li.appendChild(symbolBox);
-
-      listEl.appendChild(li);
-    });
-  }
-
-  entryCountLabel.textContent =
-    filtered.length === 1 ? "1 entry" : `${filtered.length} entries`;
-};
-
-    // Initial render
     renderEntries();
+
+    searchInput.addEventListener("input", (e) => {
+      renderEntries(e.target.value);
+    });
   </script>
 </body>
 </html>
