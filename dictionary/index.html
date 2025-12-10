@@ -207,22 +207,16 @@
       border-radius: 999px;
     }
 
+    /* ENTRY LAYOUT – now vertical */
     .entry {
-      padding: 0.55rem 0.6rem;
+      padding: 0.55rem 0.6rem 0.7rem;
       border-radius: 12px;
       border: 1px solid rgba(76, 97, 169, 0.7);
       background: radial-gradient(circle at top left, #151a3c 0, #060817 60%);
       margin-bottom: 0.45rem;
-      display: grid;
-      grid-template-columns: minmax(0, 2.3fr) minmax(0, 1.1fr);
-      gap: 0.4rem 0.75rem;
-      align-items: center;
-    }
-
-    @media (max-width: 600px) {
-      .entry {
-        grid-template-columns: minmax(0, 1.8fr) minmax(0, 1.1fr);
-      }
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
     }
 
     .entry-main {
@@ -268,21 +262,20 @@
       line-height: 1.25;
     }
 
+    /* SYMBOL ROW UNDER THE TEXT */
     .entry-symbol {
-      justify-self: flex-end;
-      text-align: right;
+      margin-top: 0.1rem;
       display: flex;
       flex-direction: column;
-      align-items: flex-end;
-      gap: 0.16rem;
+      align-items: flex-start;
+      gap: 0.18rem;
       max-width: 100%;
     }
 
-    /* 🔧 updated to wrap instead of squish/cut */
     .symbol-display {
-      font-size: 1.2rem;
+      font-size: 1.25rem;
       letter-spacing: 0.08em;
-      padding: 0.22rem 0.55rem;
+      padding: 0.28rem 0.65rem;
       border-radius: 999px;
       border: 1px solid rgba(126, 255, 255, 0.5);
       background: radial-gradient(circle at top, #1d2c4b 0, #050713 60%);
@@ -291,8 +284,8 @@
       display: inline-block;
       max-width: 100%;
       white-space: normal;      /* allow wrapping */
-      word-break: break-all;    /* long symbol string can wrap */
-      text-align: center;       /* centered on 1 or 2 lines */
+      word-break: break-all;    /* wrap long combos */
+      text-align: center;
     }
 
     .symbol-label {
