@@ -278,6 +278,7 @@
       max-width: 100%;
     }
 
+    /* 🔧 updated to wrap instead of squish/cut */
     .symbol-display {
       font-size: 1.2rem;
       letter-spacing: 0.08em;
@@ -286,10 +287,12 @@
       border: 1px solid rgba(126, 255, 255, 0.5);
       background: radial-gradient(circle at top, #1d2c4b 0, #050713 60%);
       box-shadow: 0 0 16px rgba(90, 230, 255, 0.35);
-      white-space: nowrap;
+
+      display: inline-block;
       max-width: 100%;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
+      white-space: normal;      /* allow wrapping */
+      word-break: break-all;    /* long symbol string can wrap */
+      text-align: center;       /* centered on 1 or 2 lines */
     }
 
     .symbol-label {
@@ -460,7 +463,7 @@
         term: "they in a constructed place",
         shorthand: "|U| + ᒤᐱᒊ",
         type: "Combined",
-        symbol: "|U|ᓨᐱᒊ",
+        symbol: "|U|ᒤᐱᒊ",
         description:
           "Others (they/he/she) are in a built / solid place such as home, work, or any indoor structure."
       },
@@ -478,7 +481,7 @@
         type: "Combined",
         symbol: "|Uᓬᑫᓬ",
         description:
-          "You (youtself) are outside or in an open / natural space."
+          "You (yourself) are outside or in an open / natural space."
       },
       {
         term: "they outside",
