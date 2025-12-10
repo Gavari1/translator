@@ -353,6 +353,27 @@
   <script>
     // Core data: add / remove / tweak entries here.
     const ENTRIES = [
+     {
+        term: "I (self/speaker)",
+        type: "Perspective",
+        symbol: "U",
+        description:
+          "Unconstrained perspective: the one speaking. Combines with place blocks to form full state"
+      },
+      {
+        term: "you (addressee)",
+        type: "Perspective",
+        symbol: "|U",
+        description:
+          "Direct addressee: the one being spoken to. Partial constraint relative to self."
+      },
+      {
+        term: "everyone else (they)",
+        type: "Perspective",
+        symbol: "|U|",
+        description:
+          "External group or other person: anyone who is not self or direct you."
+      },
       {
         term: "constructed place",
         type: "Place",
@@ -373,27 +394,6 @@
         symbol: "ᓬᑫᓬ",
         description:
           "Open or natural environment: yard, field, park, forest, riverbank, beach, general outside."
-      },
-      {
-        term: "I (self / speaker)",
-        type: "Perspective",
-        symbol: "U",
-        description:
-          "Unconstrained perspective: the one speaking. Combines with place blocks to form full state."
-      },
-      {
-        term: "you (addressee)",
-        type: "Perspective",
-        symbol: "|U",
-        description:
-          "Direct addressee: the one being spoken to. Partial constraint relative to self."
-      },
-      {
-        term: "everyone else (they)",
-        type: "Perspective",
-        symbol: "|U|",
-        description:
-          "External group or other person: anyone who is not self or direct you."
       },
       {
         term: "effort / occupied",
