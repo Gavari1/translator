@@ -6,8 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     :root {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #f3f4f6;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      background: #e5e7eb; /* light neutral gray */
       color: #111827;
     }
 
@@ -16,40 +16,45 @@
       padding: 2rem 1rem 3rem;
       display: flex;
       justify-content: center;
+      background: #e5e7eb;
     }
 
     .app {
       width: 100%;
-      max-width: 900px;
+      max-width: 960px;
       background: #ffffff;
-      border-radius: 1rem;
-      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.15);
-      padding: 2rem 1.5rem 2.5rem;
+      border-radius: 0.75rem;
+      border: 1px solid #e5e7eb;
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
+      padding: 2.25rem 2rem 2.75rem;
     }
 
     @media (min-width: 768px) {
       .app {
-        padding: 2.5rem 2.5rem 3rem;
+        padding: 2.5rem 2.75rem 3rem;
       }
     }
 
     h1 {
-      margin: 0 0 0.25rem;
-      font-size: 1.6rem;
-      letter-spacing: 0.02em;
+      margin: 0 0 0.35rem;
+      font-size: 1.55rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      color: #0f172a;
     }
 
     .subtitle {
-      margin: 0 0 1.75rem;
+      margin: 0 0 1.9rem;
       font-size: 0.95rem;
-      color: #6b7280;
+      color: #4b5563;
+      max-width: 40rem;
     }
 
     .form-row {
       display: grid;
       grid-template-columns: 1fr;
-      gap: 1rem;
-      margin-bottom: 1.75rem;
+      gap: 1.25rem;
+      margin-bottom: 2rem;
     }
 
     @media (min-width: 640px) {
@@ -60,47 +65,54 @@
 
     label {
       display: block;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
       color: #374151;
       margin-bottom: 0.4rem;
     }
 
     select {
       width: 100%;
-      padding: 0.55rem 0.7rem;
-      border-radius: 0.6rem;
-      border: 1px solid #d1d5db;
+      padding: 0.6rem 0.7rem;
+      border-radius: 0.5rem;
+      border: 1px solid #cbd5e1;
       background: #f9fafb;
       font-size: 0.95rem;
-      transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+      color: #0f172a;
+      transition:
+        border-color 0.15s ease,
+        box-shadow 0.15s ease,
+        background 0.15s ease;
     }
 
     select:focus {
       outline: none;
-      border-color: #f59e0b;
-      box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.25);
+      border-color: #eab308; /* QUIKRETE-ish yellow accent */
+      box-shadow: 0 0 0 1px #eab30833;
       background: #ffffff;
     }
 
     .hint {
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       color: #9ca3af;
-      margin-top: 0.2rem;
+      margin-top: 0.25rem;
     }
 
     .results-header {
       display: flex;
       justify-content: space-between;
       align-items: baseline;
-      margin-bottom: 0.75rem;
+      margin-bottom: 0.9rem;
       gap: 0.75rem;
       flex-wrap: wrap;
     }
 
     .results-title {
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       font-weight: 600;
+      color: #0f172a;
     }
 
     .results-selection {
@@ -112,7 +124,7 @@
       display: grid;
       grid-template-columns: 1fr;
       gap: 1rem;
-      margin-top: 0.5rem;
+      margin-top: 0.6rem;
     }
 
     @media (min-width: 768px) {
@@ -122,58 +134,46 @@
     }
 
     .card {
-      border-radius: 0.9rem;
+      border-radius: 0.7rem;
       padding: 1rem;
       border: 1px solid #e5e7eb;
-      background: #f9fafb;
+      background: #ffffff;
       display: flex;
       flex-direction: column;
-      gap: 0.35rem;
+      gap: 0.4rem;
       position: relative;
-      overflow: hidden;
     }
 
-    .card::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      opacity: 0.08;
-      pointer-events: none;
+    /* Professional, subtle tier accents */
+    .card--good {
+      border-top: 3px solid #16a34a; /* green */
     }
 
-    .card--good::before {
-      background: linear-gradient(135deg, #22c55e, #166534);
+    .card--better {
+      border-top: 3px solid #2563eb; /* blue */
     }
 
-    .card--better::before {
-      background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-    }
-
-    .card--best::before {
-      background: linear-gradient(135deg, #f97316, #c2410c);
+    .card--best {
+      border-top: 3px solid #ea580c; /* orange */
     }
 
     .card-pill {
       display: inline-flex;
       align-items: center;
-      padding: 0.15rem 0.65rem;
+      padding: 0.18rem 0.6rem;
       border-radius: 999px;
       font-size: 0.7rem;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.1em;
       background: #111827;
       color: #f9fafb;
       align-self: flex-start;
-      position: relative;
-      z-index: 1;
     }
 
     .card-title {
       font-size: 0.98rem;
       font-weight: 600;
-      position: relative;
-      z-index: 1;
       color: #111827;
     }
 
@@ -181,30 +181,29 @@
       font-size: 0.8rem;
       font-weight: 500;
       color: #6b7280;
-      position: relative;
-      z-index: 1;
     }
 
     .card-notes {
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       color: #4b5563;
-      position: relative;
-      z-index: 1;
-      margin-top: 0.35rem;
+      margin-top: 0.25rem;
+      line-height: 1.4;
     }
 
     .empty-state {
-      border-radius: 0.9rem;
+      border-radius: 0.7rem;
       padding: 1rem;
       border: 1px dashed #d1d5db;
       background: #f9fafb;
-      font-size: 0.88rem;
+      font-size: 0.86rem;
       color: #6b7280;
-      margin-top: 0.75rem;
+      margin-top: 0.9rem;
+      line-height: 1.45;
     }
 
     .empty-state strong {
       color: #111827;
+      font-weight: 600;
     }
   </style>
 </head>
@@ -336,21 +335,21 @@
         }
       },
 
-      // Mortar joint repair up to 1"  -> special: show message instead of cards
+      // Mortar joint repair up to 1"  -> message only
       "mortar-joint|1": {
         message: "<strong>Mortar joint repair • Up to 1\"</strong><br/>For further assistance please call 1-800-282-5828."
       },
 
-       // Mortar joint repair up to 2"  -> special: show message instead of cards
+      // Mortar joint repair up to 2"  -> message only
       "mortar-joint|2": {
         message: "<strong>Mortar joint repair • Up to 2\"</strong><br/>For further assistance please call 1-800-282-5828."
       },
-      
-       // Mortar joint repair over 2"  -> special: show message instead of cards
+
+      // Mortar joint repair over 2"  -> message only
       "mortar-joint|Over 2": {
         message: "<strong>Mortar joint repair • Over 2\"</strong><br/>For further assistance please call 1-800-282-5828."
       },
-      
+
       // Concrete crack repair up to 1/4"
       "crack|0.25": {
         good: {
@@ -373,7 +372,6 @@
         }
       },
 
-      
       // Concrete crack repair up to 3/8"
       "crack|0.375": {
         good: {
@@ -505,7 +503,7 @@
           notes: 'Quick setting polymer modified patch for spalls and shallow repairs from feather edge to 2" deep.'
         }
       },
-      
+
       // Concrete repair up to 1/2"
       "surface|0.5": {
         good: {
@@ -594,7 +592,6 @@
         }
       },
 
-      
       // Floor Leveling up to 1/4"
       "leveler|0.25": {
         good: {
@@ -617,7 +614,7 @@
         }
       },
 
-        // Floor Leveling up to 3/8"
+      // Floor Leveling up to 3/8"
       "leveler|0.375": {
         good: {
           label: "Good",
@@ -639,7 +636,7 @@
         }
       },
 
-        // Floor Leveling up to 1/2"
+      // Floor Leveling up to 1/2"
       "leveler|0.5": {
         good: {
           label: "Good",
@@ -661,7 +658,7 @@
         }
       },
 
-        // Floor Leveling up to 1"
+      // Floor Leveling up to 1"
       "leveler|1": {
         good: {
           label: "Good",
@@ -677,7 +674,7 @@
           label: "Best",
           name: "QUIKRETE® Fast Setting Self Leveling Floor Resurfacer",
           code: "#1249-51",
-          notes:"Fast Setting Self Leveling Floor Resurfacer that can go between feather edge and 1.5\" thick. Can be used as a finished flooring surface."
+          notes: 'Fast Setting Self Leveling Floor Resurfacer that can go between feather edge and 1.5" thick. Can be used as a finished flooring surface.'
         }
       }
     };
