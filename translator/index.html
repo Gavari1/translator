@@ -203,6 +203,20 @@
       max-height: 62vh;
       overflow:auto;
     }
+.search-accent {
+  background: rgba(220,38,38,.06);
+  border-bottom: 1px solid rgba(220,38,38,.22);
+}
+
+.search-accent h2 {
+  color: var(--red);
+  font-weight: 800;
+}
+
+.search-accent .hint {
+  color: var(--red);
+  font-weight: 700;
+}
 
     .row{
       padding: 10px 12px;
@@ -284,10 +298,11 @@
 
   <main>
     <section class="panel">
-      <div class="panelhead">
-        <h2>Search</h2>
-        <div class="hint">Type English (e.g., “fish”, “harbor”, “cheap”).</div>
-      </div>
+      <div class="panelhead search-accent">
+  <h2>Search</h2>
+  <div class="hint">Type English (e.g., “fish”, “harbor”, “cheap”).</div>
+</div>
+
       <div class="controls">
         <input id="q" type="search" placeholder="Search English…" autocomplete="off" />
         <button class="btn primary" id="clearBtn">Clear</button>
