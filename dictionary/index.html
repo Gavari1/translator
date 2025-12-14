@@ -3,22 +3,30 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Micro Dictionary (2–3 Letter Language)</title>
+  <title>Micro Dictionary</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+
   <style>
     :root{
-      --bg: #bfe7ff;          /* baby blue */
-      --ink: #0b0b0b;         /* near-black */
-      --card: rgba(255,255,255,.55);
-      --card2: rgba(255,255,255,.35);
-      --border: rgba(0,0,0,.18);
-      --shadow: 0 10px 30px rgba(0,0,0,.12);
+      --bg: #bfe7ff;            /* baby blue */
+      --ink: #0b0b0b;           /* black-ish */
+      --muted: rgba(0,0,0,.65);
+      --panel: rgba(255,255,255,.70);
+      --panel2: rgba(255,255,255,.52);
+      --border: rgba(0,0,0,.14);
+      --shadow: 0 10px 28px rgba(0,0,0,.10);
       --radius: 18px;
+      --radius2: 14px;
     }
 
     * { box-sizing: border-box; }
     body{
       margin: 0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       color: var(--ink);
       background: var(--bg);
     }
@@ -26,216 +34,201 @@
     header{
       position: sticky;
       top: 0;
-      z-index: 10;
+      z-index: 20;
+      background: rgba(191,231,255,.82);
       backdrop-filter: blur(10px);
-      background: rgba(191,231,255,.75);
       border-bottom: 1px solid var(--border);
     }
 
     .wrap{
-      max-width: 1050px;
+      max-width: 1100px;
       margin: 0 auto;
-      padding: 18px 16px 30px;
+      padding: 18px 16px;
     }
 
-    .hero{
+    .top{
       display: grid;
-      grid-template-columns: 1.2fr .8fr;
+      grid-template-columns: 1.1fr .9fr;
       gap: 14px;
-      align-items: end;
+      align-items: stretch;
     }
 
-    .titlebox{
-      padding: 16px 18px;
-      border-radius: var(--radius);
-      background: var(--card);
-      box-shadow: var(--shadow);
+    .card{
+      background: var(--panel);
       border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px 18px;
     }
+
+    .title{
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: baseline;
+    }
+
     h1{
-      margin: 0 0 6px;
-      font-size: 24px;
+      margin: 0;
+      font-size: 22px;
       letter-spacing: .2px;
     }
-    .sub{
-      margin: 0;
-      opacity: .8;
-      font-size: 14px;
+    .small{
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 13px;
       line-height: 1.35;
     }
 
-    .searchbox{
-      padding: 16px 18px;
-      border-radius: var(--radius);
-      background: var(--card);
-      box-shadow: var(--shadow);
-      border: 1px solid var(--border);
-    }
-    .searchrow{
-      display: flex;
+    .controls{
+      display: grid;
+      grid-template-columns: 1fr 160px 92px;
       gap: 10px;
       align-items: center;
+      margin-top: 8px;
     }
-    input[type="text"]{
+
+    input[type="text"], select{
       width: 100%;
       border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 12px 12px;
-      background: rgba(255,255,255,.7);
+      border-radius: 12px;
+      padding: 11px 12px;
+      background: rgba(255,255,255,.85);
       color: var(--ink);
       outline: none;
       font-size: 14px;
     }
+
     .btn{
       border: 1px solid var(--border);
-      background: rgba(255,255,255,.65);
+      background: rgba(255,255,255,.85);
       color: var(--ink);
-      border-radius: 14px;
-      padding: 10px 12px;
+      border-radius: 12px;
+      padding: 11px 12px;
       font-size: 13px;
       cursor: pointer;
-      transition: transform .06s ease;
       user-select: none;
-      white-space: nowrap;
+      transition: transform .06s ease, filter .12s ease;
     }
     .btn:active{ transform: scale(.98); }
+    .btn:hover{ filter: brightness(0.98); }
 
     main{
-      padding: 18px 16px 30px;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 14px 16px 28px;
     }
 
     .layout{
-      max-width: 1050px;
-      margin: 0 auto;
       display: grid;
       grid-template-columns: 1fr 44px;
       gap: 12px;
-      padding: 0 16px 28px;
+      align-items: start;
     }
 
-    /* Dictionary list container */
     .list{
-      border-radius: var(--radius);
-      background: var(--card2);
+      background: var(--panel2);
       border: 1px solid var(--border);
+      border-radius: var(--radius);
       box-shadow: var(--shadow);
       overflow: hidden;
-      min-height: 62vh;
+      min-height: 70vh;
     }
 
     .listhead{
-      padding: 12px 16px;
-      border-bottom: 1px solid var(--border);
       display: flex;
       justify-content: space-between;
       align-items: center;
       gap: 10px;
-      background: rgba(255,255,255,.35);
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255,255,255,.55);
     }
-
     .count{
       font-size: 13px;
-      opacity: .85;
+      color: var(--muted);
     }
 
-    .chiprow{
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-    }
-
-    .chip{
-      font-size: 12px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,.55);
-      cursor: pointer;
-      user-select: none;
-    }
-    .chip.active{
-      background: rgba(255,255,255,.9);
-      font-weight: 600;
-    }
-
-    /* Scroll area */
     .scroll{
-      max-height: 70vh;
+      max-height: 75vh;
       overflow: auto;
       padding: 10px 10px 16px;
     }
 
-    /* Sticky letter headers */
     .letter{
       position: sticky;
       top: 0;
+      z-index: 5;
       background: rgba(191,231,255,.92);
       border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 6px 10px;
-      margin: 8px 4px 10px;
-      font-weight: 700;
-      letter-spacing: .7px;
-      box-shadow: 0 6px 16px rgba(0,0,0,.08);
+      border-radius: 999px;
+      padding: 6px 12px;
+      margin: 10px 6px 10px;
+      font-weight: 800;
+      letter-spacing: .8px;
+      width: fit-content;
+      box-shadow: 0 6px 18px rgba(0,0,0,.08);
     }
 
     .entry{
       display: grid;
-      grid-template-columns: 96px 1fr;
-      gap: 10px;
-      align-items: start;
-      padding: 12px 12px;
-      margin: 8px 4px;
-      border-radius: 16px;
+      grid-template-columns: 110px 1fr;
+      gap: 12px;
+      padding: 14px 14px;
+      margin: 10px 6px;
+      border-radius: var(--radius2);
       border: 1px solid var(--border);
-      background: rgba(255,255,255,.55);
+      background: rgba(255,255,255,.72);
     }
+
     .word{
+      font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
       font-size: 18px;
       font-weight: 800;
-      letter-spacing: .5px;
+      letter-spacing: .6px;
       text-transform: lowercase;
+      line-height: 1.1;
     }
-    .meta{
-      font-size: 12px;
-      opacity: .75;
-      margin-top: 2px;
-    }
-    .meaning{
-      font-size: 14px;
-      line-height: 1.35;
-    }
-    .tag{
+    .cat{
+      margin-top: 6px;
       display: inline-block;
-      margin-top: 8px;
       font-size: 11px;
       padding: 5px 8px;
       border-radius: 999px;
       border: 1px solid var(--border);
-      background: rgba(255,255,255,.7);
-      opacity: .95;
+      background: rgba(255,255,255,.85);
+      color: rgba(0,0,0,.75);
+      width: fit-content;
     }
 
-    /* A–Z rail */
+    .meaning{
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    mark{
+      background: rgba(255,255,255,.0);
+      padding: 0;
+      border-bottom: 2px solid rgba(0,0,0,.35);
+    }
+
     .rail{
       position: sticky;
-      top: 90px;
-      align-self: start;
-      border-radius: 16px;
+      top: 112px;
+      border-radius: 14px;
       border: 1px solid var(--border);
-      background: rgba(255,255,255,.45);
+      background: rgba(255,255,255,.55);
       box-shadow: var(--shadow);
       padding: 8px 6px;
       display: flex;
       flex-direction: column;
       gap: 4px;
-      max-height: calc(70vh);
+      max-height: calc(75vh);
       overflow: auto;
     }
     .rail button{
       border: 1px solid rgba(0,0,0,.12);
-      background: rgba(255,255,255,.65);
+      background: rgba(255,255,255,.85);
       color: var(--ink);
       border-radius: 10px;
       padding: 6px 0;
@@ -243,63 +236,66 @@
       cursor: pointer;
       line-height: 1;
     }
-    .rail button:disabled{
-      opacity: .35;
-      cursor: not-allowed;
-    }
+    .rail button:disabled{ opacity: .35; cursor: not-allowed; }
 
     .empty{
-      padding: 18px 16px;
-      margin: 10px 4px;
-      border-radius: 16px;
+      padding: 16px 14px;
+      margin: 10px 6px;
+      border-radius: var(--radius2);
       border: 1px dashed rgba(0,0,0,.25);
-      background: rgba(255,255,255,.35);
+      background: rgba(255,255,255,.55);
+      color: var(--muted);
       font-size: 14px;
     }
 
     @media (max-width: 860px){
-      .hero{ grid-template-columns: 1fr; }
+      .top{ grid-template-columns: 1fr; }
+      .controls{ grid-template-columns: 1fr; }
       .layout{ grid-template-columns: 1fr; }
       .rail{ display: none; }
-      .entry{ grid-template-columns: 84px 1fr; }
+      .entry{ grid-template-columns: 96px 1fr; }
     }
   </style>
 </head>
+
 <body>
   <header>
     <div class="wrap">
-      <div class="hero">
-        <div class="titlebox">
-          <h1>Micro Dictionary</h1>
-          <p class="sub">
-            2–3 letter language • baby-blue UI • alphabetical + searchable • sticky letter headers.
-          </p>
-        </div>
-        <div class="searchbox">
-          <div class="searchrow">
-            <input id="search" type="text" placeholder="Search word or meaning (e.g., 'go' or 'coffee')…" />
-            <button id="clearBtn" class="btn" title="Clear search">Clear</button>
+      <div class="top">
+        <div class="card">
+          <div class="title">
+            <h1>Micro Dictionary</h1>
           </div>
+          <p class="small">2–3 letter language • alphabetical list • fast search • category filter.</p>
+        </div>
+
+        <div class="card">
+          <div class="controls">
+            <input id="search" type="text" placeholder="Search word or meaning…" />
+            <select id="category"></select>
+            <button id="clearBtn" class="btn">Clear</button>
+          </div>
+          <p class="small" id="hint">Tip: type “go”, “coffee”, “verb”, etc.</p>
         </div>
       </div>
     </div>
   </header>
 
-  <div class="layout">
-    <section class="list">
-      <div class="listhead">
-        <div class="count" id="count"></div>
-        <div class="chiprow" id="chips"></div>
-      </div>
-      <div class="scroll" id="scroll"></div>
-    </section>
+  <main>
+    <div class="layout">
+      <section class="list">
+        <div class="listhead">
+          <div class="count" id="count"></div>
+        </div>
+        <div class="scroll" id="scroll"></div>
+      </section>
 
-    <aside class="rail" id="rail" aria-label="Jump by letter"></aside>
-  </div>
+      <aside class="rail" id="rail" aria-label="Jump by letter"></aside>
+    </div>
+  </main>
 
   <script>
-    // --- CANON DATA ---
-    // Keep all canon in one place. Add new words by appending objects.
+    // --- CANON DATA (updated with new nouns) ---
     const WORDS = [
       // Pronouns
       { w:"go",  m:"I / me",                         c:"Pronoun" },
@@ -326,12 +322,13 @@
       { w:"pez", m:"please",                         c:"Response" },
 
       // Questions
-      { w:"qe",  m:"question marker (optional)",     c:"Question" },
-      { w:"wah", m:"why",                            c:"Question" },
-      { w:"kah", m:"how",                            c:"Question" },
-      { w:"lo qe", m:"and you?",                     c:"Question" }, // multi-token form
+      { w:"qe",   m:"question marker (optional)",    c:"Question" },
+      { w:"wah",  m:"why",                           c:"Question" },
+      { w:"kah",  m:"how",                           c:"Question" },
+      { w:"lo qe",m:"and you?",                      c:"Question" },
 
-      // Core verbs
+      // Verbs
+      { w:"go",  m:"go / move (generic)",            c:"Verb" },
       { w:"sta", m:"stay",                           c:"Verb" },
       { w:"ret", m:"return / go back",               c:"Verb" },
       { w:"ek",  m:"eat",                            c:"Verb" },
@@ -341,10 +338,8 @@
       { w:"ome", m:"come",                           c:"Verb" },
       { w:"et",  m:"get",                            c:"Verb" },
       { w:"mok", m:"make / do",                      c:"Verb" },
-      // Note: "go" is both pronoun and verb; we already list it as pronoun. If you want it also shown as verb:
-      { w:"go",  m:"go / move (generic)",            c:"Verb" },
 
-      // Cognition / ability
+      // Mind
       { w:"wan", m:"want",                           c:"Mind" },
       { w:"nek", m:"need",                           c:"Mind" },
       { w:"tig", m:"think",                          c:"Mind" },
@@ -357,12 +352,20 @@
       { w:"man", m:"person (any gender)",            c:"People" },
       { w:"fen", m:"friend",                         c:"People" },
 
-      // Nouns
+      // Nouns (expanded)
       { w:"cof", m:"coffee",                         c:"Noun" },
+      { w:"fod", m:"food",                           c:"Noun" },
+      { w:"wat", m:"water",                          c:"Noun" },
       { w:"hak", m:"home",                           c:"Noun" },
+      { w:"hus", m:"house",                          c:"Noun" },
       { w:"bed", m:"bed",                            c:"Noun" },
+      { w:"keh", m:"key",                            c:"Noun" },
+      { w:"bar", m:"bar",                            c:"Noun" },
+      { w:"res", m:"restaurant",                     c:"Noun" },
+      { w:"sto", m:"store",                          c:"Noun" },
+      { w:"car", m:"car",                            c:"Noun" },
 
-      // Location / direction
+      // Place / Direction
       { w:"heg", m:"here",                           c:"Place" },
       { w:"the", m:"there",                          c:"Place" },
       { w:"at",  m:"at / located at",                c:"Place" },
@@ -370,7 +373,7 @@
       { w:"awa", m:"away",                           c:"Place" },
       { w:"bak", m:"back",                           c:"Place" },
 
-      // Time + daily life
+      // Time
       { w:"now", m:"now",                            c:"Time" },
       { w:"tod", m:"today",                          c:"Time" },
       { w:"yer", m:"yesterday",                      c:"Time" },
@@ -378,7 +381,9 @@
       { w:"lat", m:"later",                          c:"Time" },
       { w:"aft", m:"after",                          c:"Time" },
       { w:"tim", m:"time",                           c:"Time" },
+      { w:"nit", m:"night",                          c:"Time" },
 
+      // Daily
       { w:"wor", m:"work",                           c:"Daily" },
       { w:"pay", m:"money",                          c:"Daily" },
 
@@ -393,46 +398,37 @@
       { w:"mab", m:"maybe",                          c:"Connector" },
     ];
 
-    // --- UTIL ---
-    const byWord = (a,b) => a.w.localeCompare(b.w, "en", { sensitivity:"base" });
-
-    // Deduplicate (since "go" appears twice: pronoun + verb). Keep both, but display nicely.
-    // We'll keep duplicates as-is because category differs — it's useful.
-
-    const CATEGORIES = [
-      "All","Pronoun","State","Negation","Response","Question","Verb","Mind","People","Noun","Place","Time","Daily","Connector"
-    ];
-
     const searchEl = document.getElementById("search");
     const clearBtn = document.getElementById("clearBtn");
     const scrollEl = document.getElementById("scroll");
     const countEl = document.getElementById("count");
-    const chipsEl = document.getElementById("chips");
     const railEl = document.getElementById("rail");
+    const categoryEl = document.getElementById("category");
+
+    const byWord = (a,b) => a.w.localeCompare(b.w, "en", { sensitivity:"base" });
+
+    const CATEGORIES = ["All", ...Array.from(new Set(WORDS.map(x => x.c))).sort()];
 
     let activeCategory = "All";
 
-    function makeChips(){
-      chipsEl.innerHTML = "";
-      for(const cat of CATEGORIES){
-        const d = document.createElement("div");
-        d.className = "chip" + (cat === activeCategory ? " active" : "");
-        d.textContent = cat;
-        d.onclick = () => {
-          activeCategory = cat;
-          document.querySelectorAll(".chip").forEach(x => x.classList.remove("active"));
-          d.classList.add("active");
-          render();
-        };
-        chipsEl.appendChild(d);
-      }
+    function escapeHtml(s){
+      return s.replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");
+    }
+
+    function highlight(text, q){
+      if(!q) return escapeHtml(text);
+      const t = text;
+      const idx = t.toLowerCase().indexOf(q.toLowerCase());
+      if(idx === -1) return escapeHtml(t);
+      const a = escapeHtml(t.slice(0, idx));
+      const b = escapeHtml(t.slice(idx, idx + q.length));
+      const c = escapeHtml(t.slice(idx + q.length));
+      return `${a}<mark>${b}</mark>${c}`;
     }
 
     function filteredWords(){
       const q = searchEl.value.trim().toLowerCase();
-      return WORDS
-        .slice()
-        .sort(byWord)
+      return WORDS.slice().sort(byWord)
         .filter(x => activeCategory === "All" ? true : x.c === activeCategory)
         .filter(x => {
           if(!q) return true;
@@ -440,20 +436,7 @@
         });
     }
 
-    function render(){
-      const list = filteredWords();
-
-      countEl.textContent = `${list.length} entr${list.length === 1 ? "y" : "ies"} • Category: ${activeCategory}`;
-
-      // Group by first letter of the WORD (ignoring leading spaces)
-      const groups = new Map();
-      for(const item of list){
-        const first = (item.w.trim()[0] || "#").toUpperCase();
-        if(!groups.has(first)) groups.set(first, []);
-        groups.get(first).push(item);
-      }
-
-      // Build A–Z rail
+    function buildRail(groups){
       railEl.innerHTML = "";
       const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
       for(const L of letters){
@@ -466,13 +449,26 @@
         };
         railEl.appendChild(btn);
       }
+    }
 
-      // Render groups
+    function render(){
+      const q = searchEl.value.trim();
+      const list = filteredWords();
+      countEl.textContent = `${list.length} entr${list.length===1?"y":"ies"} • ${activeCategory}`;
+
+      const groups = new Map();
+      for(const item of list){
+        const first = (item.w.trim()[0] || "#").toUpperCase();
+        if(!groups.has(first)) groups.set(first, []);
+        groups.get(first).push(item);
+      }
+      buildRail(groups);
+
       scrollEl.innerHTML = "";
       if(list.length === 0){
         const empty = document.createElement("div");
         empty.className = "empty";
-        empty.textContent = "No matches. Try a different search or switch category.";
+        empty.textContent = "No matches. Try a different search or category.";
         scrollEl.appendChild(empty);
         return;
       }
@@ -489,26 +485,13 @@
           card.className = "entry";
 
           const left = document.createElement("div");
-          const w = document.createElement("div");
-          w.className = "word";
-          w.textContent = item.w;
-          const meta = document.createElement("div");
-          meta.className = "meta";
-          meta.textContent = item.c;
-          left.appendChild(w);
-          left.appendChild(meta);
+          left.innerHTML = `
+            <div class="word">${highlight(item.w, q)}</div>
+            <div class="cat">${escapeHtml(item.c)}</div>
+          `;
 
           const right = document.createElement("div");
-          const meaning = document.createElement("div");
-          meaning.className = "meaning";
-          meaning.textContent = item.m;
-
-          const tag = document.createElement("div");
-          tag.className = "tag";
-          tag.textContent = `• ${item.c}`;
-
-          right.appendChild(meaning);
-          right.appendChild(tag);
+          right.innerHTML = `<div class="meaning">${highlight(item.m, q)}</div>`;
 
           card.appendChild(left);
           card.appendChild(right);
@@ -517,17 +500,35 @@
       });
     }
 
-    clearBtn.addEventListener("click", () => {
-      searchEl.value = "";
-      searchEl.focus();
+    function init(){
+      categoryEl.innerHTML = "";
+      for(const cat of CATEGORIES){
+        const opt = document.createElement("option");
+        opt.value = cat;
+        opt.textContent = cat;
+        categoryEl.appendChild(opt);
+      }
+      categoryEl.value = "All";
+
+      categoryEl.addEventListener("change", () => {
+        activeCategory = categoryEl.value;
+        render();
+      });
+
+      searchEl.addEventListener("input", render);
+
+      clearBtn.addEventListener("click", () => {
+        searchEl.value = "";
+        categoryEl.value = "All";
+        activeCategory = "All";
+        searchEl.focus();
+        render();
+      });
+
       render();
-    });
+    }
 
-    searchEl.addEventListener("input", render);
-
-    // Init
-    makeChips();
-    render();
+    init();
   </script>
 </body>
 </html>
