@@ -2,899 +2,532 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Status Symbol Dictionary</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Micro Dictionary (2–3 Letter Language)</title>
   <style>
-    :root {
-      --bg: #050713;
-      --bg-elevated: #0d101f;
-      --accent: #4dd4ff;
-      --accent-soft: rgba(77, 212, 255, 0.16);
-      --text: #f5f7ff;
-      --muted: #9aa0c2;
-      --border: #22263b;
-      --radius-lg: 14px;
-      --radius-sm: 8px;
-      --shadow-soft: 0 18px 40px rgba(0, 0, 0, 0.65);
+    :root{
+      --bg: #bfe7ff;          /* baby blue */
+      --ink: #0b0b0b;         /* near-black */
+      --card: rgba(255,255,255,.55);
+      --card2: rgba(255,255,255,.35);
+      --border: rgba(0,0,0,.18);
+      --shadow: 0 10px 30px rgba(0,0,0,.12);
+      --radius: 18px;
     }
 
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
+    * { box-sizing: border-box; }
+    body{
       margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
-        "Segoe UI", sans-serif;
-      background: radial-gradient(circle at top, #101633 0, #050713 52%);
-      color: var(--text);
-      min-height: 100vh;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+    }
+
+    header{
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(10px);
+      background: rgba(191,231,255,.75);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .wrap{
+      max-width: 1050px;
+      margin: 0 auto;
+      padding: 18px 16px 30px;
+    }
+
+    .hero{
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 14px;
+      align-items: end;
+    }
+
+    .titlebox{
+      padding: 16px 18px;
+      border-radius: var(--radius);
+      background: var(--card);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+    }
+    h1{
+      margin: 0 0 6px;
+      font-size: 24px;
+      letter-spacing: .2px;
+    }
+    .sub{
+      margin: 0;
+      opacity: .8;
+      font-size: 14px;
+      line-height: 1.35;
+    }
+
+    .searchbox{
+      padding: 16px 18px;
+      border-radius: var(--radius);
+      background: var(--card);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+    }
+    .searchrow{
       display: flex;
-      align-items: flex-start;
-      justify-content: center;
-      padding: 2.5rem 1rem 3rem;
-    }
-
-    .app {
-      width: 100%;
-      max-width: 880px;
-      background: linear-gradient(145deg, #090c19, #050713);
-      border-radius: 24px;
-      box-shadow: var(--shadow-soft);
-      border: 1px solid rgba(132, 152, 255, 0.15);
-      padding: 1.75rem 1.75rem 2rem;
-    }
-
-    @media (max-width: 640px) {
-      .app {
-        padding: 1.25rem 1.1rem 1.5rem;
-        border-radius: 18px;
-      }
-    }
-
-    .header-bar {
-      display: flex;
+      gap: 10px;
       align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      margin-bottom: 1.25rem;
     }
-
-    .title-group {
-      display: flex;
-      flex-direction: column;
-      gap: 0.1rem;
+    input[type="text"]{
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px 12px;
+      background: rgba(255,255,255,.7);
+      color: var(--ink);
+      outline: none;
+      font-size: 14px;
     }
-
-    h1 {
-      margin: 0;
-      font-size: 1.4rem;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      font-weight: 650;
-    }
-
-    .subtitle {
-      margin: 0;
-      font-size: 0.85rem;
-      color: var(--muted);
-    }
-
-    .pill {
-      padding: 0.2rem 0.7rem;
-      border-radius: 999px;
-      border: 1px solid rgba(132, 152, 255, 0.4);
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 0.11em;
-      color: var(--muted);
-      background: rgba(17, 24, 64, 0.6);
+    .btn{
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.65);
+      color: var(--ink);
+      border-radius: 14px;
+      padding: 10px 12px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: transform .06s ease;
+      user-select: none;
       white-space: nowrap;
     }
+    .btn:active{ transform: scale(.98); }
 
-    .search-row {
-      display: flex;
-      align-items: center;
-      gap: 0.8rem;
-      margin-bottom: 1.4rem;
+    main{
+      padding: 18px 16px 30px;
     }
 
-    .search-input-wrap {
-      flex: 1;
-      position: relative;
+    .layout{
+      max-width: 1050px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 44px;
+      gap: 12px;
+      padding: 0 16px 28px;
     }
 
-    .search-input-wrap input {
-      width: 100%;
-      padding: 0.6rem 0.75rem 0.6rem 2rem;
-      border-radius: 999px;
+    /* Dictionary list container */
+    .list{
+      border-radius: var(--radius);
+      background: var(--card2);
       border: 1px solid var(--border);
-      background: rgba(9, 11, 28, 0.95);
-      color: var(--text);
-      font-size: 0.9rem;
-      outline: none;
-      transition: border-color 0.15s ease, box-shadow 0.15s ease,
-        background 0.15s ease;
-    }
-
-    .search-input-wrap input::placeholder {
-      color: #5d6484;
-    }
-
-    .search-input-wrap input:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 1px rgba(77, 212, 255, 0.45);
-      background: #050713;
-    }
-
-    .search-icon {
-      position: absolute;
-      left: 0.68rem;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 0.9rem;
-      color: #656c8f;
-      pointer-events: none;
-    }
-
-    .tag-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.45rem;
-      font-size: 0.78rem;
-      color: var(--muted);
-      margin-bottom: 0.95rem;
-    }
-
-    .tag-row span {
-      padding: 0.15rem 0.55rem;
-      border-radius: 999px;
-      border: 1px solid rgba(78, 92, 150, 0.9);
-      background: rgba(10, 14, 38, 0.9);
-    }
-
-    .dictionary-panel {
-      margin-top: 0.35rem;
-      border-radius: var(--radius-lg);
-      background: radial-gradient(circle at top left, #151b3f 0, #050713 46%);
-      border: 1px solid rgba(77, 212, 255, 0.12);
-      padding: 1rem 0.9rem 0.8rem;
-      max-height: 440px;
+      box-shadow: var(--shadow);
       overflow: hidden;
-      display: flex;
-      flex-direction: column;
+      min-height: 62vh;
     }
 
-    .dictionary-header {
+    .listhead{
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
       display: flex;
       justify-content: space-between;
-      align-items: baseline;
-      gap: 0.75rem;
-      margin-bottom: 0.35rem;
-      padding: 0 0.25rem;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255,255,255,.35);
     }
 
-    .dictionary-header h2 {
-      margin: 0;
-      font-size: 0.85rem;
-      text-transform: uppercase;
-      letter-spacing: 0.14em;
-      color: #b4bbff;
+    .count{
+      font-size: 13px;
+      opacity: .85;
     }
 
-    .dictionary-header span {
-      font-size: 0.76rem;
-      color: var(--muted);
+    .chiprow{
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
     }
 
-    .dictionary-list {
-      margin: 0.25rem 0 0;
-      padding: 0.1rem 0.25rem 0.4rem;
-      list-style: none;
-      overflow-y: auto;
-      scrollbar-width: thin;
-      scrollbar-color: rgba(113, 128, 255, 0.7) transparent;
-    }
-
-    .dictionary-list::-webkit-scrollbar {
-      width: 6px;
-    }
-    .dictionary-list::-webkit-scrollbar-track {
-      background: transparent;
-    }
-    .dictionary-list::-webkit-scrollbar-thumb {
-      background: linear-gradient(180deg, #6fe2ff, #8f8bff);
+    .chip{
+      font-size: 12px;
+      padding: 6px 10px;
       border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.55);
+      cursor: pointer;
+      user-select: none;
     }
-
-    /* ENTRY LAYOUT – now vertical */
-    .entry {
-      padding: 0.55rem 0.6rem 0.7rem;
-      border-radius: 12px;
-      border: 1px solid rgba(76, 97, 169, 0.7);
-      background: radial-gradient(circle at top left, #151a3c 0, #060817 60%);
-      margin-bottom: 0.45rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.35rem;
-    }
-
-    .entry-main {
-      display: flex;
-      flex-direction: column;
-      gap: 0.15rem;
-      min-width: 0;
-    }
-
-    .entry-term {
-      font-size: 0.9rem;
+    .chip.active{
+      background: rgba(255,255,255,.9);
       font-weight: 600;
     }
 
-    .entry-meta {
-      font-size: 0.72rem;
-      color: var(--muted);
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.45rem;
-      align-items: center;
+    /* Scroll area */
+    .scroll{
+      max-height: 70vh;
+      overflow: auto;
+      padding: 10px 10px 16px;
     }
 
-    .entry-chip {
-      padding: 0.05rem 0.45rem;
+    /* Sticky letter headers */
+    .letter{
+      position: sticky;
+      top: 0;
+      background: rgba(191,231,255,.92);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 6px 10px;
+      margin: 8px 4px 10px;
+      font-weight: 700;
+      letter-spacing: .7px;
+      box-shadow: 0 6px 16px rgba(0,0,0,.08);
+    }
+
+    .entry{
+      display: grid;
+      grid-template-columns: 96px 1fr;
+      gap: 10px;
+      align-items: start;
+      padding: 12px 12px;
+      margin: 8px 4px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.55);
+    }
+    .word{
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: .5px;
+      text-transform: lowercase;
+    }
+    .meta{
+      font-size: 12px;
+      opacity: .75;
+      margin-top: 2px;
+    }
+    .meaning{
+      font-size: 14px;
+      line-height: 1.35;
+    }
+    .tag{
+      display: inline-block;
+      margin-top: 8px;
+      font-size: 11px;
+      padding: 5px 8px;
       border-radius: 999px;
-      border: 1px solid rgba(125, 139, 210, 0.8);
-      text-transform: uppercase;
-      letter-spacing: 0.09em;
-      font-size: 0.64rem;
-      color: #c4c9ff;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.7);
+      opacity: .95;
     }
 
-    .entry-shorthand {
-      font-size: 0.72rem;
-      color: #c1d3ff;
-      opacity: 0.95;
-    }
-
-    .entry-desc {
-      font-size: 0.78rem;
-      color: var(--muted);
-      line-height: 1.25;
-    }
-
-    /* SYMBOL ROW UNDER THE TEXT */
-    .entry-symbol {
-      margin-top: 0.1rem;
+    /* A–Z rail */
+    .rail{
+      position: sticky;
+      top: 90px;
+      align-self: start;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.45);
+      box-shadow: var(--shadow);
+      padding: 8px 6px;
       display: flex;
       flex-direction: column;
-      align-items: flex-start;
-      gap: 0.18rem;
-      max-width: 100%;
+      gap: 4px;
+      max-height: calc(70vh);
+      overflow: auto;
+    }
+    .rail button{
+      border: 1px solid rgba(0,0,0,.12);
+      background: rgba(255,255,255,.65);
+      color: var(--ink);
+      border-radius: 10px;
+      padding: 6px 0;
+      font-size: 11px;
+      cursor: pointer;
+      line-height: 1;
+    }
+    .rail button:disabled{
+      opacity: .35;
+      cursor: not-allowed;
     }
 
-    .symbol-display {
-      font-size: 1.25rem;
-      letter-spacing: 0.08em;
-      padding: 0.28rem 0.65rem;
-      border-radius: 999px;
-      border: 1px solid rgba(126, 255, 255, 0.5);
-      background: radial-gradient(circle at top, #1d2c4b 0, #050713 60%);
-      box-shadow: 0 0 16px rgba(90, 230, 255, 0.35);
-
-      display: inline-block;
-      max-width: 100%;
-      white-space: normal;      /* allow wrapping */
-      word-break: break-all;    /* wrap long combos */
-      text-align: center;
+    .empty{
+      padding: 18px 16px;
+      margin: 10px 4px;
+      border-radius: 16px;
+      border: 1px dashed rgba(0,0,0,.25);
+      background: rgba(255,255,255,.35);
+      font-size: 14px;
     }
 
-    .symbol-label {
-      font-size: 0.7rem;
-      color: var(--muted);
-    }
-
-    .empty-state {
-      padding: 0.7rem 0.4rem 0.3rem;
-      font-size: 0.8rem;
-      color: var(--muted);
-    }
-
-    .footer-note {
-      margin-top: 0.85rem;
-      font-size: 0.72rem;
-      color: #7078a7;
-      text-align: right;
+    @media (max-width: 860px){
+      .hero{ grid-template-columns: 1fr; }
+      .layout{ grid-template-columns: 1fr; }
+      .rail{ display: none; }
+      .entry{ grid-template-columns: 84px 1fr; }
     }
   </style>
 </head>
 <body>
-  <div class="app">
-    <div class="header-bar">
-      <div class="title-group">
-        <h1>Status Symbol Dictionary</h1>
-        <p class="subtitle">
-          A minimal reference for perspective + place + effort blocks.
-        </p>
-      </div>
-      <div class="pill">v1 · text-based</div>
-    </div>
-
-    <div class="search-row">
-      <div class="search-input-wrap">
-        <span class="search-icon">⌕</span>
-        <input
-          id="searchInput"
-          type="text"
-          placeholder="Search by English term, shorthand, or description…"
-          autocomplete="off"
-        />
+  <header>
+    <div class="wrap">
+      <div class="hero">
+        <div class="titlebox">
+          <h1>Micro Dictionary</h1>
+          <p class="sub">
+            2–3 letter language • baby-blue UI • alphabetical + searchable • sticky letter headers.
+          </p>
+        </div>
+        <div class="searchbox">
+          <div class="searchrow">
+            <input id="search" type="text" placeholder="Search word or meaning (e.g., 'go' or 'coffee')…" />
+            <button id="clearBtn" class="btn" title="Clear search">Clear</button>
+          </div>
+        </div>
       </div>
     </div>
+  </header>
 
-    <div class="tag-row">
-      <span>Perspective: U, |U, |U|</span>
-      <span></span>
-      <span></span>
-    </div>
-
-    <section class="dictionary-panel">
-      <div class="dictionary-header">
-        <h2>Entries</h2>
-        <span id="entryCountLabel">0 entries</span>
+  <div class="layout">
+    <section class="list">
+      <div class="listhead">
+        <div class="count" id="count"></div>
+        <div class="chiprow" id="chips"></div>
       </div>
-      <ul id="dictionaryList" class="dictionary-list"></ul>
+      <div class="scroll" id="scroll"></div>
     </section>
 
-    <div class="footer-note">
-      Symbols are recognized, not pronounced · combos are compositional.
-    </div>
+    <aside class="rail" id="rail" aria-label="Jump by letter"></aside>
   </div>
 
   <script>
-    const ENTRIES = [
-      {
-        term: "I (self/speaker)",
-        type: "Perspective",
-        symbol: "U",
-        description:
-          "Unconstrained perspective: the one speaking. Combines with place blocks to form full state"
-      },
-      {
-        term: "you (addressee)",
-        type: "Perspective",
-        symbol: "|U",
-        description:
-          "Direct addressee: the one being spoken to. Partial constraint relative to self."
-      },
-      {
-        term: "everyone else (they)",
-        type: "Perspective",
-        symbol: "|U|",
-        description:
-          "External group or other person: anyone who is not self or direct you."
-      },
-      {
-  "term": "universal greeting (hello/goodbye)",
-  "type": "Interaction marker",
-  "symbol": "𐊧U|U",
-  "description": "A positive-alignment greeting expressing harmonious connection between speaker (U) and addressee (|U). Used when arriving, departing, acknowledging, or blessing someone. Functions as both hello and farewell."
-},
-      {
-        term: "vector/toward",
-        type: "Relation",
-        symbol: "ᐅ",
-        description:
-          "Directional relation indicating orientation, trajectory, or movement toward a state."
-      },
-      {
-        term: "separation/movement away",
-        type: "Relation",
-        symbol: "ᐗ",
-        description:
-          "Directional relation indicating orientation, trajectory, or movement away from a state."
-      },
-      {
-  term: "expression present",
-  type: "Field / interaction state",
-  symbol: "∀ᒤ",
-  description:
-    "Internal content is externally manifest and available in shared space; does not imply intent, medium (speech/text/gesture), reception, or understanding—only that expression exists.",
-},
-      {
-        term: "nourishment/intake",
-        type: "Qualifier",
-        symbol: "ᔭ",
-        description:
-          "Energy intake; sustenance; consuming to maintain function or momentum."
-      },
-      {
-  "term": "uncertainty / curiosity",
-  "type": "Mode",
-  "symbol": "ᐬ",
-  "description":
-    "A state of not knowing; open, undecided, questioning, or curious about what comes next."
-},
-   {
-  term: "vehicle",
-  type: "Basic noun",
-  symbol: "ᐁᓵ",
-  description:
-    "Generic transport / conveyance. Not car/truck/bus—any means of getting from one place to another.",
-},
-      {
-  term: "affirming / positive-state marker",
-  type: "Quality",
-  symbol: "𐊧",
-  description:
-    "Signals alignment, smoothness, or favorable conditions. Not 'good' as a noun or adjective, but a qualitative overlay indicating things are going well, acceptable, harmonious, or beneficial in context."
-},
-{
-  term: "curiosity / inquiry-state",
-  type: "Cognition state",
-  symbol: "∫",
-  description:
-    "Mental movement of seeking, wondering, or wanting to understand; an inner lean toward clarity, not a question itself."
-},
-      {
-        term: "living/vitality",
-        type: "state",
-        symbol: "ᐱ",
-        description:
-          "Biological presence; life-state; active living systems and embodied existence."
-      },
-      {
-  term: "hopeful / upward-leaning",
-  type: "Emotion state",
-  symbol: "ᐱᒩ",
-  description:
-    "Inner tilt toward possibility; quiet optimism and readiness, moving toward light.",
-},
-{
-  term: "grateful / softened",
-  type: "Emotion state",
-  symbol: "ᓛᒊ",
-  description:
-    "Felt appreciation; humbled, softened, and warmed by what has been received.",
-},
-{
-  term: "connected / attuned",
-  type: "Relational state",
-  symbol: "U≶|U",
-  description:
-    "Mutual presence and resonance; being in sync or energetically 'with' one another.",
-},
-{
-  term: "understanding / clarity",
-  type: "Cognition state",
-  symbol: "ᓵᐱ",
-  description:
-    "Insight settling in; something finally makes sense and feels internally aligned.",
-},
-{
-  term: "peaceful / settled",
-  type: "Emotion state",
-  symbol: "ᐰ",
-  description:
-    "Calm, untroubled inner rest; quiet acceptance without numbness.",
-},
-      {
-        term: "obligation/formality",
-        type: "mode",
-        symbol: "ᒝ",
-        description:
-          "Structured obligation; transactional mode; formal systems, duties, or responsibilities."
-      },
-      {
-  term: "planning / intention",
-  type: "Operator",
-  symbol: "→",
-  description:
-    "Mental orientation toward a state; leaning toward, preparing for, or intending a shift without committing to action."
-},
-{
-  term: "vehicle",
-  type: "Basic noun / place-class",
-  symbol: "ᐁᓵ",
-  description:
-    "Any conveyance or transport environment; general vehicle category without specifying type."
-},
+    // --- CANON DATA ---
+    // Keep all canon in one place. Add new words by appending objects.
+    const WORDS = [
+      // Pronouns
+      { w:"go",  m:"I / me",                         c:"Pronoun" },
+      { w:"lo",  m:"you / yours",                    c:"Pronoun" },
+      { w:"po",  m:"he / she / it",                  c:"Pronoun" },
+      { w:"wo",  m:"we / us / ours",                 c:"Pronoun" },
+      { w:"to",  m:"they / them / theirs",           c:"Pronoun" },
 
-{
-  term: "daytime",
-  type: "Temporal state",
-  symbol: "ᓬᐱ",
-  description:
-    "Sun-awake period; daylight hours characterized by visibility and activity."
-},
+      // States / Conditions
+      { w:"ka",  m:"good / okay",                    c:"State" },
+      { w:"na",  m:"bad / not okay",                 c:"State" },
+      { w:"un",  m:"uncertain / not sure",           c:"State" },
 
-{
-  term: "nighttime",
-  type: "Temporal state",
-  symbol: "ᓬᓂᐱ",
-  description:
-    "Sun-asleep period; dark hours characterized by reduced visibility and rest."
-},
+      // Emotions / Physical
+      { w:"hap", m:"happy",                          c:"State" },
+      { w:"nap", m:"tired",                          c:"State" },
+      { w:"ill", m:"sick",                           c:"State" },
+      { w:"hun", m:"hungry",                         c:"State" },
 
-{
-  term: "to see / perceive / encounter",
-  type: "Perceptual action",
-  symbol: "ᑣᑿ",
-  description:
-    "Direct or indirect perception; visual encounter or experiential noticing."
-},
+      // Negation / Responses
+      { w:"nok", m:"no / not",                       c:"Negation" },
+      { w:"ok",  m:"ok / agree",                     c:"Response" },
+      { w:"ya",  m:"yes",                            c:"Response" },
+      { w:"pez", m:"please",                         c:"Response" },
 
-{
-  term: "greeting",
-  type: "Interaction marker",
-  symbol: "𐊧U|U",
-  description:
-    "Positive-alignment greeting exchanged between self and addressee; hello or goodbye."
-},
+      // Questions
+      { w:"qe",  m:"question marker (optional)",     c:"Question" },
+      { w:"wah", m:"why",                            c:"Question" },
+      { w:"kah", m:"how",                            c:"Question" },
+      { w:"lo qe", m:"and you?",                     c:"Question" }, // multi-token form
 
-{
-  term: "past marker",
-  type: "Time marker",
-  symbol: "⌝",
-  description:
-    "Marks an event or state as completed in the past; applied per element."
-},
+      // Core verbs
+      { w:"sta", m:"stay",                           c:"Verb" },
+      { w:"ret", m:"return / go back",               c:"Verb" },
+      { w:"ek",  m:"eat",                            c:"Verb" },
+      { w:"dak", m:"drink",                          c:"Verb" },
+      { w:"dri", m:"drive",                          c:"Verb" },
+      { w:"lep", m:"sleep",                          c:"Verb" },
+      { w:"ome", m:"come",                           c:"Verb" },
+      { w:"et",  m:"get",                            c:"Verb" },
+      { w:"mok", m:"make / do",                      c:"Verb" },
+      // Note: "go" is both pronoun and verb; we already list it as pronoun. If you want it also shown as verb:
+      { w:"go",  m:"go / move (generic)",            c:"Verb" },
 
-{
-  term: "current moment",
-  type: "Time marker",
-  symbol: "⌜",
-  description:
-    "Marks an event or state as occurring in the immediate present moment."
-},
+      // Cognition / ability
+      { w:"wan", m:"want",                           c:"Mind" },
+      { w:"nek", m:"need",                           c:"Mind" },
+      { w:"tig", m:"think",                          c:"Mind" },
+      { w:"can", m:"can / able to",                  c:"Mind" },
+      { w:"ken", m:"know",                           c:"Mind" },
+      { w:"seg", m:"see",                            c:"Mind" },
 
-{
-  term: "future marker",
-  type: "Time marker",
-  symbol: "⌞",
-  description:
-    "Marks an event or state as anticipated or not yet completed."
-},
-{
-  term: "becoming / state change",
-  type: "Operator",
-  symbol: "○",
-  description:
-    "Transition marker indicating a shift in condition or identity; entering, becoming, or taking on a new state."
-},
-{
-  term: "affective contraction / heaviness (often read as sadness)",
-  type: "Emotion state",
-  symbol: "⏙Ю",
-  description:
-    "Affective load settling downward: emotional weight present and contracting. Often read as sadness, grief, or heaviness—not a label, but a condition of inner mass becoming dense or sunk.",
-},
-{
-  term: "affective easing / release (often read as relief)",
-  type: "Emotion state",
-  symbol: "𐊧Ю",
-  description:
-    "Affective load easing into alignment: pressure dissolving and emotional weight releasing. Often read as relief—an after-effect settling in, not excitement or celebration.",
-},
-{
-  term: "again / repeat",
-  type: "Operator",
-  symbol: "↺",
-  description:
-    "Cycle marker indicating recurrence, repetition, or return to a previous state or pattern."
-},
-{
-  term: "youth / young animate",
-  type: "Qualifier",
-  symbol: "ᓛ",
-  description:
-    "Denotes a young animate being: children, teens, or youth-associated qualities of newness, learning, or early-stage growth."
-},
-{
-  term: "adult / mature animate",
-  type: "Qualifier",
-  symbol: "ᓵ",
-  description:
-    "Denotes a mature animate being: adults, elders, or qualities associated with stability, responsibility, or established identity."
-},
-{
-  term: "low effort / tired / worn",
-  type: "State",
-  symbol: "ᓂ",
-  description:
-    "Indicates reduced energy, fatigue, depleted function, or worn condition; applies to people or objects."
-},
-{
-  term: "affectional pull / warm bond",
-  type: "Emotion",
-  symbol: "ᒩᑮ",
-  description:
-    "Emotional warmth directed inward or outward; a felt bond, closeness, or attachment without implying action or speech."
-},
-{
-  "term": "negative / blocked alignment",
-  "type": "Modifier",
-  "symbol": "⟗",
-  "description":
-    "Indicates misalignment, inability, or a blocked state; signals that the intended action or mode cannot proceed."
-},
-{
-  term: "and / parallel idea",
-  type: "Connector",
-  symbol: "•",
-  description:
-    "Links two symbolic clusters without merging them; denotes separate but related states occurring alongside each other."
-},
-{
-  term: "ease / relaxed mode",
-  type: "Mode",
-  symbol: "ᒒ",
-  description:
-    "Unstructured ease; off-duty state; relaxed, unwound, decompressed attention with no pressing obligations or formal demands."
-},
-      {
-        term: "constructed place",
-        type: "Place",
-        symbol: "ᒤᐱᒊ",
-        description:
-          "Solid, built, stationary environment: houses, offices, schools, hospitals, shops, etc."
-      },
-      {
-        term: "moving place",
-        type: "Place",
-        symbol: "ᐯᓇᔐ",
-        description:
-          "Mobile environment: car, bus, train, plane, boat, ride — any place or thing whose definition includes motion."
-      },
-      {
-        term: "open space",
-        type: "Place",
-        symbol: "ᓬᑫᓬ",
-        description:
-          "Open or natural environment: yard, field, park, forest, riverbank, beach, general outside."
-      },
-      {
-        term: "effort / occupied",
-        type: "State",
-        symbol: "ᔐ",
-        description:
-          "Engaged effort: working, studying, focused, under load. Indicates limited availability, not job type."
-      },
-      {
-        term: "I in a constructed place",
-        shorthand: "U + ᒤᐱᒊ",
-        type: "Combined",
-        symbol: "Uᒤᐱᒊ",
-        description:
-          "I (myself) am in a built / solid place such as home, work, or any indoor structure."
-      },
-      {
-        term: "you in a constructed place",
-        shorthand: "|U + ᒤᐱᒊ",
-        type: "Combined",
-        symbol: "|Uᒤᐱᒊ",
-        description:
-          "You (yourself) are in a built / solid place such as home, work, or any indoor structure."
-      },
-      {
-        term: "they in a constructed place",
-        shorthand: "|U| + ᒤᐱᒊ",
-        type: "Combined",
-        symbol: "|U|ᒤᐱᒊ",
-        description:
-          "Others (they/he/she) are in a built / solid place such as home, work, or any indoor structure."
-      },
-      {
-        term: "I outside",
-        shorthand: "U + ᓬᑫᓬ",
-        type: "Combined",
-        symbol: "Uᓬᑫᓬ",
-        description:
-          "I (myself) am outside or in an open / natural space."
-      },
-      {
-        term: "You outside",
-        shorthand: "|U + ᓬᑫᓬ",
-        type: "Combined",
-        symbol: "|Uᓬᑫᓬ",
-        description:
-          "You (yourself) are outside or in an open / natural space."
-      },
-      {
-        term: "they outside",
-        shorthand: "|U| + ᓬᑫᓬ",
-        type: "Combined",
-        symbol: "|U|ᓬᑫᓬ",
-        description:
-          "Others (they/he/she) are outside or in an open / natural space."
-      },
-      {
-        term: "I outside working",
-        shorthand: "U + ᓬᑫᓬᔐ",
-        type: "Combined",
-        symbol: "Uᓬᑫᓬᔐ",
-        description:
-          "I (myself) am outside and engaged in effort: field work, construction, practice, outdoor tasks."
-      },
-      {
-        term: "you outside working",
-        shorthand: "|U + ᓬᑫᓬᔐ",
-        type: "Combined",
-        symbol: "|Uᓬᑫᓬᔐ",
-        description:
-          "You (yourself) are outside and engaged in effort: field work, construction, practice, outdoor tasks."
-      },
-      {
-        term: "they outside working",
-        shorthand: "|U| + ᓬᑫᓬᔐ",
-        type: "Combined",
-        symbol: "|U|ᓬᑫᓬᔐ",
-        description:
-          "Others (they/he/she) are outside and engaged in effort: field work, construction, practice, outdoor tasks."
-      },
-      {
-        term: "I in motion",
-        shorthand: "U + ᐯᓇᔐ",
-        type: "Combined",
-        symbol: "Uᐯᓇᔐ",
-        description:
-          "I (myself) am in a moving place such as a car, bus, plane, train, or similar."
-      },
-      {
-        term: "you in motion",
-        shorthand: "|U + ᐯᓇᔐ",
-        type: "Combined",
-        symbol: "|Uᐯᓇᔐ",
-        description:
-          "You (yourself) are in a moving place such as a car, bus, plane, train, or similar."
-      },
-      {
-        term: "they in motion",
-        shorthand: "|U| + ᐯᓇᔐ",
-        type: "Combined",
-        symbol: "|U|ᐯᓇᔐ",
-        description:
-          "Others (they/he/she) are in a moving place such as a car, bus, plane, train, or similar."
-      },
-      {
-        term: "I am in motion toward a constructed place of nourishment",
-        shorthand: "U + ᐯᓇᔐ + ᐅ + ᒤᐱᒊ + ᔭ",
-        type: "Combined",
-        symbol: "Uᐯᓇᔐᐅᒤᐱᒊᔭ",
-        description:
-          "I (myself) am going to a restaurant to eat."
-      },
-      {
-        term: "I am moving away from a constructed place of obligation",
-        shorthand: "U + ᐯᓇᔐ + ᐗ + ᒤᐱᒊ + ᒝ",
-        type: "Combined",
-        symbol: "Uᐯᓇᔐᐗᒤᐱᒊᒝ",
-        description:
-          "I (myself) am leaving work."
-      },
-      {
-  term: "they in a relaxed state at home",
-  shorthand: "|U| + ᒒ + ᒤᐱᒊ + ᐱ",
-  type: "Combined",
-  symbol: "|U|ᒒᒤᐱᒊᐱ",
-  description:
-    "They/he/she are in a relaxed, eased state within a constructed living space (home)."
-},
-{
-  term: "I am planning to go outside again",
-  shorthand: "U + → + ᐅ + ᓬᑫᓬ + ↺",
-  type: "Combined",
-  symbol: "U→ᐅᓬᑫᓬ↺",
-  description:
-    "I (myself) intend to go toward an open outdoor space again."
-},
-{
-  "term": "I am at home and unsure",
-  "type": "Combined",
-  "shorthand": "U + ᒤᐱᒊᐱ + ᐬ",
-  "symbol": "Uᒤᐱᒊᐱᐬ",
-  "description":
-    "I (myself) am at home and in an uncertain or undecided state."
-}
+      // People
+      { w:"kid", m:"child",                          c:"People" },
+      { w:"man", m:"person (any gender)",            c:"People" },
+      { w:"fen", m:"friend",                         c:"People" },
+
+      // Nouns
+      { w:"cof", m:"coffee",                         c:"Noun" },
+      { w:"hak", m:"home",                           c:"Noun" },
+      { w:"bed", m:"bed",                            c:"Noun" },
+
+      // Location / direction
+      { w:"heg", m:"here",                           c:"Place" },
+      { w:"the", m:"there",                          c:"Place" },
+      { w:"at",  m:"at / located at",                c:"Place" },
+      { w:"ze",  m:"to / toward",                    c:"Place" },
+      { w:"awa", m:"away",                           c:"Place" },
+      { w:"bak", m:"back",                           c:"Place" },
+
+      // Time + daily life
+      { w:"now", m:"now",                            c:"Time" },
+      { w:"tod", m:"today",                          c:"Time" },
+      { w:"yer", m:"yesterday",                      c:"Time" },
+      { w:"tom", m:"tomorrow",                       c:"Time" },
+      { w:"lat", m:"later",                          c:"Time" },
+      { w:"aft", m:"after",                          c:"Time" },
+      { w:"tim", m:"time",                           c:"Time" },
+
+      { w:"wor", m:"work",                           c:"Daily" },
+      { w:"pay", m:"money",                          c:"Daily" },
+
+      // Connectors
+      { w:"and", m:"and",                            c:"Connector" },
+      { w:"but", m:"but",                            c:"Connector" },
+      { w:"cau", m:"because",                        c:"Connector" },
+      { w:"aso", m:"also",                           c:"Connector" },
+      { w:"if",  m:"if",                             c:"Connector" },
+      { w:"thu", m:"then",                           c:"Connector" },
+      { w:"or",  m:"or",                             c:"Connector" },
+      { w:"mab", m:"maybe",                          c:"Connector" },
     ];
 
-    const listEl = document.getElementById("dictionaryList");
-    const searchInput = document.getElementById("searchInput");
-    const entryCountLabel = document.getElementById("entryCountLabel");
+    // --- UTIL ---
+    const byWord = (a,b) => a.w.localeCompare(b.w, "en", { sensitivity:"base" });
 
-    function normalize(str) {
-      return (str || "").toLowerCase().trim();
+    // Deduplicate (since "go" appears twice: pronoun + verb). Keep both, but display nicely.
+    // We'll keep duplicates as-is because category differs — it's useful.
+
+    const CATEGORIES = [
+      "All","Pronoun","State","Negation","Response","Question","Verb","Mind","People","Noun","Place","Time","Daily","Connector"
+    ];
+
+    const searchEl = document.getElementById("search");
+    const clearBtn = document.getElementById("clearBtn");
+    const scrollEl = document.getElementById("scroll");
+    const countEl = document.getElementById("count");
+    const chipsEl = document.getElementById("chips");
+    const railEl = document.getElementById("rail");
+
+    let activeCategory = "All";
+
+    function makeChips(){
+      chipsEl.innerHTML = "";
+      for(const cat of CATEGORIES){
+        const d = document.createElement("div");
+        d.className = "chip" + (cat === activeCategory ? " active" : "");
+        d.textContent = cat;
+        d.onclick = () => {
+          activeCategory = cat;
+          document.querySelectorAll(".chip").forEach(x => x.classList.remove("active"));
+          d.classList.add("active");
+          render();
+        };
+        chipsEl.appendChild(d);
+      }
     }
 
-    function renderEntries(filterText = "") {
-      const query = normalize(filterText);
-
-      const ordered = ENTRIES;
-
-      const filtered = ordered.filter((entry) => {
-        if (!query) return true;
-        const haystack = (
-          (entry.term || "") +
-          " " +
-          (entry.shorthand || "") +
-          " " +
-          (entry.description || "")
-        ).toLowerCase();
-        return haystack.includes(query);
-      });
-
-      listEl.innerHTML = "";
-
-      if (!filtered.length) {
-        const empty = document.createElement("div");
-        empty.className = "empty-state";
-        empty.textContent = "No entries match that search yet.";
-        listEl.appendChild(empty);
-      } else {
-        filtered.forEach((entry) => {
-          const li = document.createElement("li");
-          li.className = "entry";
-
-          const main = document.createElement("div");
-          main.className = "entry-main";
-
-          const term = document.createElement("div");
-          term.className = "entry-term";
-          term.textContent = entry.term;
-
-          const meta = document.createElement("div");
-          meta.className = "entry-meta";
-
-          const chip = document.createElement("span");
-          chip.className = "entry-chip";
-          chip.textContent = entry.type;
-
-          meta.appendChild(chip);
-
-          if (entry.shorthand) {
-            const shorthand = document.createElement("span");
-            shorthand.className = "entry-shorthand";
-            shorthand.textContent = `shorthand: ${entry.shorthand}`;
-            meta.appendChild(shorthand);
-          }
-
-          const desc = document.createElement("div");
-          desc.className = "entry-desc";
-          desc.textContent = entry.description;
-
-          main.appendChild(term);
-          main.appendChild(meta);
-          main.appendChild(desc);
-
-          const symbolBox = document.createElement("div");
-          symbolBox.className = "entry-symbol";
-
-          const symbol = document.createElement("div");
-          symbol.className = "symbol-display";
-          symbol.textContent = entry.symbol;
-
-          const label = document.createElement("div");
-          label.className = "symbol-label";
-          label.textContent = "symbol";
-
-          symbolBox.appendChild(symbol);
-          symbolBox.appendChild(label);
-
-          li.appendChild(main);
-          li.appendChild(symbolBox);
-
-          listEl.appendChild(li);
+    function filteredWords(){
+      const q = searchEl.value.trim().toLowerCase();
+      return WORDS
+        .slice()
+        .sort(byWord)
+        .filter(x => activeCategory === "All" ? true : x.c === activeCategory)
+        .filter(x => {
+          if(!q) return true;
+          return x.w.toLowerCase().includes(q) || x.m.toLowerCase().includes(q) || x.c.toLowerCase().includes(q);
         });
+    }
+
+    function render(){
+      const list = filteredWords();
+
+      countEl.textContent = `${list.length} entr${list.length === 1 ? "y" : "ies"} • Category: ${activeCategory}`;
+
+      // Group by first letter of the WORD (ignoring leading spaces)
+      const groups = new Map();
+      for(const item of list){
+        const first = (item.w.trim()[0] || "#").toUpperCase();
+        if(!groups.has(first)) groups.set(first, []);
+        groups.get(first).push(item);
       }
 
-      entryCountLabel.textContent =
-        filtered.length === 1 ? "1 entry" : `${filtered.length} entries`;
+      // Build A–Z rail
+      railEl.innerHTML = "";
+      const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+      for(const L of letters){
+        const btn = document.createElement("button");
+        btn.textContent = L;
+        btn.disabled = !groups.has(L);
+        btn.onclick = () => {
+          const target = document.getElementById("letter-" + L);
+          if(target) target.scrollIntoView({ behavior:"smooth", block:"start" });
+        };
+        railEl.appendChild(btn);
+      }
+
+      // Render groups
+      scrollEl.innerHTML = "";
+      if(list.length === 0){
+        const empty = document.createElement("div");
+        empty.className = "empty";
+        empty.textContent = "No matches. Try a different search or switch category.";
+        scrollEl.appendChild(empty);
+        return;
+      }
+
+      [...groups.keys()].sort().forEach(letter => {
+        const hdr = document.createElement("div");
+        hdr.className = "letter";
+        hdr.id = "letter-" + letter;
+        hdr.textContent = letter;
+        scrollEl.appendChild(hdr);
+
+        for(const item of groups.get(letter)){
+          const card = document.createElement("div");
+          card.className = "entry";
+
+          const left = document.createElement("div");
+          const w = document.createElement("div");
+          w.className = "word";
+          w.textContent = item.w;
+          const meta = document.createElement("div");
+          meta.className = "meta";
+          meta.textContent = item.c;
+          left.appendChild(w);
+          left.appendChild(meta);
+
+          const right = document.createElement("div");
+          const meaning = document.createElement("div");
+          meaning.className = "meaning";
+          meaning.textContent = item.m;
+
+          const tag = document.createElement("div");
+          tag.className = "tag";
+          tag.textContent = `• ${item.c}`;
+
+          right.appendChild(meaning);
+          right.appendChild(tag);
+
+          card.appendChild(left);
+          card.appendChild(right);
+          scrollEl.appendChild(card);
+        }
+      });
     }
 
-    renderEntries();
-
-    searchInput.addEventListener("input", (e) => {
-      renderEntries(e.target.value);
+    clearBtn.addEventListener("click", () => {
+      searchEl.value = "";
+      searchEl.focus();
+      render();
     });
+
+    searchEl.addEventListener("input", render);
+
+    // Init
+    makeChips();
+    render();
   </script>
 </body>
 </html>
