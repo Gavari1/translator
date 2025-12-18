@@ -197,7 +197,7 @@ button:hover { background: #f3f4f6; }
     padding: var(--pad);
   }
 
-  /* Slightly tighter visuals so it still looks crisp */
+  /* Slightly tighter visuals so it stil looks crisp */
   .square { border-radius: 14px; }
   .piece  { font-size: 1.05rem; }
   .piece.black, .piece.white { padding: 8px 10px; }
