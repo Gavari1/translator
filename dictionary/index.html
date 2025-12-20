@@ -4,14 +4,70 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Fliplish Translator</title>
+
   <style>
-    body { font-family: system-ui, -apple-system, Segoe UI, sans-serif; margin: 24px; line-height: 1.35; }
-    textarea { width: 100%; min-height: 140px; padding: 12px; font-size: 16px; }
-    .row { display: flex; gap: 12px; margin: 12px 0; flex-wrap: wrap; }
-    button, select { padding: 10px 12px; font-size: 15px; }
-    .hint { opacity: 0.75; font-size: 13px; margin-top: 8px; }
+    :root {
+      /* Night-light taupe */
+      --bg: #d8cbb8;
+      --panel: rgba(255,255,255,0.78);
+      --border: rgba(17, 24, 39, 0.18);
+      --text: #111827;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, sans-serif;
+      margin: 24px;
+      line-height: 1.35;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 140px;
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--panel);
+      color: var(--text);
+      outline: none;
+    }
+
+    textarea:focus {
+      border-color: rgba(17, 24, 39, 0.35);
+    }
+
+    .row {
+      display: flex;
+      gap: 12px;
+      margin: 12px 0;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    button, select {
+      padding: 10px 12px;
+      font-size: 15px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.65);
+      color: var(--text);
+      cursor: pointer;
+    }
+
+    button:active {
+      transform: translateY(1px);
+    }
+
+    .hint {
+      opacity: 0.75;
+      font-size: 13px;
+      margin-top: 8px;
+    }
   </style>
 </head>
+
 <body>
   <h1>Fliplish Translator</h1>
 
@@ -21,6 +77,7 @@
   <div class="row">
     <button id="encode">Encode →</button>
     <button id="decode">← Decode</button>
+    <button id="clear">Clear</button>
 
     <label>
       Suffix:
@@ -43,8 +100,9 @@
   <textarea id="output" readonly></textarea>
 
   <div class="hint">
-    Rule: move first letter to end + add suffix (encode). Remove suffix + move last letter to front (decode).
-    Punctuation and spacing are preserved.
+    Rule: move first letter to end + add suffix (encode).
+    Remove suffix + move last letter to front (decode).
+    Apostrophes inside words are preserved.
   </div>
 
 <script>
@@ -52,44 +110,17 @@
   const outputEl = document.getElementById("output");
   const suffixEl = document.getElementById("suffix");
   const capsEl = document.getElementById("caps");
+  const clearBtn = document.getElementById("clear");
 
-  function isLetter(ch) {
-    return /[A-Za-z]/.test(ch);
-  }
-
-  // Split into tokens while preserving spaces and punctuation:
-  // - words: sequences containing letters/apostrophes
-  // - everything else: single characters (punctuation, spaces, emojis, etc.)
+  // Tokenizer that keeps internal apostrophes together
   function tokenize(text) {
-    const tokens = [];
-    let i = 0;
-
-    while (i < text.length) {
-      const ch = text[i];
-
-      // Word token: starts with a letter
-      if (isLetter(ch)) {
-        let j = i + 1;
-        while (j < text.length) {
-          const c = text[j];
-          // Keep letters and internal apostrophes (don't, you're)
-          if (isLetter(c) || c === "'") j++;
-          else break;
-        }
-        tokens.push(text.slice(i, j));
-        i = j;
-      } else {
-        // Non-word token: keep exact char (space/punct)
-        tokens.push(ch);
-        i++;
-      }
-    }
-    return tokens;
+    return text.match(/[A-Za-z]+(?:['’][A-Za-z]+)*|[^A-Za-z]+/g) || [];
   }
 
   function detectCapsStyle(word) {
     if (word.toUpperCase() === word) return "upper";
-    if (word[0].toUpperCase() === word[0] && word.slice(1).toLowerCase() === word.slice(1)) return "title";
+    if (word[0].toUpperCase() === word[0] &&
+        word.slice(1).toLowerCase() === word.slice(1)) return "title";
     return "lower";
   }
 
@@ -100,64 +131,46 @@
   }
 
   function encodeWord(word, suffix, preserveCaps) {
-    // Keep original caps style if requested
     const style = preserveCaps ? detectCapsStyle(word) : "lower";
-
-    // Work in lowercase for transformation
     const w = word.toLowerCase();
-    if (w.length === 0) return word;
-
-    // If it's just "'" or weird edge, return as-is
-    if (!/[a-z]/.test(w)) return word;
-
-    // Move first letter to end, add suffix
-    const first = w[0];
-    const rest = w.slice(1);
-    const coded = rest + first + suffix;
-
+    if (w.length < 1) return word;
+    const coded = w.slice(1) + w[0] + suffix;
     return preserveCaps ? applyCapsStyle(coded, style) : coded;
   }
 
   function decodeWord(word, suffix, preserveCaps) {
     const style = preserveCaps ? detectCapsStyle(word) : "lower";
     const w = word.toLowerCase();
-
-    // Only decode if it ends with the chosen suffix and has enough length
     if (!w.endsWith(suffix) || w.length < 2) return word;
-
-    const core = w.slice(0, -1); // remove suffix
-    const last = core[core.length - 1];
-    const rest = core.slice(0, -1);
-    const plain = last + rest;
-
+    const core = w.slice(0, -1);
+    const plain = core.slice(-1) + core.slice(0, -1);
     return preserveCaps ? applyCapsStyle(plain, style) : plain;
   }
 
   function transform(text, mode) {
     const suffix = suffixEl.value;
     const preserveCaps = capsEl.value === "yes";
-    const tokens = tokenize(text);
-
-    const out = tokens.map(tok => {
-      // Only transform word tokens (they start with a letter)
-      if (tok.length && isLetter(tok[0])) {
+    return tokenize(text).map(tok => {
+      if (/^[A-Za-z]/.test(tok)) {
         return mode === "encode"
           ? encodeWord(tok, suffix, preserveCaps)
           : decodeWord(tok, suffix, preserveCaps);
       }
-      return tok; // punctuation/space/etc.
-    });
-
-    return out.join("");
+      return tok;
+    }).join("");
   }
 
-  document.getElementById("encode").addEventListener("click", () => {
+  document.getElementById("encode").onclick = () =>
     outputEl.value = transform(inputEl.value, "encode");
-  });
 
-  document.getElementById("decode").addEventListener("click", () => {
+  document.getElementById("decode").onclick = () =>
     outputEl.value = transform(inputEl.value, "decode");
-  });
+
+  clearBtn.onclick = () => {
+    inputEl.value = "";
+    outputEl.value = "";
+    inputEl.focus();
+  };
 </script>
 </body>
 </html>
