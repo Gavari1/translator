@@ -81,10 +81,8 @@
 
     <label>
       Suffix:
-      <select id="suffix">
-        <option value="a" selected>a</option>
-        <option value="o">o</option>
-      </select>
+      <!-- Now populated dynamically (a–z) -->
+      <select id="suffix"></select>
     </label>
 
     <label>
@@ -112,7 +110,21 @@
   const capsEl = document.getElementById("caps");
   const clearBtn = document.getElementById("clear");
 
-  // Tokenizer that keeps internal apostrophes together
+  // Populate suffix dropdown with a–z (default = a)
+  (function initSuffixOptions() {
+    const letters = "abcdefghijklmnopqrstuvwxyz";
+    const defaultSuffix = "a";
+    suffixEl.innerHTML = "";
+    for (const ch of letters) {
+      const opt = document.createElement("option");
+      opt.value = ch;
+      opt.textContent = ch;
+      if (ch === defaultSuffix) opt.selected = true;
+      suffixEl.appendChild(opt);
+    }
+  })();
+
+  // Tokenizer that keeps internal apostrophes together (supports ' and ’)
   function tokenize(text) {
     return text.match(/[A-Za-z]+(?:['’][A-Za-z]+)*|[^A-Za-z]+/g) || [];
   }
