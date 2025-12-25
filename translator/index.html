@@ -3,255 +3,193 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Random Latin Ending Generator</title>
+  <title>English → Chaos Latin Translator</title>
 
   <style>
     :root{
-      --bg1:#0b132b;
-      --bg2:#111827;
-      --card: rgba(255,255,255,.92);
-      --card2: rgba(255,255,255,.08);
+      --bg:#0b132b;
+      --card:#ffffff;
       --text:#0f172a;
-      --muted: rgba(255,255,255,.75);
-      --btn:#38bdf8;
-      --btnText:#031019;
-      --border: rgba(255,255,255,.14);
+      --muted:#64748b;
+      --border:rgba(15,23,42,.15);
+      --accent:#38bdf8;
     }
-
     *{box-sizing:border-box}
     body{
-      margin:0; padding:22px;
-      font-family: system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-      background: radial-gradient(1100px 650px at 20% 0%, #1d4ed8 0%, transparent 55%),
-                  radial-gradient(950px 600px at 80% 30%, #06b6d4 0%, transparent 55%),
-                  linear-gradient(180deg,var(--bg1),var(--bg2));
-      color:#e5e7eb;
-    }
-    .wrap{max-width:900px;margin:0 auto}
-    h1{margin:0 0 8px;font-size:28px;letter-spacing:.2px}
-    p{margin:0 0 14px;color:var(--muted);line-height:1.35}
-
-    .panel{
-      background: var(--card2);
-      border:1px solid var(--border);
-      border-radius:18px;
-      padding:14px;
-      box-shadow: 0 18px 50px rgba(0,0,0,.35);
-      backdrop-filter: blur(10px);
-    }
-
-    .card{
-      background: var(--card);
-      border-radius:16px;
-      padding:14px;
-      margin-top:12px;
+      margin:0;
+      padding:24px;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+      background:linear-gradient(180deg,var(--bg),#111827);
       color:var(--text);
     }
+    .wrap{max-width:960px;margin:0 auto}
+    header{color:#fff;margin-bottom:16px}
+    header h1{margin:0 0 6px;font-size:22px;font-weight:800}
+    header p{margin:0;color:rgba(255,255,255,.75);font-size:14px}
 
-    label{
-      display:block;
-      font-size:12px;
-      opacity:.85;
-      margin-bottom:6px;
+    .card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:14px;
+      box-shadow:0 18px 45px rgba(0,0,0,.18);
     }
 
+    label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
     textarea{
       width:100%;
-      min-height:150px;
-      padding:14px;
-      border-radius:14px;
-      border:1px solid rgba(15,23,42,.12);
-      font-size:16px;
-      line-height:1.45;
-      outline:none;
+      min-height:200px;
       resize:vertical;
+      padding:12px;
+      border-radius:12px;
+      border:1px solid var(--border);
+      outline:none;
+      font-size:14px;
+      line-height:1.45;
     }
     textarea:focus{
-      border-color: rgba(56,189,248,.75);
-      box-shadow: 0 0 0 4px rgba(56,189,248,.22);
+      border-color:rgba(56,189,248,.65);
+      box-shadow:0 0 0 3px rgba(56,189,248,.22);
     }
 
     .controls{
       display:flex;
       gap:10px;
-      flex-wrap:wrap;
-      align-items:center;
       margin-top:10px;
+      flex-wrap:wrap;
     }
 
     button{
       appearance:none;
-      border:none;
-      background: var(--btn);
-      color: var(--btnText);
-      font-weight:800;
-      padding:11px 16px;
-      border-radius:14px;
+      border:1px solid var(--border);
+      background:#fff;
+      padding:9px 12px;
+      border-radius:12px;
+      font-weight:700;
       cursor:pointer;
-      font-size:14px;
-      box-shadow: 0 10px 26px rgba(56,189,248,.22);
-    }
-    button:hover{opacity:.92}
-    button.secondary{
-      background: rgba(255,255,255,.14);
-      color:#fff;
-      border:1px solid rgba(255,255,255,.18);
-      box-shadow:none;
-    }
-
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:8px 10px;
-      border-radius:999px;
-      background: rgba(255,255,255,.10);
-      border:1px solid rgba(255,255,255,.14);
-      color:#fff;
       font-size:13px;
     }
-    .pill input{transform:translateY(1px)}
-
-    .hint{
-      margin-top:10px;
-      color: rgba(255,255,255,.72);
-      font-size:12px;
-      line-height:1.35;
+    button:hover{
+      border-color:rgba(56,189,248,.75);
+      box-shadow:0 0 0 3px rgba(56,189,248,.18);
     }
   </style>
 </head>
 
 <body>
-  <div class="wrap">
-    <h1>Random Latin Ending Generator</h1>
-    <p>Cleaner chaos: keep “glue words” normal, mutate the juicy words.</p>
+<div class="wrap">
+  <header>
+    <h1>Chaos Latin Translator</h1>
+    <p>English words + pseudo-Latin endings. No grammar. Pure chaos.</p>
+  </header>
 
-    <div class="panel">
-      <div class="pill">
-        <input id="keepGlue" type="checkbox" checked />
-        <label for="keepGlue" style="margin:0">Keep function words normal</label>
-      </div>
-      <div class="pill">
-        <input id="preserveCaps" type="checkbox" checked />
-        <label for="preserveCaps" style="margin:0">Preserve capitalization</label>
-      </div>
+  <div class="card">
+    <label for="input">Input</label>
+    <textarea id="input" placeholder="Type here..."></textarea>
 
-      <div class="card">
-        <label for="input">English input</label>
-        <textarea id="input" placeholder="Type here... e.g. The man went to church and then had lunch."></textarea>
-
-        <div class="controls">
-          <button id="mutate" type="button">Mutate</button>
-          <button id="copy" type="button" class="secondary">Copy output</button>
-          <button id="clear" type="button" class="secondary">Clear</button>
-        </div>
-      </div>
-
-      <div class="card">
-        <label for="output">Output</label>
-        <textarea id="output" readonly placeholder="Output appears here..."></textarea>
-      </div>
-
-      <div class="hint">
-        Endings used: <b>us um a ere is tus bilis ibus idus ivus</b>.
-        Function words are things like <b>the, to, and, then, had, is</b> etc.
-      </div>
+    <div class="controls">
+      <button id="copyBtn">Copy output</button>
+      <button id="clearBtn">Clear</button>
     </div>
   </div>
 
-<script>
-  const ENDINGS = ["us","um","a","ere","is","tus","bilis","ibus","idus","ivus"];
+  <div class="card" style="margin-top:12px">
+    <label for="output">Output</label>
+    <textarea id="output" readonly></textarea>
+  </div>
+</div>
 
-  // “Glue words” (keep these unchanged so sentences still read clean)
-  const GLUE_WORDS = new Set([
-    "the","a","an","and","or","but","so","to","of","in","on","at","for","from","with","by","as",
-    "then","than","when","while","because","if","though","although","until","before","after",
-    "is","am","are","was","were","be","been","being","do","does","did","have","has","had",
-    "i","you","he","she","it","we","they","me","him","her","us","them","my","your","his","their","our",
-    "this","that","these","those"
+<script>
+  const NEVER_CHANGE = new Set(["the","a","an","and"]);
+
+  const PRONOUNS = new Set([
+    "i","me","we","us","you","they","them","he","him","she","her","it","yall","y’all","youall"
   ]);
 
-  const inputEl = document.getElementById("input");
-  const outputEl = document.getElementById("output");
-  const mutateBtn = document.getElementById("mutate");
-  const copyBtn = document.getElementById("copy");
-  const clearBtn = document.getElementById("clear");
-  const keepGlueEl = document.getElementById("keepGlue");
-  const preserveCapsEl = document.getElementById("preserveCaps");
+  const POSSESSIVES = new Set([
+    "my","mine","your","yours","his","hers","their","theirs","our","ours","its"
+  ]);
 
-  function isLetter(ch){ return /^[A-Za-z]$/.test(ch); }
+  const FUNCTION_WORDS = new Set([
+    "with","for","because","cause","of","if","then","but","so"
+  ]);
 
-  function randEnding(){
-    return ENDINGS[Math.floor(Math.random() * ENDINGS.length)];
+  const RANDOM_ENDINGS = ["ere","ibus","orum","um","us"];
+
+  function randomEnding(){
+    return RANDOM_ENDINGS[Math.floor(Math.random() * RANDOM_ENDINGS.length)];
   }
 
-  function styleLike(original, mutated){
-    if (!preserveCapsEl.checked) return mutated;
-
-    const allCaps = original.length > 1 && original === original.toUpperCase();
-    const titleCase = /^[A-Z][a-z]+$/.test(original);
-
-    if (allCaps) return mutated.toUpperCase();
-    if (titleCase) return mutated[0].toUpperCase() + mutated.slice(1);
-    return mutated;
+  function isLetter(ch){
+    return /^[A-Za-z]$/.test(ch);
   }
 
-  // Avoid ugly double-vowel collisions like "a" + "a" or "idea" + "a"
-  // Super simple: if word already ends with a vowel and ending starts with vowel, prefer a consonant-start ending.
-  function pickEndingFor(wordLower){
-    const endsVowel = /[aeiou]$/.test(wordLower);
-    if (!endsVowel) return randEnding();
-
-    const consonantStart = ENDINGS.filter(e => !/^[aeiou]/.test(e));
-    return consonantStart[Math.floor(Math.random() * consonantStart.length)];
+  function preserveCase(original, transformed){
+    if (original === original.toUpperCase()) return transformed.toUpperCase();
+    if (/^[A-Z][a-z]+$/.test(original))
+      return transformed.charAt(0).toUpperCase() + transformed.slice(1);
+    return transformed;
   }
 
-  function mutateWord(word){
-    const lower = word.toLowerCase();
+  function translateWord(word){
+    const low = word.toLowerCase();
 
-    if (keepGlueEl.checked && GLUE_WORDS.has(lower)) return word;
+    if (NEVER_CHANGE.has(low)) return word;
 
-    const ending = pickEndingFor(lower);
-    const mutated = word + ending;
-    return styleLike(word, mutated);
+    if (low === "to" || low === "too")
+      return preserveCase(word, word + "um");
+
+    if (PRONOUNS.has(low))
+      return preserveCase(word, word + "orum");
+
+    if (POSSESSIVES.has(low))
+      return preserveCase(word, word + "um");
+
+    if (FUNCTION_WORDS.has(low))
+      return preserveCase(word, word + "us");
+
+    return preserveCase(word, word + randomEnding());
   }
 
-  function mutateText(text){
-    let i = 0, out = "";
+  function translateText(text){
+    let out = "";
+    let i = 0;
+
     while (i < text.length){
-      if (isLetter(text[i])){
+      const ch = text[i];
+
+      if (isLetter(ch)){
         let j = i;
         while (j < text.length && isLetter(text[j])) j++;
         const word = text.slice(i, j);
-        out += mutateWord(word);
+        out += translateWord(word);
         i = j;
       } else {
-        out += text[i];
+        out += ch;
         i++;
       }
     }
     return out;
   }
 
-  mutateBtn.addEventListener("click", () => {
-    outputEl.value = mutateText(inputEl.value);
+  const inputEl = document.getElementById("input");
+  const outputEl = document.getElementById("output");
+
+  inputEl.addEventListener("input", () => {
+    outputEl.value = translateText(inputEl.value);
   });
 
-  copyBtn.addEventListener("click", async () => {
+  document.getElementById("copyBtn").onclick = async () => {
     try{
       await navigator.clipboard.writeText(outputEl.value);
-      copyBtn.textContent = "Copied!";
-      setTimeout(()=>copyBtn.textContent="Copy output", 900);
-    } catch(e){
-      alert("Copy failed (clipboard permission). You can manually select + copy.");
-    }
-  });
+    }catch{}
+  };
 
-  clearBtn.addEventListener("click", () => {
+  document.getElementById("clearBtn").onclick = () => {
     inputEl.value = "";
     outputEl.value = "";
     inputEl.focus();
-  });
+  };
 </script>
 </body>
 </html>
