@@ -63,8 +63,8 @@
     <header>
       <h1>English → Fake Latin Translator</h1>
       <p>
-        Words in the dictionary swap directly (e.g. <b>is → est</b>). Anything not found gets a rotating suffix:
-        <b>-us</b>, <b>-um</b>, <b>-orum</b>.
+        Words in the dictionary swap directly (e.g. <b>is → est</b>). Anything not found gets a suffix
+        based on the <b>last letter</b> of the word.
       </p>
     </header>
 
@@ -84,7 +84,8 @@
 
         <div class="small">
           Edit mappings inside <code>DICT</code> in the script.<br/>
-          Current: <code>is→est</code>, <code>i→ego</code>, <code>am→sunt</code>, <code>you→tu</code>.
+          Any mapped word overrides suffix rules (ex: <code>house → domus</code>).<br/>
+          Set a value to <code>""</code> to delete a word cleanly (ex: <code>"the": ""</code>).
         </div>
       </div>
 
@@ -93,7 +94,8 @@
         <textarea id="output" readonly placeholder="Output appears here..."></textarea>
 
         <div class="small">
-          Suffix cycle (unknown words only): <code>-us → -um → -orum → (repeat)</code>
+          Unknown suffix rule: based on last letter (a→orum, b→us, c→um, …).<br/>
+          Note: your list included <code>l = lorum</code> (kept as-is).
         </div>
       </div>
     </div>
@@ -107,27 +109,58 @@
       "i": "ego",
       "am": "sunt",
       "you": "tu",
+
+      // examples you already had
       "the": "",
       "a": "",
+      "an": "",
       "and": "et",
-      "in": "inum", 
+      "in": "inum",
       "on": "onum",
-      "with": "cum", 
-      "at": "atus", 
+      "with": "cum",
+      "at": "atus",
       "to": "ad",
-      "you": "tu", 
-      "we": "nos", 
-      "god": "deus", 
-      "child": "puer", 
+
+      "we": "nos",
+      "god": "deus",
+      "child": "puer",
       "house": "domus",
-      "brother": "frater", 
+      "brother": "frater",
       "kids": "liberi"
-      // "the": ""   // example: removes "the" cleanly (no extra spaces)
     });
 
-    // Unknown-word suffix cycle (revolves per unknown word encountered)
-    const SUFFIXES = ["us", "um", "orum"];
-    let suffixIndex = 0;
+    // === Last-letter suffix map for UNKNOWN words only ===
+    // Your spec:
+    // a=orum b=us c=um d=orum e=us f=us g=um h=orum i=um j=us k=orum l=lorum
+    // m=us n=us o=um p=um q=orum r=um s=us t=us u=orum v=um w=us x=orum y=um z=us
+    const LAST_LETTER_SUFFIX = Object.freeze({
+      "a":"orum",
+      "b":"us",
+      "c":"um",
+      "d":"orum",
+      "e":"us",
+      "f":"us",
+      "g":"um",
+      "h":"orum",
+      "i":"um",
+      "j":"us",
+      "k":"orum",
+      "l":"lorum",  // keeping your "lorum" exactly
+      "m":"us",
+      "n":"us",
+      "o":"um",
+      "p":"um",
+      "q":"orum",
+      "r":"um",
+      "s":"us",
+      "t":"us",
+      "u":"orum",
+      "v":"um",
+      "w":"us",
+      "x":"orum",
+      "y":"um",
+      "z":"us"
+    });
 
     const inputEl = document.getElementById("input");
     const outputEl = document.getElementById("output");
@@ -146,6 +179,17 @@
       return translatedWord;
     }
 
+    function lastLetterSuffixFor(wordLower){
+      // Find last alphabetic char (handles weird inputs, though words should be letters only)
+      for (let i = wordLower.length - 1; i >= 0; i--){
+        const ch = wordLower[i];
+        if (ch >= "a" && ch <= "z"){
+          return LAST_LETTER_SUFFIX[ch] || "us"; // fallback if somehow missing
+        }
+      }
+      return "us";
+    }
+
     function translateWord(word){
       if (!word) return word;
 
@@ -158,18 +202,13 @@
         return applyCaps(word, mapped);
       }
 
-      // unknown → add revolving suffix
-      const suffix = SUFFIXES[suffixIndex % SUFFIXES.length];
-      suffixIndex++;
-
+      // unknown → suffix determined by last letter
+      const suffix = lastLetterSuffixFor(low);
       const t = word + suffix;
       return applyCaps(word, t);
     }
 
     function translateText(text){
-      // reset suffix cycle per run so output is stable while typing
-      suffixIndex = 0;
-
       // split on word boundaries but keep punctuation/spaces as tokens
       const tokens = text.split(/\b/);
       const out = [];
@@ -177,9 +216,7 @@
       for (const token of tokens){
         if (/^[A-Za-z]+$/.test(token)){
           const translated = translateWord(token);
-
-          // if translation is empty, skip it (prevents phantom spaces)
-          if (translated) out.push(translated);
+          if (translated) out.push(translated); // skip deletions cleanly
         } else {
           out.push(token); // punctuation/spaces preserved
         }
