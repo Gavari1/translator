@@ -101,18 +101,13 @@
 
   <script>
     // === Add words here (lowercase keys) ===
+    // Set a value to "" to remove a word entirely (e.g., "the": "")
     const DICT = Object.freeze({
       "is": "est",
       "i": "ego",
       "am": "sunt",
-      "you": "tu",
-      "a": "",
-      "an": "",
-      "the": "",
-      "with": "cum", 
-      "to": "ad",
-      "at": "at",
-      "and": "et"
+      "you": "tu"
+      // "the": ""   // example: removes "the" cleanly (no extra spaces)
     });
 
     // Unknown-word suffix cycle (revolves per unknown word encountered)
@@ -124,8 +119,6 @@
     const preserveCapsEl = document.getElementById("preserveCaps");
     const copyBtn = document.getElementById("copyBtn");
     const clearBtn = document.getElementById("clearBtn");
-
-    function isLetter(ch){ return /^[A-Za-z]$/.test(ch); }
 
     function applyCaps(originalWord, translatedWord){
       if (!preserveCapsEl.checked) return translatedWord;
@@ -143,9 +136,11 @@
 
       const low = word.toLowerCase();
 
-      // direct dictionary swap
+      // direct dictionary swap (including "" to delete)
       if (Object.prototype.hasOwnProperty.call(DICT, low)){
-        return applyCaps(word, DICT[low]);
+        const mapped = DICT[low];
+        if (mapped === "") return ""; // delete word completely
+        return applyCaps(word, mapped);
       }
 
       // unknown → add revolving suffix
@@ -160,24 +155,23 @@
       // reset suffix cycle per run so output is stable while typing
       suffixIndex = 0;
 
-      let i = 0;
-      let out = "";
+      // split on word boundaries but keep punctuation/spaces as tokens
+      const tokens = text.split(/\b/);
+      const out = [];
 
-      while (i < text.length){
-        const ch = text[i];
+      for (const token of tokens){
+        if (/^[A-Za-z]+$/.test(token)){
+          const translated = translateWord(token);
 
-        if (isLetter(ch)){
-          let j = i;
-          while (j < text.length && isLetter(text[j])) j++;
-          const word = text.slice(i, j);
-          out += translateWord(word);
-          i = j;
+          // if translation is empty, skip it (prevents phantom spaces)
+          if (translated) out.push(translated);
         } else {
-          out += ch; // keep spaces/punctuation
-          i++;
+          out.push(token); // punctuation/spaces preserved
         }
       }
-      return out;
+
+      // collapse any accidental extra whitespace and trim ends
+      return out.join("").replace(/\s+/g, " ").trim();
     }
 
     function update(){
