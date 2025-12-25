@@ -88,7 +88,7 @@
     <h1>Pattern Latin Translator</h1>
     <p>
       Fixed suffix loop:
-      <code>-us, -um, -us, -ibus, -um, -us, -ere</code> (repeats).
+      <code>-us, -um, -us, -orum, -um, -us, -ibus</code> (repeats).
       <b>The / A / An / And</b> never get endings. Everything else advances the pattern.
     </p>
   </header>
@@ -119,7 +119,7 @@
 
 <script>
   const NO_ENDINGS = new Set(["the","a","an","and","he","is","to","too",]);
-  const SUFFIX_PATTERN = ["us","um","us","ibus","um","us","ere"];
+  const SUFFIX_PATTERN = ["us","um","us","orum","um","us","ibus"];
 
   const inputEl = document.getElementById("input");
   const outputEl = document.getElementById("output");
