@@ -6,98 +6,251 @@
   <title>Random Latin Ending Generator</title>
 
   <style>
+    :root{
+      --bg1:#0b132b;
+      --bg2:#111827;
+      --card: rgba(255,255,255,.92);
+      --card2: rgba(255,255,255,.08);
+      --text:#0f172a;
+      --muted: rgba(255,255,255,.75);
+      --btn:#38bdf8;
+      --btnText:#031019;
+      --border: rgba(255,255,255,.14);
+    }
+
+    *{box-sizing:border-box}
     body{
-      margin:0;
-      padding:24px;
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-      background:#0f172a;
+      margin:0; padding:22px;
+      font-family: system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+      background: radial-gradient(1100px 650px at 20% 0%, #1d4ed8 0%, transparent 55%),
+                  radial-gradient(950px 600px at 80% 30%, #06b6d4 0%, transparent 55%),
+                  linear-gradient(180deg,var(--bg1),var(--bg2));
       color:#e5e7eb;
     }
-    .wrap{max-width:900px;margin:auto}
-    h1{margin-bottom:8px}
-    p{opacity:.8;margin-top:0}
+    .wrap{max-width:900px;margin:0 auto}
+    h1{margin:0 0 8px;font-size:28px;letter-spacing:.2px}
+    p{margin:0 0 14px;color:var(--muted);line-height:1.35}
+
+    .panel{
+      background: var(--card2);
+      border:1px solid var(--border);
+      border-radius:18px;
+      padding:14px;
+      box-shadow: 0 18px 50px rgba(0,0,0,.35);
+      backdrop-filter: blur(10px);
+    }
+
+    .card{
+      background: var(--card);
+      border-radius:16px;
+      padding:14px;
+      margin-top:12px;
+      color:var(--text);
+    }
+
+    label{
+      display:block;
+      font-size:12px;
+      opacity:.85;
+      margin-bottom:6px;
+    }
+
     textarea{
       width:100%;
-      min-height:200px;
+      min-height:150px;
       padding:14px;
-      border-radius:10px;
-      border:none;
-      font-size:15px;
-      line-height:1.5;
-      margin-bottom:12px;
+      border-radius:14px;
+      border:1px solid rgba(15,23,42,.12);
+      font-size:16px;
+      line-height:1.45;
+      outline:none;
+      resize:vertical;
     }
-    textarea:focus{outline:none}
+    textarea:focus{
+      border-color: rgba(56,189,248,.75);
+      box-shadow: 0 0 0 4px rgba(56,189,248,.22);
+    }
+
+    .controls{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      margin-top:10px;
+    }
+
     button{
-      padding:10px 16px;
-      border-radius:10px;
+      appearance:none;
       border:none;
-      font-weight:700;
+      background: var(--btn);
+      color: var(--btnText);
+      font-weight:800;
+      padding:11px 16px;
+      border-radius:14px;
       cursor:pointer;
-      background:#38bdf8;
-      color:#020617;
+      font-size:14px;
+      box-shadow: 0 10px 26px rgba(56,189,248,.22);
     }
-    button:hover{opacity:.9}
+    button:hover{opacity:.92}
+    button.secondary{
+      background: rgba(255,255,255,.14);
+      color:#fff;
+      border:1px solid rgba(255,255,255,.18);
+      box-shadow:none;
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 10px;
+      border-radius:999px;
+      background: rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.14);
+      color:#fff;
+      font-size:13px;
+    }
+    .pill input{transform:translateY(1px)}
+
+    .hint{
+      margin-top:10px;
+      color: rgba(255,255,255,.72);
+      font-size:12px;
+      line-height:1.35;
+    }
   </style>
 </head>
 
 <body>
   <div class="wrap">
     <h1>Random Latin Ending Generator</h1>
-    <p>Every word gets a random Latin-ish ending. No rules. No logic. Just vibes.</p>
+    <p>Cleaner chaos: keep “glue words” normal, mutate the juicy words.</p>
 
-    <textarea id="input" placeholder="Type English here..."></textarea>
-    <button id="go">Mutate</button>
+    <div class="panel">
+      <div class="pill">
+        <input id="keepGlue" type="checkbox" checked />
+        <label for="keepGlue" style="margin:0">Keep function words normal</label>
+      </div>
+      <div class="pill">
+        <input id="preserveCaps" type="checkbox" checked />
+        <label for="preserveCaps" style="margin:0">Preserve capitalization</label>
+      </div>
 
-    <textarea id="output" readonly placeholder="Output appears here..."></textarea>
+      <div class="card">
+        <label for="input">English input</label>
+        <textarea id="input" placeholder="Type here... e.g. The man went to church and then had lunch."></textarea>
+
+        <div class="controls">
+          <button id="mutate" type="button">Mutate</button>
+          <button id="copy" type="button" class="secondary">Copy output</button>
+          <button id="clear" type="button" class="secondary">Clear</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <label for="output">Output</label>
+        <textarea id="output" readonly placeholder="Output appears here..."></textarea>
+      </div>
+
+      <div class="hint">
+        Endings used: <b>us um a ere is tus bilis ibus idus ivus</b>.
+        Function words are things like <b>the, to, and, then, had, is</b> etc.
+      </div>
+    </div>
   </div>
 
 <script>
-  const endings = [
-    "us",
-    "um",
-    "a",
-    "ere",
-    "is",
-    "tus",
-    "bilis",
-    "ibus",
-    "idus",
-    "ivus"
-  ];
+  const ENDINGS = ["us","um","a","ere","is","tus","bilis","ibus","idus","ivus"];
 
-  const input = document.getElementById("input");
-  const output = document.getElementById("output");
-  const button = document.getElementById("go");
+  // “Glue words” (keep these unchanged so sentences still read clean)
+  const GLUE_WORDS = new Set([
+    "the","a","an","and","or","but","so","to","of","in","on","at","for","from","with","by","as",
+    "then","than","when","while","because","if","though","although","until","before","after",
+    "is","am","are","was","were","be","been","being","do","does","did","have","has","had",
+    "i","you","he","she","it","we","they","me","him","her","us","them","my","your","his","their","our",
+    "this","that","these","those"
+  ]);
 
-  function isLetter(ch){
-    return /^[A-Za-z]$/.test(ch);
+  const inputEl = document.getElementById("input");
+  const outputEl = document.getElementById("output");
+  const mutateBtn = document.getElementById("mutate");
+  const copyBtn = document.getElementById("copy");
+  const clearBtn = document.getElementById("clear");
+  const keepGlueEl = document.getElementById("keepGlue");
+  const preserveCapsEl = document.getElementById("preserveCaps");
+
+  function isLetter(ch){ return /^[A-Za-z]$/.test(ch); }
+
+  function randEnding(){
+    return ENDINGS[Math.floor(Math.random() * ENDINGS.length)];
   }
 
-  function randomEnding(){
-    return endings[Math.floor(Math.random() * endings.length)];
+  function styleLike(original, mutated){
+    if (!preserveCapsEl.checked) return mutated;
+
+    const allCaps = original.length > 1 && original === original.toUpperCase();
+    const titleCase = /^[A-Z][a-z]+$/.test(original);
+
+    if (allCaps) return mutated.toUpperCase();
+    if (titleCase) return mutated[0].toUpperCase() + mutated.slice(1);
+    return mutated;
   }
 
-  function transform(text){
-    let i = 0;
-    let result = "";
+  // Avoid ugly double-vowel collisions like "a" + "a" or "idea" + "a"
+  // Super simple: if word already ends with a vowel and ending starts with vowel, prefer a consonant-start ending.
+  function pickEndingFor(wordLower){
+    const endsVowel = /[aeiou]$/.test(wordLower);
+    if (!endsVowel) return randEnding();
 
-    while(i < text.length){
-      if(isLetter(text[i])){
+    const consonantStart = ENDINGS.filter(e => !/^[aeiou]/.test(e));
+    return consonantStart[Math.floor(Math.random() * consonantStart.length)];
+  }
+
+  function mutateWord(word){
+    const lower = word.toLowerCase();
+
+    if (keepGlueEl.checked && GLUE_WORDS.has(lower)) return word;
+
+    const ending = pickEndingFor(lower);
+    const mutated = word + ending;
+    return styleLike(word, mutated);
+  }
+
+  function mutateText(text){
+    let i = 0, out = "";
+    while (i < text.length){
+      if (isLetter(text[i])){
         let j = i;
-        while(j < text.length && isLetter(text[j])) j++;
+        while (j < text.length && isLetter(text[j])) j++;
         const word = text.slice(i, j);
-        result += word + randomEnding();
+        out += mutateWord(word);
         i = j;
       } else {
-        result += text[i];
+        out += text[i];
         i++;
       }
     }
-    return result;
+    return out;
   }
 
-  button.addEventListener("click", () => {
-    output.value = transform(input.value);
+  mutateBtn.addEventListener("click", () => {
+    outputEl.value = mutateText(inputEl.value);
+  });
+
+  copyBtn.addEventListener("click", async () => {
+    try{
+      await navigator.clipboard.writeText(outputEl.value);
+      copyBtn.textContent = "Copied!";
+      setTimeout(()=>copyBtn.textContent="Copy output", 900);
+    } catch(e){
+      alert("Copy failed (clipboard permission). You can manually select + copy.");
+    }
+  });
+
+  clearBtn.addEventListener("click", () => {
+    inputEl.value = "";
+    outputEl.value = "";
+    inputEl.focus();
   });
 </script>
 </body>
