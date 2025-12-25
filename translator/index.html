@@ -3,21 +3,15 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>English → Chaos Latin Translator</title>
-
+  <title>Pattern Latin Translator</title>
   <style>
     :root{
-      --bg:#0b132b;
-      --card:#ffffff;
-      --text:#0f172a;
-      --muted:#64748b;
-      --border:rgba(15,23,42,.15);
-      --accent:#38bdf8;
+      --bg:#0b132b; --card:#ffffff; --text:#0f172a; --muted:#64748b;
+      --border:rgba(15,23,42,.15); --accent:#38bdf8;
     }
     *{box-sizing:border-box}
     body{
-      margin:0;
-      padding:24px;
+      margin:0; padding:24px;
       font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
       background:linear-gradient(180deg,var(--bg),#111827);
       color:var(--text);
@@ -25,7 +19,7 @@
     .wrap{max-width:960px;margin:0 auto}
     header{color:#fff;margin-bottom:16px}
     header h1{margin:0 0 6px;font-size:22px;font-weight:800}
-    header p{margin:0;color:rgba(255,255,255,.75);font-size:14px}
+    header p{margin:0;color:rgba(255,255,255,.75);font-size:14px;line-height:1.4}
 
     .card{
       background:var(--card);
@@ -34,7 +28,6 @@
       padding:14px;
       box-shadow:0 18px 45px rgba(0,0,0,.18);
     }
-
     label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
     textarea{
       width:100%;
@@ -51,14 +44,13 @@
       border-color:rgba(56,189,248,.65);
       box-shadow:0 0 0 3px rgba(56,189,248,.22);
     }
-
     .controls{
       display:flex;
       gap:10px;
       margin-top:10px;
       flex-wrap:wrap;
+      align-items:center;
     }
-
     button{
       appearance:none;
       border:1px solid var(--border);
@@ -73,14 +65,32 @@
       border-color:rgba(56,189,248,.75);
       box-shadow:0 0 0 3px rgba(56,189,248,.18);
     }
+    .pill{
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      padding:8px 10px;
+      border:1px solid var(--border);
+      border-radius:999px;
+      background:#fff;
+      font-size:13px;
+      color:var(--text);
+    }
+    .pill input{transform:translateY(1px)}
+    .small{font-size:12px;color:var(--muted);margin-top:10px;line-height:1.35}
+    code{background:rgba(15,23,42,.06);padding:2px 6px;border-radius:8px}
   </style>
 </head>
 
 <body>
 <div class="wrap">
   <header>
-    <h1>Chaos Latin Translator</h1>
-    <p>English words + pseudo-Latin endings. No grammar. Pure chaos.</p>
+    <h1>Pattern Latin Translator</h1>
+    <p>
+      Fixed suffix loop:
+      <code>-us, -um, -us, -ibus, -um, -us, -ere</code> (repeats).
+      <b>The / A / An / And</b> never get endings. Everything else advances the pattern.
+    </p>
   </header>
 
   <div class="card">
@@ -88,72 +98,54 @@
     <textarea id="input" placeholder="Type here..."></textarea>
 
     <div class="controls">
-      <button id="copyBtn">Copy output</button>
-      <button id="clearBtn">Clear</button>
+      <span class="pill">
+        <input type="checkbox" id="preserveCaps" checked>
+        <label for="preserveCaps" style="margin:0;color:inherit;">Preserve capitalization</label>
+      </span>
+      <button id="copyBtn" type="button">Copy output</button>
+      <button id="clearBtn" type="button">Clear</button>
+    </div>
+
+    <div class="small">
+      Pattern advances only when a word gets a suffix. Words kept plain (<b>the/a/an/and</b>) do <i>not</i> consume a slot.
     </div>
   </div>
 
   <div class="card" style="margin-top:12px">
     <label for="output">Output</label>
-    <textarea id="output" readonly></textarea>
+    <textarea id="output" readonly placeholder="Output appears here..."></textarea>
   </div>
 </div>
 
 <script>
-  const NEVER_CHANGE = new Set(["the","a","an","and"]);
+  const NO_ENDINGS = new Set(["the","a","an","and"]);
+  const SUFFIX_PATTERN = ["us","um","us","ibus","um","us","ere"];
 
-  const PRONOUNS = new Set([
-    "i","me","we","us","you","they","them","he","him","she","her","it","yall","y’all","youall"
-  ]);
-
-  const POSSESSIVES = new Set([
-    "my","mine","your","yours","his","hers","their","theirs","our","ours","its"
-  ]);
-
-  const FUNCTION_WORDS = new Set([
-    "with","for","because","cause","of","if","then","but","so"
-  ]);
-
-  const RANDOM_ENDINGS = ["ere","ibus","orum","um","us"];
-
-  function randomEnding(){
-    return RANDOM_ENDINGS[Math.floor(Math.random() * RANDOM_ENDINGS.length)];
-  }
+  const inputEl = document.getElementById("input");
+  const outputEl = document.getElementById("output");
+  const preserveCapsEl = document.getElementById("preserveCaps");
+  const copyBtn = document.getElementById("copyBtn");
+  const clearBtn = document.getElementById("clearBtn");
 
   function isLetter(ch){
     return /^[A-Za-z]$/.test(ch);
   }
 
   function preserveCase(original, transformed){
-    if (original === original.toUpperCase()) return transformed.toUpperCase();
-    if (/^[A-Z][a-z]+$/.test(original))
-      return transformed.charAt(0).toUpperCase() + transformed.slice(1);
+    if (!preserveCapsEl.checked) return transformed;
+
+    const isAllCaps = original.length > 1 && original === original.toUpperCase();
+    const isTitle = /^[A-Z][a-z]+$/.test(original);
+
+    if (isAllCaps) return transformed.toUpperCase();
+    if (isTitle) return transformed.charAt(0).toUpperCase() + transformed.slice(1);
     return transformed;
-  }
-
-  function translateWord(word){
-    const low = word.toLowerCase();
-
-    if (NEVER_CHANGE.has(low)) return word;
-
-    if (low === "to" || low === "too")
-      return preserveCase(word, word + "um");
-
-    if (PRONOUNS.has(low))
-      return preserveCase(word, word + "orum");
-
-    if (POSSESSIVES.has(low))
-      return preserveCase(word, word + "um");
-
-    if (FUNCTION_WORDS.has(low))
-      return preserveCase(word, word + "us");
-
-    return preserveCase(word, word + randomEnding());
   }
 
   function translateText(text){
     let out = "";
     let i = 0;
+    let k = 0; // pattern index
 
     while (i < text.length){
       const ch = text[i];
@@ -161,8 +153,18 @@
       if (isLetter(ch)){
         let j = i;
         while (j < text.length && isLetter(text[j])) j++;
+
         const word = text.slice(i, j);
-        out += translateWord(word);
+        const low = word.toLowerCase();
+
+        if (NO_ENDINGS.has(low)){
+          out += word; // no suffix, does NOT advance pattern
+        } else {
+          const suf = SUFFIX_PATTERN[k % SUFFIX_PATTERN.length];
+          k++;
+          out += preserveCase(word, word + suf);
+        }
+
         i = j;
       } else {
         out += ch;
@@ -172,24 +174,30 @@
     return out;
   }
 
-  const inputEl = document.getElementById("input");
-  const outputEl = document.getElementById("output");
-
-  inputEl.addEventListener("input", () => {
+  function update(){
     outputEl.value = translateText(inputEl.value);
-  });
+  }
 
-  document.getElementById("copyBtn").onclick = async () => {
+  inputEl.addEventListener("input", update);
+  preserveCapsEl.addEventListener("change", update);
+
+  copyBtn.addEventListener("click", async () => {
     try{
       await navigator.clipboard.writeText(outputEl.value);
-    }catch{}
-  };
+      copyBtn.textContent = "Copied!";
+      setTimeout(()=>copyBtn.textContent="Copy output", 900);
+    }catch(e){
+      alert("Copy failed (clipboard permission). You can manually select + copy.");
+    }
+  });
 
-  document.getElementById("clearBtn").onclick = () => {
+  clearBtn.addEventListener("click", () => {
     inputEl.value = "";
     outputEl.value = "";
     inputEl.focus();
-  };
+  });
+
+  update();
 </script>
 </body>
 </html>
