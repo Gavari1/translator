@@ -226,7 +226,7 @@
             <textarea id="inText" placeholder="Type a sentence...">The football is in the store.</textarea>
           </div>
           <div>
-            <div class="label" style="margin:0 0 6px;">OUTPUT (Braided)</div>
+            <div class="label" style="margin:0 0 6px;">OUTPUT (Braided + Vowel Swap)</div>
             <textarea id="outText" readonly placeholder="Output appears here..."></textarea>
           </div>
         </div>
@@ -290,14 +290,20 @@
       let i = 0;
       let j = words.length - 1;
       while (i <= j) {
-        if (i === j) {
-          out.push(words[i]);
-        } else {
-          out.push(words[i], words[j]);
-        }
+        if (i === j) out.push(words[i]);
+        else out.push(words[i], words[j]);
         i++; j--;
       }
       return out;
+    }
+
+    // A↔O, E↔I, U↔Y (and Y↔U), preserving capitalization
+    function vowelSwap(s) {
+      const map = {
+        a:"o", o:"a", e:"i", i:"e", u:"y", y:"u",
+        A:"O", O:"A", E:"I", I:"E", U:"Y", Y:"U"
+      };
+      return s.replace(/[aeiouyAEIOUY]/g, ch => map[ch] || ch);
     }
 
     function translateNow() {
@@ -314,7 +320,9 @@
         braided[braided.length - 1] = braided[braided.length - 1] + finalPunct;
       }
 
-      outText.value = braided.join(" ");
+      // Apply vowel swap AFTER braiding + punctuation placement
+      const out = vowelSwap(braided.join(" "));
+      outText.value = out;
 
       countWords.textContent = `WORDS: ${words.length}`;
       countChars.textContent = `CHARS: ${src.length}`;
