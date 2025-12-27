@@ -3,254 +3,398 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>English → Fake Latin Translator</title>
+  <title>Nordic-ish Translator 96™</title>
   <style>
     :root{
-      --bg:#0b132b; --card:#ffffff; --text:#0f172a; --muted:#64748b;
-      --border:rgba(15,23,42,.15); --accent:#38bdf8;
+      --bg:#9aa3ad;
+      --panel:#c9ced6;
+      --bezel:#6f7780;
+      --screen:#bfe3b9;
+      --screen2:#a8d8a2;
+      --text:#0b1a0b;
+      --btn:#e6e6e6;
+      --btn2:#d2d2d2;
+      --red:#c93b3b;
+      --blue:#2e5bd6;
+      --yellow:#d6b12e;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      --sans: system-ui, -apple-system, Segoe UI, sans-serif;
     }
-    *{box-sizing:border-box}
+    *{ box-sizing:border-box; }
     body{
-      margin:0; padding:24px;
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-      background:linear-gradient(180deg,var(--bg),#111827);
-      color:var(--text);
+      margin:0;
+      background: linear-gradient(180deg, #7f8892, var(--bg));
+      font-family: var(--sans);
+      color:#111;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      min-height:100vh;
+      padding:16px;
     }
-    .wrap{max-width:980px;margin:0 auto}
-    header{color:#fff;margin-bottom:16px}
-    header h1{margin:0 0 6px;font-size:22px;font-weight:800;letter-spacing:.3px}
-    header p{margin:0;color:rgba(255,255,255,.75);font-size:14px;line-height:1.4}
-    .grid{display:grid;grid-template-columns:1fr;gap:12px}
-    @media(min-width:900px){.grid{grid-template-columns:1fr 1fr}}
-    .card{
-      background:var(--card); border:1px solid var(--border);
-      border-radius:14px; padding:14px;
-      box-shadow:0 18px 45px rgba(0,0,0,.18);
+    .device{
+      width:min(900px, 100%);
+      background: linear-gradient(180deg, var(--panel), #b7bcc5);
+      border: 4px solid var(--bezel);
+      border-radius: 16px;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.35), inset 0 2px 0 rgba(255,255,255,0.6);
+      padding:16px;
+      overflow:hidden;
     }
-    label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:8px 10px 14px;
+      flex-wrap:wrap;
+    }
+    .brand{
+      font-weight:800;
+      letter-spacing:0.5px;
+      text-transform:uppercase;
+      font-size:14px;
+      color:#222;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      white-space:nowrap;
+    }
+    .brand .dot{
+      width:10px;height:10px;border-radius:50%;
+      background: radial-gradient(circle at 30% 30%, #fff, #bbb);
+      border:1px solid rgba(0,0,0,0.25);
+    }
+    .model{
+      font-family: var(--mono);
+      font-size:12px;
+      color:#333;
+      opacity:0.9;
+    }
+    .screen-wrap{
+      background: #3a3f47;
+      border-radius: 12px;
+      padding:12px;
+      border: 3px solid #1f232a;
+      box-shadow: inset 0 2px 0 rgba(255,255,255,0.08);
+    }
+    .screen{
+      background: linear-gradient(180deg, var(--screen), var(--screen2));
+      border-radius: 8px;
+      border: 2px solid rgba(0,0,0,0.45);
+      box-shadow: inset 0 0 0 2px rgba(255,255,255,0.2);
+      padding:10px;
+      color: var(--text);
+      font-family: var(--mono);
+      max-width:100%;
+      overflow:hidden;
+    }
+    .row{
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      justify-content:space-between;
+      margin-bottom:10px;
+      flex-wrap:wrap;
+    }
+    .label{
+      font-size:12px;
+      opacity:0.85;
+      flex: 1 1 auto;
+      min-width: 240px;
+    }
     textarea{
-      width:100%; min-height:220px; resize:vertical;
-      padding:12px; border-radius:12px; border:1px solid var(--border);
-      outline:none; font-size:14px; line-height:1.45;
+      width:100%;
+      max-width:100%;
+      min-width:0;
+      display:block;
+      min-height:120px;
+      resize:vertical;
+      border-radius: 6px;
+      border: 1px solid rgba(0,0,0,0.45);
+      background: rgba(255,255,255,0.55);
+      color:#0c1a0c;
+      font-family: var(--mono);
+      font-size: 14px;
+      padding:10px;
+      outline:none;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.35);
+      overflow-wrap:anywhere;
+      word-break:break-word;
     }
-    textarea:focus{
-      border-color:rgba(56,189,248,.65);
-      box-shadow:0 0 0 3px rgba(56,189,248,.22);
+    .split{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:10px;
+      width:100%;
+      margin:0 auto;
+      max-width:100%;
     }
-    .controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:10px}
+    .split > div{ min-width:0; max-width:100%; }
+    @media (min-width: 820px){
+      .split{ grid-template-columns: 1fr 1fr; }
+      textarea{ min-height: 180px; }
+    }
+    .controls{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      padding:12px 2px 4px;
+      align-items:center;
+      justify-content:space-between;
+    }
+    .btns{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      align-items:center;
+    }
     button{
-      appearance:none; border:1px solid var(--border); background:#fff;
-      padding:9px 12px; border-radius:12px; font-weight:700;
-      cursor:pointer; font-size:13px;
+      border: 2px solid rgba(0,0,0,0.45);
+      background: linear-gradient(180deg, var(--btn), var(--btn2));
+      border-radius: 10px;
+      padding:10px 14px;
+      font-weight:700;
+      font-family: var(--sans);
+      cursor:pointer;
+      box-shadow: 0 4px 0 rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.6);
+      transition: transform 0.03s ease-in-out;
     }
-    button:hover{
-      border-color:rgba(56,189,248,.75);
-      box-shadow:0 0 0 3px rgba(56,189,248,.18);
+    button:active{
+      transform: translateY(2px);
+      box-shadow: 0 2px 0 rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.6);
+    }
+    .btn-blue{
+      background: linear-gradient(180deg, #6ea0ff, var(--blue));
+      color:#071026;
+    }
+    .btn-yellow{
+      background: linear-gradient(180deg, #ffe08a, var(--yellow));
+      color:#241b05;
+    }
+    .btn-red{
+      background: linear-gradient(180deg, #ff6d6d, var(--red));
+      color:#140000;
+    }
+    .status{
+      font-family: var(--mono);
+      font-size:12px;
+      opacity:0.9;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:flex-end;
     }
     .pill{
-      display:inline-flex; gap:8px; align-items:center;
-      padding:8px 10px; border:1px solid var(--border);
-      border-radius:999px; background:#fff; font-size:13px;
+      border:1px solid rgba(0,0,0,0.35);
+      background: rgba(255,255,255,0.35);
+      padding:6px 10px;
+      border-radius:999px;
+      white-space:nowrap;
     }
-    .pill input{transform:translateY(1px)}
-    .small{font-size:12px;color:var(--muted);margin-top:10px;line-height:1.35}
-    code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace}
+    .foot{
+      margin-top:10px;
+      font-size:12px;
+      opacity:0.85;
+      color:#222;
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .foot code{ font-family: var(--mono); }
   </style>
 </head>
-
 <body>
-  <div class="wrap">
-    <header>
-      <h1>English → Fake Latin Translator</h1>
-      <p>
-        Words in the dictionary swap directly (e.g. <b>is → est</b>). Anything not found gets a suffix
-        based on the <b>last letter</b> of the word.
-      </p>
-    </header>
+  <div class="device" role="application" aria-label="Nordic-ish Translator 96">
+    <div class="topbar">
+      <div class="brand"><span class="dot" aria-hidden="true"></span> NORDIC-ISH TRANSLATOR 96™</div>
+      <div class="model">MODEL: NXT-1996 • “CHEAP BUT LOUD” EDITION</div>
+    </div>
 
-    <div class="grid">
-      <div class="card">
-        <label for="input">English input</label>
-        <textarea id="input" placeholder="Type here... e.g. I am happy and you are tired."></textarea>
+    <div class="screen-wrap">
+      <div class="screen">
+        <div class="row">
+          <div class="label">
+            RULES: vowel swap (A↔O, E↔I, U↔Y). Then: “the NOUN” → NOUN+en. Plural: “the cars” → “the corens”.
+          </div>
+        </div>
+
+        <div class="split">
+          <div>
+            <textarea id="inText" placeholder="Type text...">The car is in the street. The cars are in the store.</textarea>
+          </div>
+          <div>
+            <div class="label" style="margin:0 0 6px;">OUTPUT</div>
+            <textarea id="outText" readonly placeholder="Output appears here..."></textarea>
+          </div>
+        </div>
 
         <div class="controls">
-          <div class="pill">
-            <input type="checkbox" id="preserveCaps" checked>
-            <label for="preserveCaps" style="margin:0;color:inherit;">Preserve capitalization</label>
+          <div class="btns">
+            <button class="btn-blue" id="btnTranslate">TRANSLATE</button>
+            <button class="btn-yellow" id="btnCopy">COPY OUTPUT</button>
+            <button class="btn-red" id="btnClear">CLEAR</button>
           </div>
-          <button id="copyBtn" type="button">Copy output</button>
-          <button id="clearBtn" type="button">Clear</button>
-        </div>
 
-        <div class="small">
-          Edit mappings inside <code>DICT</code> in the script.<br/>
-          Any mapped word overrides suffix rules (ex: <code>house → domus</code>).<br/>
-          Set a value to <code>""</code> to delete a word cleanly (ex: <code>"the": ""</code>).
+          <div class="status">
+            <span class="pill" id="countWords">WORDS: 0</span>
+            <span class="pill" id="countChars">CHARS: 0</span>
+          </div>
         </div>
       </div>
+    </div>
 
-      <div class="card">
-        <label for="output">Translated output</label>
-        <textarea id="output" readonly placeholder="Output appears here..."></textarea>
-
-        <div class="small">
-          Unknown suffix rule: based on last letter (a→orum, b→us, c→um, …).<br/>
-          Note: your list included <code>l = lorum</code> (kept as-is).
-        </div>
-      </div>
+    <div class="foot">
+      <div>Note: noun detection is “the + next word.” Plural = ends with <code>s</code>.</div>
+      <div>Live mode: typing updates output automatically.</div>
     </div>
   </div>
 
   <script>
-    // === Add words here (lowercase keys) ===
-    // Set a value to "" to remove a word entirely (e.g., "the": "")
-    const DICT = Object.freeze({
-      "is": "est",
-      "i": "ego",
-      "am": "sunt",
-      "you": "tu",
+    const inText = document.getElementById('inText');
+    const outText = document.getElementById('outText');
+    const btnTranslate = document.getElementById('btnTranslate');
+    const btnCopy = document.getElementById('btnCopy');
+    const btnClear = document.getElementById('btnClear');
+    const countWords = document.getElementById('countWords');
+    const countChars = document.getElementById('countChars');
 
-      // examples you already had
-      "the": "",
-      "a": "",
-      "an": "",
-      "and": "et",
-      "in": "inum",
-      "on": "onum",
-      "with": "cum",
-      "at": "atus",
-      "to": "ad",
-
-      "we": "nos",
-      "god": "deus",
-      "child": "puer",
-      "house": "domus",
-      "brother": "frater",
-      "kids": "liberi"
-    });
-
-    // === Last-letter suffix map for UNKNOWN words only ===
-    // Your spec:
-    // a=orum b=us c=um d=orum e=us f=us g=um h=orum i=um j=us k=orum l=lorum
-    // m=us n=us o=um p=um q=orum r=um s=us t=us u=orum v=um w=us x=orum y=um z=us
-    const LAST_LETTER_SUFFIX = Object.freeze({
-      "a":"orum",
-      "b":"us",
-      "c":"um",
-      "d":"orum",
-      "e":"us",
-      "f":"us",
-      "g":"um",
-      "h":"orum",
-      "i":"um",
-      "j":"us",
-      "k":"orum",
-      "l":"lorum",  // keeping your "lorum" exactly
-      "m":"us",
-      "n":"us",
-      "o":"um",
-      "p":"um",
-      "q":"orum",
-      "r":"um",
-      "s":"us",
-      "t":"us",
-      "u":"orum",
-      "v":"um",
-      "w":"us",
-      "x":"orum",
-      "y":"um",
-      "z":"us"
-    });
-
-    const inputEl = document.getElementById("input");
-    const outputEl = document.getElementById("output");
-    const preserveCapsEl = document.getElementById("preserveCaps");
-    const copyBtn = document.getElementById("copyBtn");
-    const clearBtn = document.getElementById("clearBtn");
-
-    function applyCaps(originalWord, translatedWord){
-      if (!preserveCapsEl.checked) return translatedWord;
-
-      const isAllCaps = originalWord.length > 1 && originalWord === originalWord.toUpperCase();
-      const isTitle = /^[A-Z][a-z]+$/.test(originalWord);
-
-      if (isAllCaps) return translatedWord.toUpperCase();
-      if (isTitle) return translatedWord.charAt(0).toUpperCase() + translatedWord.slice(1);
-      return translatedWord;
+    // Tokenize while preserving whitespace + punctuation as separate tokens:
+    // - words (letters + apostrophes)
+    // - whitespace
+    // - everything else (punctuation/symbols)
+    function tokenize(text) {
+      return text.match(/[A-Za-z']+|\s+|[^A-Za-z'\s]+/g) || [];
     }
 
-    function lastLetterSuffixFor(wordLower){
-      // Find last alphabetic char (handles weird inputs, though words should be letters only)
-      for (let i = wordLower.length - 1; i >= 0; i--){
-        const ch = wordLower[i];
-        if (ch >= "a" && ch <= "z"){
-          return LAST_LETTER_SUFFIX[ch] || "us"; // fallback if somehow missing
-        }
-      }
-      return "us";
+    // Vowel swap: A↔O, E↔I, U↔Y (and Y↔U), preserving case.
+    function vowelSwapWord(w) {
+      const map = {
+        a:"o", o:"a", e:"i", i:"e", u:"y", y:"u",
+        A:"O", O:"A", E:"I", I:"E", U:"Y", Y:"U"
+      };
+      return w.replace(/[aeiouyAEIOUY]/g, ch => map[ch] || ch);
     }
 
-    function translateWord(word){
-      if (!word) return word;
-
-      const low = word.toLowerCase();
-
-      // direct dictionary swap (including "" to delete)
-      if (Object.prototype.hasOwnProperty.call(DICT, low)){
-        const mapped = DICT[low];
-        if (mapped === "") return ""; // delete word completely
-        return applyCaps(word, mapped);
-      }
-
-      // unknown → suffix determined by last letter
-      const suffix = lastLetterSuffixFor(low);
-      const t = word + suffix;
-      return applyCaps(word, t);
+    function isWordToken(tok) {
+      return /^[A-Za-z']+$/.test(tok);
     }
 
-    function translateText(text){
-      // split on word boundaries but keep punctuation/spaces as tokens
-      const tokens = text.split(/\b/);
+    function isWhitespace(tok) {
+      return /^\s+$/.test(tok);
+    }
+
+    // Transform "the NOUN" into:
+    // - singular: drop "the", output swapped(noun) + "en"
+    // - plural (noun ends with s/S): keep literal "the", output swapped(stem) + "ens"
+    // Matches your examples:
+    //   "the car"  -> "coren"
+    //   "the cars" -> "the corens"
+    function translateText(src) {
+      const toks = tokenize(src);
       const out = [];
+      let i = 0;
 
-      for (const token of tokens){
-        if (/^[A-Za-z]+$/.test(token)){
-          const translated = translateWord(token);
-          if (translated) out.push(translated); // skip deletions cleanly
-        } else {
-          out.push(token); // punctuation/spaces preserved
+      while (i < toks.length) {
+        const tok = toks[i];
+
+        // Look for the word "the" (any case) as a standalone word token
+        if (isWordToken(tok) && tok.toLowerCase() === "the") {
+          // Find the next word token (skipping whitespace/punct in between)
+          let j = i + 1;
+          while (j < toks.length && !isWordToken(toks[j])) {
+            // If it's whitespace or punctuation, we will only keep it
+            // IF we are also going to keep "the" (plural case).
+            j++;
+          }
+
+          if (j < toks.length && isWordToken(toks[j])) {
+            const noun = toks[j];
+
+            // Determine plural by a simple trailing-s rule
+            const isPlural = noun.length > 1 && /[sS]$/.test(noun) && !/[sS]{2}$/.test(noun);
+
+            if (isPlural) {
+              // Keep literal "the" + the original spacing/punct between the and noun
+              out.push("the");
+
+              // Preserve any original tokens between 'the' and noun (usually spaces)
+              for (let k = i + 1; k < j; k++) out.push(toks[k]);
+
+              // Stem (drop final s), swap vowels, then add "ens"
+              const stem = noun.slice(0, -1);
+              const swappedStem = vowelSwapWord(stem);
+              out.push(swappedStem + "ens");
+
+              i = j + 1;
+              continue;
+            } else {
+              // Singular: DROP 'the' and ALSO drop any whitespace/punct between it and noun,
+              // then output swapped(noun) + "en"
+              const swappedNoun = vowelSwapWord(noun);
+              out.push(swappedNoun + "en");
+
+              i = j + 1;
+              continue;
+            }
+          }
+          // If "the" isn't followed by a word, just fall through and treat normally
         }
+
+        // Normal tokens:
+        if (isWordToken(tok)) out.push(vowelSwapWord(tok));
+        else out.push(tok);
+
+        i++;
       }
 
-      // collapse any accidental extra whitespace and trim ends
-      return out.join("").replace(/\s+/g, " ").trim();
+      return out.join("");
     }
 
-    function update(){
-      outputEl.value = translateText(inputEl.value);
+    function updateCounts(src) {
+      const words = (src.match(/[A-Za-z']+/g) || []).length;
+      countWords.textContent = `WORDS: ${words}`;
+      countChars.textContent = `CHARS: ${src.length}`;
     }
 
-    inputEl.addEventListener("input", update);
-    preserveCapsEl.addEventListener("change", update);
+    function translateNow() {
+      const src = inText.value || "";
+      outText.value = translateText(src);
+      updateCounts(src);
+    }
 
-    copyBtn.addEventListener("click", async () => {
-      try{
-        await navigator.clipboard.writeText(outputEl.value);
-        copyBtn.textContent = "Copied!";
-        setTimeout(()=>copyBtn.textContent="Copy output", 900);
-      } catch(e){
-        alert("Copy failed (clipboard permission). You can manually select + copy.");
+    async function copyOutput() {
+      const text = outText.value || "";
+      if (!text) return;
+
+      try {
+        await navigator.clipboard.writeText(text);
+        btnCopy.textContent = "COPIED!";
+        setTimeout(() => (btnCopy.textContent = "COPY OUTPUT"), 900);
+      } catch (e) {
+        outText.focus();
+        outText.select();
+        document.execCommand('copy');
+        btnCopy.textContent = "COPIED!";
+        setTimeout(() => (btnCopy.textContent = "COPY OUTPUT"), 900);
       }
-    });
+    }
 
-    clearBtn.addEventListener("click", () => {
-      inputEl.value = "";
-      outputEl.value = "";
-      inputEl.focus();
-      update();
-    });
+    function clearAll() {
+      inText.value = "";
+      outText.value = "";
+      translateNow();
+      inText.focus();
+    }
 
-    update();
+    inText.addEventListener('input', translateNow);
+    btnTranslate.addEventListener('click', translateNow);
+    btnCopy.addEventListener('click', copyOutput);
+    btnClear.addEventListener('click', clearAll);
+
+    translateNow();
   </script>
 </body>
 </html>
