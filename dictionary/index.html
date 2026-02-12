@@ -33,31 +33,42 @@ input{
   border-radius:10px;
   border:none;
   margin-bottom:20px;
+  outline:none;
 }
 
 .row{
   display:flex;
   justify-content:space-between;
+  gap:18px;
   padding:10px 0;
   border-bottom:1px solid #222;
   font-family:monospace;
   font-size:16px;
+}
+
+.row span:last-child{
+  opacity:.9;
+  text-align:right;
+}
+
+.empty{
+  opacity:.7;
+  font-family:monospace;
+  padding:10px 0;
 }
 </style>
 </head>
 
 <body>
 <div class="card">
-<h1>Novara Dictionary</h1>
-<input id="search" placeholder="Type English or Novara..." />
-
-<div id="results"></div>
+  <h1>Novara Dictionary</h1>
+  <input id="search" placeholder="Type English or Novara..." />
+  <div id="results"></div>
 </div>
 
 <script>
-
 // SIMPLE DICTIONARY STRUCTURE
-  const DICT = [
+const DICT = [
 
   // Core grammar
   {nov:"sa", en:"the"},
@@ -229,7 +240,6 @@ input{
   {nov:"pront", en:"ready"}
 
 ];
-];
 
 const input = document.getElementById("search");
 const results = document.getElementById("results");
@@ -240,7 +250,13 @@ function normalize(str){
 
 function render(list){
   results.innerHTML = "";
-  list.forEach(entry=>{
+
+  if (!list.length){
+    results.innerHTML = `<div class="empty">No matches.</div>`;
+    return;
+  }
+
+  list.slice(0, 80).forEach(entry=>{
     const row = document.createElement("div");
     row.className = "row";
     row.innerHTML = `<span>${entry.nov}</span><span>${entry.en}</span>`;
@@ -262,7 +278,6 @@ input.addEventListener("input", ()=>{
 
   render(matches);
 });
-
 </script>
 </body>
 </html>
