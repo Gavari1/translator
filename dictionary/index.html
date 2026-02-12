@@ -2,377 +2,730 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Sentence Braid 95™</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Novara Dictionary</title>
   <style>
     :root{
-      --bg:#9aa3ad;
-      --panel:#c9ced6;
-      --bezel:#6f7780;
-      --screen:#bfe3b9;
-      --screen2:#a8d8a2;
-      --text:#0b1a0b;
-      --btn:#e6e6e6;
-      --btn2:#d2d2d2;
-      --red:#c93b3b;
-      --blue:#2e5bd6;
-      --yellow:#d6b12e;
-      --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
-      --sans: system-ui, -apple-system, Segoe UI, sans-serif;
+      --bg: #0b0f1a;
+      --panel: rgba(255,255,255,.06);
+      --panel2: rgba(255,255,255,.09);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.62);
+      --line: rgba(255,255,255,.12);
+      --accent: #7dd3fc;
+      --accent2:#a78bfa;
+      --good:#34d399;
+      --warn:#fbbf24;
+      --bad:#fb7185;
+      --shadow: 0 18px 60px rgba(0,0,0,.45);
+      --radius: 18px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
     }
-    *{ box-sizing:border-box; }
+    *{ box-sizing: border-box; }
     body{
       margin:0;
-      background: linear-gradient(180deg, #7f8892, var(--bg));
       font-family: var(--sans);
-      color:#111;
+      color: var(--text);
+      min-height:100vh;
+      background:
+        radial-gradient(900px 500px at 15% 20%, rgba(167,139,250,.18), transparent 60%),
+        radial-gradient(800px 500px at 85% 10%, rgba(125,211,252,.18), transparent 55%),
+        radial-gradient(900px 700px at 50% 85%, rgba(52,211,153,.10), transparent 60%),
+        var(--bg);
       display:flex;
       align-items:center;
       justify-content:center;
-      min-height:100vh;
-      padding:16px;
+      padding: 26px 16px;
     }
-    .device{
-      width:min(900px, 100%);
-      background: linear-gradient(180deg, var(--panel), #b7bcc5);
-      border: 4px solid var(--bezel);
-      border-radius: 16px;
-      box-shadow: 0 18px 40px rgba(0,0,0,0.35), inset 0 2px 0 rgba(255,255,255,0.6);
-      padding:16px;
+    .wrap{
+      width: min(980px, 100%);
+      display:grid;
+      gap: 16px;
+    }
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.04));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
       overflow:hidden;
     }
-    .topbar{
+    header{
+      padding: 22px 22px 16px;
       display:flex;
-      align-items:center;
+      flex-direction:column;
+      gap: 10px;
+    }
+    .titleRow{
+      display:flex;
+      align-items:flex-end;
       justify-content:space-between;
       gap:12px;
-      padding:8px 10px 14px;
       flex-wrap:wrap;
     }
-    .brand{
-      font-weight:800;
-      letter-spacing:0.5px;
-      text-transform:uppercase;
-      font-size:14px;
-      color:#222;
-      display:flex;
-      align-items:center;
-      gap:10px;
+    h1{
+      margin:0;
+      font-weight: 800;
+      letter-spacing:.2px;
+      font-size: clamp(22px, 3.3vw, 30px);
+    }
+    .badge{
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+      border: 1px solid var(--line);
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.04);
+      user-select:none;
       white-space:nowrap;
     }
-    .brand .dot{
-      width:10px;height:10px;border-radius:50%;
-      background: radial-gradient(circle at 30% 30%, #fff, #bbb);
-      border:1px solid rgba(0,0,0,0.25);
+    .sub{
+      color: var(--muted);
+      font-size: 13.5px;
+      line-height: 1.35;
+      margin:0;
     }
-    .model{
-      font-family: var(--mono);
-      font-size:12px;
-      color:#333;
-      opacity:0.9;
+
+    .searchBar{
+      padding: 0 22px 22px;
+      display:grid;
+      gap: 10px;
     }
-    .screen-wrap{
-      background: #3a3f47;
-      border-radius: 12px;
-      padding:12px;
-      border: 3px solid #1f232a;
-      box-shadow: inset 0 2px 0 rgba(255,255,255,0.08);
-    }
-    .screen{
-      background: linear-gradient(180deg, var(--screen), var(--screen2));
-      border-radius: 8px;
-      border: 2px solid rgba(0,0,0,0.45);
-      box-shadow: inset 0 0 0 2px rgba(255,255,255,0.2);
-      padding:10px;
-      color: var(--text);
-      font-family: var(--mono);
-      max-width:100%;
-      overflow:hidden;
-    }
-    .row{
+    .inputWrap{
+      position:relative;
       display:flex;
       gap:10px;
-      align-items:flex-start;
-      justify-content:space-between;
-      margin-bottom:10px;
-      flex-wrap:wrap;
+      align-items:center;
     }
-    .label{
-      font-size:12px;
-      opacity:0.85;
-      flex: 1 1 auto;
-      min-width: 240px;
-    }
-    textarea{
+    input{
       width:100%;
-      max-width:100%;
-      min-width:0;
-      display:block;
-      min-height:120px;
-      resize:vertical;
-      border-radius: 6px;
-      border: 1px solid rgba(0,0,0,0.45);
-      background: rgba(255,255,255,0.55);
-      color:#0c1a0c;
-      font-family: var(--mono);
-      font-size: 14px;
-      padding:10px;
+      padding: 14px 14px 14px 44px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: rgba(0,0,0,.22);
+      color: var(--text);
       outline:none;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.35);
-      overflow-wrap:anywhere;
-      word-break:break-word;
+      font-size: 15px;
+      transition: border-color .15s ease, background .15s ease;
     }
-    .split{
-      display:grid;
-      grid-template-columns: 1fr;
-      gap:10px;
-      width:100%;
-      margin:0 auto;
-      max-width:100%;
+    input:focus{
+      border-color: rgba(125,211,252,.55);
+      background: rgba(0,0,0,.30);
     }
-    .split > div{ min-width:0; max-width:100%; }
-    @media (min-width: 820px){
-      .split{ grid-template-columns: 1fr 1fr; }
-      textarea{ min-height: 180px; }
+    .icon{
+      position:absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      opacity:.75;
+      pointer-events:none;
     }
     .controls{
       display:flex;
-      flex-wrap:wrap;
       gap:10px;
-      padding:12px 2px 4px;
+      flex-wrap:wrap;
       align-items:center;
       justify-content:space-between;
     }
-    .btns{
+    .toggleRow{
       display:flex;
-      flex-wrap:wrap;
       gap:10px;
+      flex-wrap:wrap;
       align-items:center;
     }
-    button{
-      border: 2px solid rgba(0,0,0,0.45);
-      background: linear-gradient(180deg, var(--btn), var(--btn2));
-      border-radius: 10px;
-      padding:10px 14px;
-      font-weight:700;
-      font-family: var(--sans);
+    .chip{
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      color: var(--muted);
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 12.5px;
       cursor:pointer;
-      box-shadow: 0 4px 0 rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.6);
-      transition: transform 0.03s ease-in-out;
-    }
-    button:active{
-      transform: translateY(2px);
-      box-shadow: 0 2px 0 rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.6);
-    }
-    .btn-blue{
-      background: linear-gradient(180deg, #6ea0ff, var(--blue));
-      color:#071026;
-    }
-    .btn-yellow{
-      background: linear-gradient(180deg, #ffe08a, var(--yellow));
-      color:#241b05;
-    }
-    .btn-red{
-      background: linear-gradient(180deg, #ff6d6d, var(--red));
-      color:#140000;
-    }
-    .status{
-      font-family: var(--mono);
-      font-size:12px;
-      opacity:0.9;
+      user-select:none;
       display:flex;
-      gap:10px;
-      flex-wrap:wrap;
       align-items:center;
-      justify-content:flex-end;
+      gap:8px;
     }
-    .pill{
-      border:1px solid rgba(0,0,0,0.35);
-      background: rgba(255,255,255,0.35);
-      padding:6px 10px;
-      border-radius:999px;
-      white-space:nowrap;
+    .chip input{ display:none; }
+    .chip[data-on="true"]{
+      color: rgba(255,255,255,.90);
+      border-color: rgba(167,139,250,.55);
+      background: rgba(167,139,250,.12);
     }
-    .foot{
-      margin-top:10px;
-      font-size:12px;
-      opacity:0.85;
-      color:#222;
+    .hint{
+      color: var(--muted);
+      font-size: 12.5px;
+    }
+
+    .results{
+      border-top: 1px solid var(--line);
+      padding: 14px 14px 18px;
+    }
+    .empty{
+      padding: 20px 8px;
+      text-align:center;
+      color: var(--muted);
+      display:none;
+    }
+    .empty strong{ color: rgba(255,255,255,.86); }
+    .list{
+      display:grid;
+      gap: 10px;
+    }
+    .row{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:10px;
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.04);
+    }
+    @media (min-width: 720px){
+      .row{
+        grid-template-columns: 1.1fr 1.1fr .8fr;
+        align-items:start;
+      }
+    }
+    .term{
+      font-family: var(--mono);
+      font-size: 13px;
+      color: rgba(255,255,255,.88);
+      line-height: 1.35;
+    }
+    .term .label{
+      display:block;
+      font-family: var(--sans);
+      letter-spacing:.2px;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .term .big{
+      font-size: 15px;
+      font-weight: 650;
+    }
+    .meta{
+      display:flex;
+      gap: 8px;
+      flex-wrap:wrap;
+      justify-content:flex-start;
+    }
+    .tag{
+      font-family: var(--mono);
+      font-size: 11.5px;
+      border: 1px solid var(--line);
+      background: rgba(0,0,0,.18);
+      padding: 4px 8px;
+      border-radius: 999px;
+      color: var(--muted);
+    }
+    .tag.good{ border-color: rgba(52,211,153,.45); color: rgba(167,243,208,.95); background: rgba(52,211,153,.08); }
+    .tag.warn{ border-color: rgba(251,191,36,.45); color: rgba(253,230,138,.95); background: rgba(251,191,36,.08); }
+    .tag.bad{  border-color: rgba(251,113,133,.45); color: rgba(255,167,181,.95); background: rgba(251,113,133,.08); }
+
+    .footer{
+      padding: 12px 18px 16px;
+      color: var(--muted);
+      font-size: 12px;
+      border-top: 1px solid var(--line);
       display:flex;
       justify-content:space-between;
       gap:10px;
       flex-wrap:wrap;
     }
-    .foot code{ font-family: var(--mono); }
+    .kbd{
+      font-family: var(--mono);
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      padding: 2px 6px;
+      border-radius: 6px;
+      color: rgba(255,255,255,.80);
+    }
+    a{ color: var(--accent); text-decoration:none; }
+    a:hover{ text-decoration:underline; }
   </style>
 </head>
+
 <body>
-  <div class="device" role="application" aria-label="Sentence Braid 95 Translator">
-    <div class="topbar">
-      <div class="brand"><span class="dot" aria-hidden="true"></span> SENTENCE BRAID 95™</div>
-      <div class="model">MODEL: SB-1996 • “CHEAP BUT LOUD” EDITION</div>
-    </div>
-
-    <div class="screen-wrap">
-      <div class="screen">
-        <div class="row">
-          <div class="label">
-            INPUT (Rule: 1st word, last word, 2nd word, 2nd-last…)
-          </div>
+  <div class="wrap">
+    <div class="card">
+      <header>
+        <div class="titleRow">
+          <h1>Novara Dictionary</h1>
+          <div class="badge">v1.0 • English → Novara</div>
         </div>
+        <p class="sub">
+          Start typing in <b>English</b>. Results appear only when your input is specific enough.
+          As you type more letters, broader matches fade away and the correct one remains.
+        </p>
+      </header>
 
-        <div class="split">
-          <div>
-            <textarea id="inText" placeholder="Type a sentence...">The football is in the store.</textarea>
-          </div>
-          <div>
-            <div class="label" style="margin:0 0 6px;">OUTPUT (Braided + Vowel Swap)</div>
-            <textarea id="outText" readonly placeholder="Output appears here..."></textarea>
-          </div>
+      <div class="searchBar">
+        <div class="inputWrap">
+          <div class="icon" aria-hidden="true">🔎</div>
+          <input id="q" type="text" autocomplete="off" spellcheck="false"
+                 placeholder="Type an English word… (e.g., tomorrow, father, buy, forest)" />
         </div>
 
         <div class="controls">
-          <div class="btns">
-            <button class="btn-blue" id="btnTranslate">TRANSLATE</button>
-            <button class="btn-yellow" id="btnCopy">COPY OUTPUT</button>
-            <button class="btn-red" id="btnClear">CLEAR</button>
+          <div class="toggleRow">
+            <div class="chip" id="modeChip" data-on="true" title="Toggle search mode">
+              <span id="modeLabel">EN → NOV</span>
+            </div>
+            <div class="chip" id="smartChip" data-on="true" title="Smart disambiguation">
+              <span>SMART</span>
+            </div>
           </div>
-
-          <div class="status">
-            <span class="pill" id="countWords">WORDS: 0</span>
-            <span class="pill" id="countChars">CHARS: 0</span>
+          <div class="hint">
+            Enter = pin top match • <span class="kbd">Esc</span> clears
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="foot">
-      <div>Tip: final punctuation moves to the last output word (e.g., <code>store.</code> → last word).</div>
-      <div>Live mode: typing updates output automatically.</div>
+      <div class="results">
+        <div id="empty" class="empty">
+          <strong>No results yet.</strong><br/>
+          Type more letters to narrow the match.
+        </div>
+        <div id="list" class="list"></div>
+      </div>
+
+      <div class="footer">
+        <div>Novara is lean by design: verbs end in <span class="kbd">-e</span>, tense particles <span class="kbd">pa/fa/wa</span>, progressive <span class="kbd">-ndo</span>.</div>
+        <div>Built for GitHub Pages.</div>
+      </div>
     </div>
   </div>
 
-  <script>
-    const inText = document.getElementById('inText');
-    const outText = document.getElementById('outText');
-    const btnTranslate = document.getElementById('btnTranslate');
-    const btnCopy = document.getElementById('btnCopy');
-    const btnClear = document.getElementById('btnClear');
-    const countWords = document.getElementById('countWords');
-    const countChars = document.getElementById('countChars');
+<script>
+/**
+ * Novara Dictionary data
+ * - Search is primarily English → Novara.
+ * - Also supports NOV → English (toggle).
+ * - Add new entries by appending objects to DICT.
+ */
+const DICT = [
+  // Function words / grammar
+  { nov:"sa",    en:["the (definite article)"], tags:["article"] },
+  { nov:"un",    en:["a/an","one"], tags:["article","number"] },
+  { nov:"pa",    en:["past (tense particle)"], tags:["tense"] },
+  { nov:"fa",    en:["future (tense particle)","will"], tags:["tense"] },
+  { nov:"wa",    en:["conditional (tense particle)","would"], tags:["tense"] },
+  { nov:"no",    en:["not","no (negation)"], tags:["negation"] },
+  { nov:"ca",    en:["that (complementizer)","that (demonstrative)"], tags:["clause","demo"] },
+  { nov:"co",    en:["this"], tags:["demo"] },
+  { nov:"cos",   en:["these"], tags:["demo"] },
+  { nov:"cas",   en:["those"], tags:["demo"] },
+  { nov:"a",     en:["to"], tags:["prep"] },
+  { nov:"en",    en:["in","inside","at"], tags:["prep"] },
+  { nov:"con",   en:["with"], tags:["prep"] },
+  { nov:"des",   en:["from","of"], tags:["prep"] },
+  { nov:"pro",   en:["for","by means of"], tags:["prep"] },
+  { nov:"tras",  en:["through"], tags:["prep"] },
+  { nov:"si",    en:["if"], tags:["clause"] },
+  { nov:"asta",  en:["until"], tags:["time"] },
 
-    // Split on whitespace into tokens
-    function tokenizeWords(text) {
-      return (text.trim().match(/\S+/g) || []);
-    }
+  // Pronouns
+  { nov:"mi",  en:["I","me"], tags:["pronoun"] },
+  { nov:"tu",  en:["you (sg)"], tags:["pronoun"] },
+  { nov:"ele", en:["he"], tags:["pronoun"] },
+  { nov:"ela", en:["she"], tags:["pronoun"] },
+  { nov:"elo", en:["it"], tags:["pronoun"] },
+  { nov:"nos", en:["we","us"], tags:["pronoun"] },
+  { nov:"le",  en:["they","them"], tags:["pronoun"] },
+  { nov:"vos", en:["you (pl)","you all"], tags:["pronoun"] },
 
-    // Pull ONLY final sentence punctuation from the very end of the input.
-    // Handles ., !, ?, ... and combos like "?!"
-    function extractFinalPunct(text) {
-      const trimmed = text.trim();
-      const m = trimmed.match(/[.!?]+$/);
-      return m ? m[0] : "";
-    }
+  // Possessives
+  { nov:"mia",  en:["my","mine"], tags:["poss"] },
+  { nov:"tua",  en:["your","yours"], tags:["poss"] },
+  { nov:"elea", en:["his"], tags:["poss"] },
+  { nov:"elaa", en:["her","hers"], tags:["poss"] },
+  { nov:"eloa", en:["its"], tags:["poss"] },
+  { nov:"nosa", en:["our","ours"], tags:["poss"] },
+  { nov:"lea",  en:["their","theirs"], tags:["poss"] },
+  { nov:"vosa", en:["your (pl)","you all's"], tags:["poss"] },
 
-    // Remove final sentence punctuation from the last token ONLY (if present)
-    function stripPunctFromLastToken(tokens, finalPunct) {
-      if (!tokens.length || !finalPunct) return tokens;
-      const lastIdx = tokens.length - 1;
+  // Core verbs
+  { nov:"sere",  en:["be","am","is","are"], tags:["verb"] },
+  { nov:"ire",   en:["go"], tags:["verb"] },
+  { nov:"vene",  en:["come"], tags:["verb"] },
+  { nov:"parle", en:["talk","speak"], tags:["verb"] },
+  { nov:"sabe",  en:["know"], tags:["verb"] },
+  { nov:"pere",  en:["hope","expect"], tags:["verb"] },
+  { nov:"vole",  en:["want"], tags:["verb"] },
+  { nov:"ole",   en:["see"], tags:["verb"] },
+  { nov:"aude",  en:["hear"], tags:["verb"] },
+  { nov:"sente", en:["feel"], tags:["verb"] },
+  { nov:"tene",  en:["have","hold"], tags:["verb"] },
+  { nov:"dare",  en:["give"], tags:["verb"] },
+  { nov:"face",  en:["make","do"], tags:["verb"] },
+  { nov:"trove", en:["find"], tags:["verb"] },
+  { nov:"labre", en:["work"], tags:["verb"] },
+  { nov:"mange", en:["eat"], tags:["verb"] },
+  { nov:"bibe",  en:["drink"], tags:["verb"] },
+  { nov:"dorme", en:["sleep"], tags:["verb"] },
+  { nov:"lege",  en:["read"], tags:["verb"] },
+  { nov:"scribe",en:["write"], tags:["verb"] },
+  { nov:"apre",  en:["open"], tags:["verb"] },
+  { nov:"yame",  en:["call"], tags:["verb"] },
 
-      if (tokens[lastIdx].endsWith(finalPunct)) {
-        tokens[lastIdx] = tokens[lastIdx].slice(0, -finalPunct.length);
-      }
-      return tokens;
-    }
+  // Added verbs (20-pack)
+  { nov:"lume",  en:["shine"], tags:["verb"] },
+  { nov:"brise", en:["break"], tags:["verb"] },
+  { nov:"calme", en:["calm"], tags:["verb"] },
+  { nov:"rende", en:["return","give back"], tags:["verb"] },
+  { nov:"sume",  en:["assume","take on"], tags:["verb"] },
+  { nov:"vire",  en:["turn"], tags:["verb"] },
+  { nov:"drite", en:["direct"], tags:["verb"] },
+  { nov:"clare", en:["clarify"], tags:["verb"] },
+  { nov:"serne", en:["choose","select"], tags:["verb"] },
+  { nov:"tace",  en:["be silent"], tags:["verb"] },
+  { nov:"baste", en:["build"], tags:["verb"] },
+  { nov:"grine", en:["smile"], tags:["verb"] },
+  { nov:"frise", en:["freeze"], tags:["verb"] },
+  { nov:"cende", en:["ignite","light"], tags:["verb"] },
+  { nov:"plene", en:["fill"], tags:["verb"] },
+  { nov:"spire", en:["breathe"], tags:["verb"] },
+  { nov:"dolve", en:["solve"], tags:["verb"] },
+  { nov:"rave",  en:["wander"], tags:["verb"] },
+  { nov:"sorte", en:["exit","leave"], tags:["verb"] },
+  { nov:"valde", en:["value"], tags:["verb"] },
 
-    function braidWords(words) {
-      const out = [];
-      let i = 0;
-      let j = words.length - 1;
-      while (i <= j) {
-        if (i === j) out.push(words[i]);
-        else out.push(words[i], words[j]);
-        i++; j--;
-      }
-      return out;
-    }
+  // New: compe
+  { nov:"compe", en:["buy"], tags:["verb"] },
 
-    // A↔O, E↔I, U↔Y (and Y↔U), preserving capitalization
-    function vowelSwap(s) {
-      const map = {
-        a:"a", o:"o", e:"e", i:"i", u:"u", y:"y",
-        A:"A", O:"O", E:"E", I:"I", U:"U", Y:"Y"
-      };
-      return s.replace(/[aeiouyAEIOUY]/g, ch => map[ch] || ch);
-    }
+  // Nouns (core + added)
+  { nov:"omen",  en:["man"], tags:["noun"] },
+  { nov:"fema",  en:["woman"], tags:["noun"] },
+  { nov:"filo",  en:["child"], tags:["noun"] },
+  { nov:"patre", en:["father","dad"], tags:["noun"] },
+  { nov:"matra", en:["mother","mom"], tags:["noun"] },
+  { nov:"amico", en:["friend"], tags:["noun"] },
+  { nov:"casa",  en:["house","home"], tags:["noun"] },
+  { nov:"tenda", en:["store"], tags:["noun"] },
+  { nov:"labora",en:["work","job"], tags:["noun"] },
+  { nov:"cama",  en:["bed"], tags:["noun"] },
+  { nov:"mente", en:["mind"], tags:["noun"] },
+  { nov:"corpo", en:["body"], tags:["noun"] },
+  { nov:"mundo", en:["world"], tags:["noun"] },
+  { nov:"loco",  en:["place"], tags:["noun"] },
+  { nov:"libra", en:["book"], tags:["noun"] },
+  { nov:"aqua",  en:["water"], tags:["noun"] },
+  { nov:"pane",  en:["bread"], tags:["noun"] },
+  { nov:"fruta", en:["fruit"], tags:["noun"] },
+  { nov:"verda", en:["truth"], tags:["noun"] },
 
-    // NEW: split input into sentences (keeps ending punctuation with each sentence)
-    function splitSentences(text) {
-      return text.match(/[^.!?]+[.!?]+|[^.!?]+$/g) || [];
-    }
+  // Added 30 nouns
+  { nov:"sola",  en:["sun"], tags:["noun"] },
+  { nov:"luna",  en:["moon"], tags:["noun"] },
+  { nov:"ombra", en:["shadow"], tags:["noun"] },
+  { nov:"flara", en:["flower"], tags:["noun"] },
+  { nov:"silva", en:["forest"], tags:["noun"] },
+  { nov:"riva",  en:["river"], tags:["noun"] },
+  { nov:"sora",  en:["sky"], tags:["noun"] },
+  { nov:"bruma", en:["fog"], tags:["noun"] },
+  { nov:"cora",  en:["heart"], tags:["noun"] },
+  { nov:"nerva", en:["nerve"], tags:["noun"] },
+  { nov:"anima", en:["soul"], tags:["noun"] },
+  { nov:"voila", en:["memory"], tags:["noun"] },
+  { nov:"dara",  en:["gift"], tags:["noun"] },
+  { nov:"strada",en:["street"], tags:["noun"] },
+  { nov:"porta", en:["door"], tags:["noun"] },
+  { nov:"janua", en:["gate"], tags:["noun"] },
+  { nov:"pietra",en:["stone"], tags:["noun"] },
+  { nov:"cifra", en:["number"], tags:["noun"] },
+  { nov:"forma", en:["shape","form"], tags:["noun"] },
+  { nov:"fira",  en:["fire"], tags:["noun"] },
+  { nov:"pluva", en:["rain"], tags:["noun"] },
+  { nov:"arena", en:["sand"], tags:["noun"] },
+  { nov:"vetra", en:["glass"], tags:["noun"] },
+  { nov:"stela", en:["star"], tags:["noun"] },
+  { nov:"valora",en:["value (noun)"], tags:["noun"] },
+  { nov:"senda", en:["path"], tags:["noun"] },
+  { nov:"grava", en:["weight"], tags:["noun"] },
+  { nov:"tenra", en:["thread"], tags:["noun"] },
+  { nov:"vora",  en:["voice-tone"], tags:["noun"] },
+  { nov:"cava",  en:["cave"], tags:["noun"] },
 
-    function translateNow() {
-      const src = inText.value || "";
-      const sentences = splitSentences(src);
+  // Story additions
+  { nov:"curt",   en:["short"], tags:["adj"] },
+  { nov:"istoria",en:["story"], tags:["noun"] },
+  { nov:"dina",   en:["money"], tags:["noun"] },
+  { nov:"ayar",   en:["yesterday"], tags:["time"] },
+  { nov:"doman",  en:["tomorrow"], tags:["time"] },
 
-      const braidedSentences = [];
+  // A few common function words used in your examples
+  { nov:"i",    en:["and"], tags:["conj"] },
+  { nov:"ma",   en:["but"], tags:["conj"] },
+  { nov:"quan", en:["when"], tags:["qword","time"] },
+  { nov:"unde", en:["where"], tags:["qword"] },
+  { nov:"quia", en:["why"], tags:["qword"] },
+  { nov:"tote", en:["all"], tags:["quant"] },
+  { nov:"mult", en:["many"], tags:["quant"] },
+  { nov:"multo",en:["more"], tags:["quant"] },
+  { nov:"multa",en:["most"], tags:["quant"] },
+  { nov:"qual","en":["which"], tags:["qword","quant"] },
+  { nov:"quale","en":["which"], tags:["qword","quant"] },
 
-      for (const sentence of sentences) {
-        const finalPunct = extractFinalPunct(sentence);
+  // Adjectives (base forms)
+  { nov:"bon",   en:["good"], tags:["adj","ladder"] },
+  { nov:"mal",   en:["bad"], tags:["adj","ladder"] },
+  { nov:"grand", en:["big","large"], tags:["adj","ladder"] },
+  { nov:"fort",  en:["strong"], tags:["adj","ladder"] },
+  { nov:"pet",   en:["small"], tags:["adj","ladder"] },
+  { nov:"rapid", en:["fast"], tags:["adj","ladder"] },
+  { nov:"nov",   en:["new"], tags:["adj","ladder"] },
+  { nov:"ved",   en:["old"], tags:["adj","ladder"] },
+  { nov:"clar",  en:["clear"], tags:["adj","ladder"] },
+  { nov:"difis", en:["difficult","hard"], tags:["adj","ladder"] },
+  { nov:"enferm",en:["sick"], tags:["adj","ladder"] },
+  { nov:"pront", en:["ready"], tags:["adj","ladder"] },
+];
 
-        let words = tokenizeWords(sentence);
-        words = stripPunctFromLastToken(words, finalPunct);
+/** Helpers */
+const norm = (s) => (s || "")
+  .toLowerCase()
+  .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+  .replace(/[^a-z0-9\s\-']/g,"")
+  .trim();
 
-        const braided = braidWords(words);
+function unique(arr){ return [...new Set(arr)]; }
 
-        // Re-attach final punctuation to LAST output word (per sentence)
-        if (braided.length && finalPunct) {
-          braided[braided.length - 1] = braided[braided.length - 1] + finalPunct;
+function entryHaystackEN(entry){
+  const en = (entry.en || []).join(" | ");
+  return norm(en);
+}
+function entryHaystackNOV(entry){
+  return norm(entry.nov || "");
+}
+
+/**
+ * SMART disambiguation:
+ * - If multiple results share a shorter exact key (e.g., "to") but longer typed string starts another word (e.g., "tom"),
+ *   we prefer "tightest prefix" results (closest length to query).
+ * - Also, we prioritize:
+ *   1) exact match
+ *   2) prefix match
+ *   3) substring match
+ */
+function scoreMatch(query, candidate){
+  // lower is better
+  if (candidate === query) return {tier:0, dist:0};
+  if (candidate.startsWith(query)) return {tier:1, dist: candidate.length - query.length};
+  const idx = candidate.indexOf(query);
+  if (idx >= 0) return {tier:2, dist: idx + (candidate.length - query.length)};
+  return null;
+}
+
+/**
+ * Return matches given query + mode.
+ * mode = "EN2NOV" | "NOV2EN"
+ */
+function search(query, mode){
+  const q = norm(query);
+  if (!q) return [];
+
+  const results = [];
+  for (const entry of DICT){
+    if (mode === "EN2NOV"){
+      const hay = entryHaystackEN(entry);
+      const parts = unique(hay.split("|").map(s=>norm(s)));
+      let best = null;
+      for (const p of parts){
+        const sc = scoreMatch(q, p);
+        if (sc && (!best || sc.tier < best.tier || (sc.tier===best.tier && sc.dist < best.dist))){
+          best = sc;
         }
-
-        braidedSentences.push(braided.join(" "));
       }
-
-      // Apply vowel swap AFTER braiding + punctuation placement
-      const out = vowelSwap(braidedSentences.join(" "));
-      outText.value = out;
-
-      countWords.textContent = `WORDS: ${tokenizeWords(src).length}`;
-      countChars.textContent = `CHARS: ${src.length}`;
+      if (best) results.push({entry, best});
+    } else {
+      const hay = entryHaystackNOV(entry);
+      const sc = scoreMatch(q, hay);
+      if (sc) results.push({entry, best: sc});
     }
+  }
 
-    async function copyOutput() {
-      const text = outText.value || "";
-      if (!text) return;
+  results.sort((a,b)=>{
+    if (a.best.tier !== b.best.tier) return a.best.tier - b.best.tier;
+    if (a.best.dist !== b.best.dist) return a.best.dist - b.best.dist;
+    return (a.entry.nov || "").localeCompare(b.entry.nov || "");
+  });
 
-      try {
-        await navigator.clipboard.writeText(text);
-        btnCopy.textContent = "COPIED!";
-        setTimeout(() => (btnCopy.textContent = "COPY OUTPUT"), 900);
-      } catch (e) {
-        outText.focus();
-        outText.select();
-        document.execCommand('copy');
-        btnCopy.textContent = "COPIED!";
-        setTimeout(() => (btnCopy.textContent = "COPY OUTPUT"), 900);
+  return results.map(r=>r.entry);
+}
+
+/**
+ * SMART narrowing rule:
+ * - Show results only if query length >= minLen (default 2)
+ * - If SMART enabled:
+ *   - Find best match tier among results.
+ *   - For prefix matches (tier 1), keep only those with smallest "distance" (closest length).
+ *     This makes "to" appear early, but disappear once a more specific longer word becomes the best fit.
+ */
+function smartFilter(entries, query, mode){
+  const q = norm(query);
+  if (!q) return [];
+  const minLen = 1; // keep responsive; disambiguation handles the rest
+  if (q.length < minLen) return [];
+
+  // compute match stats again for filtering
+  const scored = [];
+  for (const e of entries){
+    let best = null;
+    if (mode === "EN2NOV"){
+      const hay = entryHaystackEN(e);
+      const parts = unique(hay.split("|").map(s=>norm(s)));
+      for (const p of parts){
+        const sc = scoreMatch(q, p);
+        if (sc && (!best || sc.tier < best.tier || (sc.tier===best.tier && sc.dist < best.dist))){
+          best = sc;
+        }
       }
+    } else {
+      const hay = entryHaystackNOV(e);
+      best = scoreMatch(q, hay);
     }
+    if (best) scored.push({e, best});
+  }
+  if (!scored.length) return [];
 
-    function clearAll() {
-      inText.value = "";
-      outText.value = "";
-      translateNow();
-      inText.focus();
+  const bestTier = Math.min(...scored.map(x=>x.best.tier));
+
+  // If exact exists, show only exact(s)
+  const exact = scored.filter(x=>x.best.tier===0);
+  if (exact.length) return exact.map(x=>x.e);
+
+  // If best tier is prefix, keep only tightest prefix distance
+  if (bestTier === 1){
+    const bestDist = Math.min(...scored.filter(x=>x.best.tier===1).map(x=>x.best.dist));
+    return scored
+      .filter(x=>x.best.tier===1 && x.best.dist===bestDist)
+      .map(x=>x.e);
+  }
+
+  // Otherwise keep best-tier matches, limited
+  return scored.filter(x=>x.best.tier===bestTier).map(x=>x.e);
+}
+
+function tagClass(t){
+  if (t === "verb") return "good";
+  if (t === "noun") return "warn";
+  if (t === "tense" || t === "negation") return "bad";
+  return "";
+}
+
+function render(entries){
+  const list = document.getElementById("list");
+  list.innerHTML = "";
+  for (const e of entries.slice(0, 12)){
+    const row = document.createElement("div");
+    row.className = "row";
+
+    const left = document.createElement("div");
+    left.className = "term";
+    left.innerHTML = `<span class="label">Novara</span><span class="big">${escapeHtml(e.nov)}</span>`;
+
+    const mid = document.createElement("div");
+    mid.className = "term";
+    const enText = (e.en || []).join("; ");
+    mid.innerHTML = `<span class="label">English</span><span class="big">${escapeHtml(enText)}</span>`;
+
+    const right = document.createElement("div");
+    right.className = "meta";
+    (e.tags || []).forEach(t=>{
+      const span = document.createElement("span");
+      span.className = `tag ${tagClass(t)}`.trim();
+      span.textContent = t;
+      right.appendChild(span);
+    });
+
+    row.appendChild(left);
+    row.appendChild(mid);
+    row.appendChild(right);
+    list.appendChild(row);
+  }
+}
+
+function escapeHtml(str){
+  return String(str).replace(/[&<>"']/g, s => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  }[s]));
+}
+
+// UI logic
+let mode = "EN2NOV";
+let smart = true;
+
+const q = document.getElementById("q");
+const empty = document.getElementById("empty");
+const modeChip = document.getElementById("modeChip");
+const modeLabel = document.getElementById("modeLabel");
+const smartChip = document.getElementById("smartChip");
+
+function update(){
+  const query = q.value;
+  const raw = search(query, mode);
+
+  let out = raw;
+  if (smart) out = smartFilter(raw, query, mode);
+
+  // hide everything when empty query
+  if (!norm(query)){
+    document.getElementById("list").innerHTML = "";
+    empty.style.display = "none";
+    return;
+  }
+
+  if (!out.length){
+    document.getElementById("list").innerHTML = "";
+    empty.style.display = "block";
+  } else {
+    empty.style.display = "none";
+    render(out);
+  }
+}
+
+q.addEventListener("input", update);
+
+q.addEventListener("keydown", (e)=>{
+  if (e.key === "Escape"){
+    q.value = "";
+    update();
+  }
+  if (e.key === "Enter"){
+    // pin top match by replacing query with best English alias or Novara word depending on mode
+    const query = q.value;
+    const raw = search(query, mode);
+    const out = smart ? smartFilter(raw, query, mode) : raw;
+    if (out.length){
+      if (mode === "EN2NOV"){
+        // Replace input with the matched English phrase that best matched (keep what user typed if they prefer)
+        q.value = query;
+      } else {
+        q.value = out[0].nov;
+      }
+      update();
     }
+  }
+});
 
-    // Live update
-    inText.addEventListener('input', translateNow);
+modeChip.addEventListener("click", ()=>{
+  mode = (mode === "EN2NOV") ? "NOV2EN" : "EN2NOV";
+  modeLabel.textContent = (mode === "EN2NOV") ? "EN → NOV" : "NOV → EN";
+  modeChip.dataset.on = "true";
+  update();
+});
 
-    btnTranslate.addEventListener('click', translateNow);
-    btnCopy.addEventListener('click', copyOutput);
-    btnClear.addEventListener('click', clearAll);
+smartChip.addEventListener("click", ()=>{
+  smart = !smart;
+  smartChip.dataset.on = smart ? "true" : "false";
+  update();
+});
 
-    translateNow();
-  </script>
+// Initial state: show nothing
+update();
+</script>
 </body>
 </html>
