@@ -318,12 +318,12 @@ function normalize(str){
 function sortDict(list){
   // Sort by Novara, then English
   return [...list].sort((a,b)=>{
-    const an = normalize(a.nov);
-    const bn = normalize(b.nov);
+    const an = normalize(a.en);
+    const bn = normalize(b.en);
     if(an < bn) return -1;
     if(an > bn) return 1;
-    const ae = normalize(a.en);
-    const be = normalize(b.en);
+    const ae = normalize(a.nov);
+    const be = normalize(b.nov);
     if(ae < be) return -1;
     if(ae > be) return 1;
     return 0;
@@ -335,7 +335,7 @@ function groupByLetter(list){
   LETTERS.forEach(L => groups[L] = []);
 
   list.forEach(entry=>{
-    const key = (entry.nov || "").trim().charAt(0).toUpperCase();
+    const key = (entry.en || "").trim().charAt(0).toUpperCase();
     const L = LETTERS.includes(key) ? key : "#";
     if(!groups[L]) groups[L] = [];
     groups[L].push(entry);
