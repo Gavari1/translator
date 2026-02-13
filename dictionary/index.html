@@ -382,7 +382,7 @@ function renderGrouped(list){
     entries.forEach(entry=>{
       const row = document.createElement("div");
       row.className = "row";
-      row.innerHTML = `<span>${entry.nov}</span><span>${entry.en}</span>`;
+      row.innerHTML = `<span>${entry.en}</span><span>${entry.nov}</span>`;
       section.appendChild(row);
     });
 
