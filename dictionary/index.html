@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Novara Dictionary</title>
+<title>Lumeran Dictionary</title>
 
 <style>
 body{
@@ -102,14 +102,13 @@ input{
   opacity:.7;
   margin:-6px 0 14px 0;
 }
-
 </style>
 </head>
 
 <body>
 <div class="card">
-  <h1>Novara Dictionary</h1>
-  <input id="search" placeholder="Type English or Novara..." />
+  <h1>Lumeran Dictionary</h1>
+  <input id="search" placeholder="Type English or Lumeran..." />
   <div class="note">Scroll A–Z or search to filter instantly.</div>
 
   <div class="azbar" id="azbar"></div>
@@ -117,11 +116,8 @@ input{
 </div>
 
 <script>
-// SIMPLE DICTIONARY STRUCTURE
-const DICT = [
-
-  // Core grammar
-{
+// --- RAW WORDLIST (LUMERAN -> ENGLISH) ---
+const RAW_DICT = {
   "egu": "I",
   "tus": "you",
   "elo": "he",
@@ -176,8 +172,11 @@ const DICT = [
   "hodia": "today",
   "manha": "tomorrow",
   "mirka": "yesterday"
-}
-];
+};
+
+// --- CONVERT TO THE STRUCTURE THIS APP EXPECTS ---
+// Each entry: { en: "...", lum: "..." }
+const DICT = Object.entries(RAW_DICT).map(([lum, en]) => ({ en, lum }));
 
 const input   = document.getElementById("search");
 const results = document.getElementById("results");
@@ -193,16 +192,18 @@ function normalize(str){
 }
 
 function sortDict(list){
-  // Sort by Novara, then English
+  // Sort by Lumeran first, then English
   return [...list].sort((a,b)=>{
-    const an = normalize(a.en);
-    const bn = normalize(b.en);
-    if(an < bn) return -1;
-    if(an > bn) return 1;
-    const ae = normalize(a.nov);
-    const be = normalize(b.nov);
+    const al = normalize(a.lum);
+    const bl = normalize(b.lum);
+    if(al < bl) return -1;
+    if(al > bl) return 1;
+
+    const ae = normalize(a.en);
+    const be = normalize(b.en);
     if(ae < be) return -1;
     if(ae > be) return 1;
+
     return 0;
   });
 }
@@ -212,13 +213,13 @@ function groupByLetter(list){
   LETTERS.forEach(L => groups[L] = []);
 
   list.forEach(entry=>{
+    // Group by ENGLISH first letter (matches your current A–Z expectation)
     const key = (entry.en || "").trim().charAt(0).toUpperCase();
     const L = LETTERS.includes(key) ? key : "#";
     if(!groups[L]) groups[L] = [];
     groups[L].push(entry);
   });
 
-  // Remove empty groups except keep A-Z (we’ll just skip empties in render)
   return groups;
 }
 
@@ -259,7 +260,7 @@ function renderGrouped(list){
     entries.forEach(entry=>{
       const row = document.createElement("div");
       row.className = "row";
-      row.innerHTML = `<span>${entry.en}</span><span>${entry.nov}</span>`;
+      row.innerHTML = `<span>${entry.en}</span><span>${entry.lum}</span>`;
       section.appendChild(row);
     });
 
@@ -270,14 +271,13 @@ function renderGrouped(list){
 function applySearch(){
   const q = normalize(input.value);
 
-  // If empty search, show EVERYTHING A–Z
   if(!q){
     renderGrouped(DICT);
     return;
   }
 
   const matches = DICT.filter(entry =>
-    normalize(entry.nov).includes(q) ||
+    normalize(entry.lum).includes(q) ||
     normalize(entry.en).includes(q)
   );
 
