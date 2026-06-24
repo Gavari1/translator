@@ -141,6 +141,162 @@ function skipSpaces(tokens, index) {
 }
 
 /*
+  RELATIVE THAT SAFETY RULE
+
+  English:
+    the dog that I saw
+    the man that helped me
+
+  Elefen:
+    la can cual me ia vide
+    la om ci ia aida me
+*/
+
+function previousWordToken(tokens, index) {
+  for (let i = index - 1; i >= 0; i--) {
+    if (isWordToken(tokens[i])) {
+      return normalizeWord(tokens[i]);
+    }
+  }
+
+  return "";
+}
+
+function nextWordTokenIndex(tokens, index) {
+  for (let i = index + 1; i < tokens.length; i++) {
+    if (isWordToken(tokens[i])) {
+      return i;
+    }
+
+    if (!isSpaceToken(tokens[i])) {
+      return -1;
+    }
+  }
+
+  return -1;
+}
+
+function isHumanRelativeNoun(word) {
+  return [
+    "person", "people", "man", "woman", "child", "baby",
+    "mother", "father", "friend"
+  ].includes(normalizeWord(word));
+}
+
+function isLikelyRelativeNoun(word) {
+  const clean = normalizeWord(word);
+
+  if (hasTag(clean, "noun")) return true;
+
+  return [
+    "car", "house", "thing", "language", "person", "river", "train",
+    "bus", "bicycle", "bike", "plane", "boat", "food", "water",
+    "day", "night", "work", "job", "street", "store", "school",
+    "city", "country", "world", "word", "sentence", "time", "year",
+    "month", "week", "hour", "minute", "morning", "church", "evening",
+    "room", "door", "window", "book", "phone", "name", "family",
+    "mother", "father", "child", "baby", "woman", "man", "people",
+    "body", "head", "hand", "eye", "mouth", "heart", "coffee",
+    "bread", "fruit", "animal", "dog", "cat", "tree", "flower",
+    "sun", "moon", "place", "problem", "cage", "home",
+    "translation", "translations", "translator"
+  ].includes(clean);
+}
+
+function hasVerbSoonAfter(tokens, startIndex, maxWords = 6) {
+  let wordsSeen = 0;
+
+  for (let i = startIndex; i < tokens.length && wordsSeen < maxWords; i++) {
+    if (!isWordToken(tokens[i])) continue;
+
+    const word = normalizeWord(tokens[i]);
+    wordsSeen++;
+
+    if ([
+      "am", "are", "is", "was", "were",
+      "do", "does", "did",
+      "can", "could", "should", "must",
+      "will", "would"
+    ].includes(word)) {
+      return true;
+    }
+
+    if ([
+      "bought", "helped", "made", "did", "said", "saw", "heard",
+      "ate", "drank", "went", "came", "wrote", "read", "found",
+      "gave", "took", "used", "wanted", "needed", "liked", "loved",
+      "worked", "lived", "spoke", "translated", "created", "opened",
+      "closed", "started", "finished", "changed", "cleaned", "repaired"
+    ].includes(word)) {
+      return true;
+    }
+
+    if (hasTag(word, "verb")) return true;
+    if (word.endsWith("ed")) return true;
+  }
+
+  return false;
+}
+
+function looksLikeRelativeThatLocal(tokens, index) {
+  const current = normalizeWord(tokens[index]);
+  if (current !== "that") return false;
+
+  const prev = previousWordToken(tokens, index);
+  if (!isLikelyRelativeNoun(prev)) return false;
+
+  const nextIndex = nextWordTokenIndex(tokens, index);
+  if (nextIndex < 0) return false;
+
+  const next = normalizeWord(tokens[nextIndex]);
+
+  // the dog that I saw
+  if ([
+    "i", "me", "you", "he", "him", "she", "her", "it",
+    "we", "us", "they", "them"
+  ].includes(next)) {
+    return hasVerbSoonAfter(tokens, nextIndex);
+  }
+
+  // the dog that is happy
+  if ([
+    "am", "are", "is", "was", "were",
+    "do", "does", "did",
+    "can", "could", "should", "must",
+    "will", "would"
+  ].includes(next)) {
+    return true;
+  }
+
+  // the man that helped me
+  if ([
+    "bought", "helped", "made", "did", "said", "saw", "heard",
+    "ate", "drank", "went", "came", "wrote", "read", "found",
+    "gave", "took", "used", "wanted", "needed", "liked", "loved",
+    "worked", "lived", "spoke", "translated", "created", "opened",
+    "closed", "started", "finished", "changed", "cleaned", "repaired"
+  ].includes(next)) {
+    return true;
+  }
+
+  if (hasTag(next, "verb")) return true;
+  if (next.endsWith("ed")) return true;
+
+  return false;
+}
+
+function resolveRelativeThatLocal(tokens) {
+  return tokens.map((token, index) => {
+    if (isWordToken(token) && looksLikeRelativeThatLocal(tokens, index)) {
+      const prev = previousWordToken(tokens, index);
+      return isHumanRelativeNoun(prev) ? "ci" : "cual";
+    }
+
+    return token;
+  });
+}
+
+/*
   YES/NO QUESTION RULE
 
   English:
@@ -408,16 +564,22 @@ function tryAdjectiveNounRule(tokens, startIndex) {
 function translateText(source, allowQuestionRule = true) {
   let tokens = tokenize(source);
 
-  // Special "that" rules from rules.js:
-  // that dog / I want that -> acel
-  // the dog that I saw -> cual
-  // the man that helped me -> ci
-  if (typeof RULES.resolveAcelThat === "function") {
-    tokens = RULES.resolveAcelThat(tokens);
-  }
+  // Order matters:
+  // 1. Relative that first:
+  //    the dog that I saw -> cual
+  //    the man that helped me -> ci
+  //
+  // 2. Acel that second:
+  //    that dog / I want that -> acel
+
+  tokens = resolveRelativeThatLocal(tokens);
 
   if (typeof RULES.resolveRelativeThat === "function") {
     tokens = RULES.resolveRelativeThat(tokens);
+  }
+
+  if (typeof RULES.resolveAcelThat === "function") {
+    tokens = RULES.resolveAcelThat(tokens);
   }
 
   const output = [];
