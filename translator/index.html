@@ -1,401 +1,1083 @@
 <!doctype html>
+
 <html lang="en">
+
 <head>
+
   <meta charset="utf-8" />
+
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Nordic-ish Translator 96™</title>
+
+  <title>English to Elefen Translator</title>
+
   <style>
+
     :root{
-      --bg:#9aa3ad;
-      --panel:#c9ced6;
-      --bezel:#6f7780;
-      --screen:#bfe3b9;
-      --screen2:#a8d8a2;
-      --text:#0b1a0b;
-      --btn:#e6e6e6;
-      --btn2:#d2d2d2;
+
+      --bg:#1c2230;
+
+      --panel:#d8dde7;
+
+      --bezel:#566071;
+
+      --screen:#bfe3ff;
+
+      --screen2:#92cfff;
+
+      --text:#07131f;
+
+      --btn:#f2f2f2;
+
+      --btn2:#d4d4d4;
+
       --red:#c93b3b;
-      --blue:#2e5bd6;
+
+      --blue:#2f7ee6;
+
       --yellow:#d6b12e;
+
+      --green:#2dbd79;
+
       --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+
       --sans: system-ui, -apple-system, Segoe UI, sans-serif;
+
     }
+
     *{ box-sizing:border-box; }
+
     body{
+
       margin:0;
-      background: linear-gradient(180deg, #7f8892, var(--bg));
+
+      background:
+
+        radial-gradient(circle at top, rgba(80,160,255,0.35), transparent 35%),
+
+        linear-gradient(180deg, #111827, var(--bg));
+
       font-family: var(--sans);
+
       color:#111;
+
       display:flex;
+
       align-items:center;
+
       justify-content:center;
+
       min-height:100vh;
+
       padding:16px;
+
     }
+
     .device{
-      width:min(900px, 100%);
-      background: linear-gradient(180deg, var(--panel), #b7bcc5);
+
+      width:min(950px, 100%);
+
+      background: linear-gradient(180deg, var(--panel), #b6bdca);
+
       border: 4px solid var(--bezel);
-      border-radius: 16px;
-      box-shadow: 0 18px 40px rgba(0,0,0,0.35), inset 0 2px 0 rgba(255,255,255,0.6);
+
+      border-radius: 18px;
+
+      box-shadow:
+
+        0 22px 55px rgba(0,0,0,0.45),
+
+        inset 0 2px 0 rgba(255,255,255,0.7);
+
       padding:16px;
+
       overflow:hidden;
+
     }
+
     .topbar{
+
       display:flex;
+
       align-items:center;
+
       justify-content:space-between;
+
       gap:12px;
+
       padding:8px 10px 14px;
+
       flex-wrap:wrap;
+
     }
+
     .brand{
-      font-weight:800;
-      letter-spacing:0.5px;
+
+      font-weight:900;
+
+      letter-spacing:0.8px;
+
       text-transform:uppercase;
+
       font-size:14px;
-      color:#222;
+
+      color:#1b2430;
+
       display:flex;
+
       align-items:center;
+
       gap:10px;
+
       white-space:nowrap;
+
     }
+
     .brand .dot{
-      width:10px;height:10px;border-radius:50%;
-      background: radial-gradient(circle at 30% 30%, #fff, #bbb);
-      border:1px solid rgba(0,0,0,0.25);
-    }
-    .model{
-      font-family: var(--mono);
-      font-size:12px;
-      color:#333;
-      opacity:0.9;
-    }
-    .screen-wrap{
-      background: #3a3f47;
-      border-radius: 12px;
-      padding:12px;
-      border: 3px solid #1f232a;
-      box-shadow: inset 0 2px 0 rgba(255,255,255,0.08);
-    }
-    .screen{
-      background: linear-gradient(180deg, var(--screen), var(--screen2));
-      border-radius: 8px;
-      border: 2px solid rgba(0,0,0,0.45);
-      box-shadow: inset 0 0 0 2px rgba(255,255,255,0.2);
-      padding:10px;
-      color: var(--text);
-      font-family: var(--mono);
-      max-width:100%;
-      overflow:hidden;
-    }
-    .row{
-      display:flex;
-      gap:10px;
-      align-items:flex-start;
-      justify-content:space-between;
-      margin-bottom:10px;
-      flex-wrap:wrap;
-    }
-    .label{
-      font-size:12px;
-      opacity:0.85;
-      flex: 1 1 auto;
-      min-width: 240px;
-    }
-    textarea{
-      width:100%;
-      max-width:100%;
-      min-width:0;
-      display:block;
-      min-height:120px;
-      resize:vertical;
-      border-radius: 6px;
-      border: 1px solid rgba(0,0,0,0.45);
-      background: rgba(255,255,255,0.55);
-      color:#0c1a0c;
-      font-family: var(--mono);
-      font-size: 14px;
-      padding:10px;
-      outline:none;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.35);
-      overflow-wrap:anywhere;
-      word-break:break-word;
-    }
-    .split{
-      display:grid;
-      grid-template-columns: 1fr;
-      gap:10px;
-      width:100%;
-      margin:0 auto;
-      max-width:100%;
-    }
-    .split > div{ min-width:0; max-width:100%; }
-    @media (min-width: 820px){
-      .split{ grid-template-columns: 1fr 1fr; }
-      textarea{ min-height: 180px; }
-    }
-    .controls{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      padding:12px 2px 4px;
-      align-items:center;
-      justify-content:space-between;
-    }
-    .btns{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      align-items:center;
-    }
-    button{
-      border: 2px solid rgba(0,0,0,0.45);
-      background: linear-gradient(180deg, var(--btn), var(--btn2));
-      border-radius: 10px;
-      padding:10px 14px;
-      font-weight:700;
-      font-family: var(--sans);
-      cursor:pointer;
-      box-shadow: 0 4px 0 rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.6);
-      transition: transform 0.03s ease-in-out;
-    }
-    button:active{
-      transform: translateY(2px);
-      box-shadow: 0 2px 0 rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.6);
-    }
-    .btn-blue{
-      background: linear-gradient(180deg, #6ea0ff, var(--blue));
-      color:#071026;
-    }
-    .btn-yellow{
-      background: linear-gradient(180deg, #ffe08a, var(--yellow));
-      color:#241b05;
-    }
-    .btn-red{
-      background: linear-gradient(180deg, #ff6d6d, var(--red));
-      color:#140000;
-    }
-    .status{
-      font-family: var(--mono);
-      font-size:12px;
-      opacity:0.9;
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      align-items:center;
-      justify-content:flex-end;
-    }
-    .pill{
+
+      width:12px;
+
+      height:12px;
+
+      border-radius:50%;
+
+      background: radial-gradient(circle at 30% 30%, #fff, #4da6ff 45%, #1b4e91);
+
       border:1px solid rgba(0,0,0,0.35);
-      background: rgba(255,255,255,0.35);
-      padding:6px 10px;
-      border-radius:999px;
-      white-space:nowrap;
+
+      box-shadow:0 0 12px rgba(77,166,255,0.8);
+
     }
-    .foot{
-      margin-top:10px;
+
+    .model{
+
+      font-family: var(--mono);
+
       font-size:12px;
-      opacity:0.85;
-      color:#222;
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
-      flex-wrap:wrap;
+
+      color:#333;
+
+      opacity:0.9;
+
     }
-    .foot code{ font-family: var(--mono); }
+
+    .screen-wrap{
+
+      background: #303846;
+
+      border-radius: 14px;
+
+      padding:12px;
+
+      border: 3px solid #171b22;
+
+      box-shadow: inset 0 2px 0 rgba(255,255,255,0.08);
+
+    }
+
+    .screen{
+
+      background: linear-gradient(180deg, var(--screen), var(--screen2));
+
+      border-radius: 10px;
+
+      border: 2px solid rgba(0,0,0,0.45);
+
+      box-shadow:
+
+        inset 0 0 0 2px rgba(255,255,255,0.25),
+
+        inset 0 12px 30px rgba(255,255,255,0.22);
+
+      padding:12px;
+
+      color: var(--text);
+
+      font-family: var(--mono);
+
+      max-width:100%;
+
+      overflow:hidden;
+
+    }
+
+    .row{
+
+      display:flex;
+
+      gap:10px;
+
+      align-items:flex-start;
+
+      justify-content:space-between;
+
+      margin-bottom:10px;
+
+      flex-wrap:wrap;
+
+    }
+
+    .label{
+
+      font-size:12px;
+
+      opacity:0.88;
+
+      flex: 1 1 auto;
+
+      min-width: 240px;
+
+      line-height:1.45;
+
+    }
+
+    .split{
+
+      display:grid;
+
+      grid-template-columns: 1fr;
+
+      gap:10px;
+
+      width:100%;
+
+      margin:0 auto;
+
+      max-width:100%;
+
+    }
+
+    .split > div{
+
+      min-width:0;
+
+      max-width:100%;
+
+    }
+
+    @media (min-width: 820px){
+
+      .split{
+
+        grid-template-columns: 1fr 1fr;
+
+      }
+
+      textarea{
+
+        min-height: 220px;
+
+      }
+
+    }
+
+    textarea{
+
+      width:100%;
+
+      max-width:100%;
+
+      min-width:0;
+
+      display:block;
+
+      min-height:160px;
+
+      resize:vertical;
+
+      border-radius: 8px;
+
+      border: 1px solid rgba(0,0,0,0.5);
+
+      background: rgba(255,255,255,0.62);
+
+      color:#07131f;
+
+      font-family: var(--mono);
+
+      font-size: 15px;
+
+      line-height:1.45;
+
+      padding:12px;
+
+      outline:none;
+
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.45);
+
+      overflow-wrap:anywhere;
+
+      word-break:break-word;
+
+    }
+
+    textarea:focus{
+
+      border-color:#1e63bd;
+
+      box-shadow:
+
+        inset 0 1px 0 rgba(255,255,255,0.45),
+
+        0 0 0 3px rgba(47,126,230,0.18);
+
+    }
+
+    #outText{
+
+      background: rgba(255,255,255,0.72);
+
+      font-weight:700;
+
+    }
+
+    .controls{
+
+      display:flex;
+
+      flex-wrap:wrap;
+
+      gap:10px;
+
+      padding:12px 2px 4px;
+
+      align-items:center;
+
+      justify-content:space-between;
+
+    }
+
+    .btns{
+
+      display:flex;
+
+      flex-wrap:wrap;
+
+      gap:10px;
+
+      align-items:center;
+
+    }
+
+    button{
+
+      border: 2px solid rgba(0,0,0,0.45);
+
+      background: linear-gradient(180deg, var(--btn), var(--btn2));
+
+      border-radius: 10px;
+
+      padding:10px 14px;
+
+      font-weight:800;
+
+      font-family: var(--sans);
+
+      cursor:pointer;
+
+      box-shadow:
+
+        0 4px 0 rgba(0,0,0,0.25),
+
+        inset 0 1px 0 rgba(255,255,255,0.7);
+
+      transition: transform 0.03s ease-in-out;
+
+    }
+
+    button:active{
+
+      transform: translateY(2px);
+
+      box-shadow:
+
+        0 2px 0 rgba(0,0,0,0.25),
+
+        inset 0 1px 0 rgba(255,255,255,0.7);
+
+    }
+
+    .btn-blue{
+
+      background: linear-gradient(180deg, #7db3ff, var(--blue));
+
+      color:#071026;
+
+    }
+
+    .btn-yellow{
+
+      background: linear-gradient(180deg, #ffe08a, var(--yellow));
+
+      color:#241b05;
+
+    }
+
+    .btn-red{
+
+      background: linear-gradient(180deg, #ff7777, var(--red));
+
+      color:#180000;
+
+    }
+
+    .btn-green{
+
+      background: linear-gradient(180deg, #75e6b1, var(--green));
+
+      color:#061b11;
+
+    }
+
+    .status{
+
+      font-family: var(--mono);
+
+      font-size:12px;
+
+      opacity:0.95;
+
+      display:flex;
+
+      gap:10px;
+
+      flex-wrap:wrap;
+
+      align-items:center;
+
+      justify-content:flex-end;
+
+    }
+
+    .pill{
+
+      border:1px solid rgba(0,0,0,0.35);
+
+      background: rgba(255,255,255,0.38);
+
+      padding:6px 10px;
+
+      border-radius:999px;
+
+      white-space:nowrap;
+
+      font-weight:700;
+
+    }
+
+    .vocab-box{
+
+      margin-top:12px;
+
+      display:none;
+
+    }
+
+    .vocab-box.open{
+
+      display:block;
+
+    }
+
+    #vocabText{
+
+      min-height:180px;
+
+      font-size:13px;
+
+      background: rgba(255,255,255,0.66);
+
+    }
+
+    .foot{
+
+      margin-top:10px;
+
+      font-size:12px;
+
+      opacity:0.88;
+
+      color:#222;
+
+      display:flex;
+
+      justify-content:space-between;
+
+      gap:10px;
+
+      flex-wrap:wrap;
+
+    }
+
+    .foot code{
+
+      font-family: var(--mono);
+
+      background: rgba(255,255,255,0.35);
+
+      padding:2px 5px;
+
+      border-radius:5px;
+
+    }
+
   </style>
+
 </head>
+
 <body>
-  <div class="device" role="application" aria-label="Nordic-ish Translator 96">
+
+  <div class="device" role="application" aria-label="English to Elefen Translator">
+
     <div class="topbar">
-      <div class="brand"><span class="dot" aria-hidden="true"></span> NORDIC-ISH TRANSLATOR 96™</div>
-      <div class="model">MODEL: NXT-1996 • “CHEAP BUT LOUD” EDITION</div>
+
+      <div class="brand">
+
+        <span class="dot" aria-hidden="true"></span>
+
+        ENGLISH → ELEFEN TRANSLATOR
+
+      </div>
+
+      <div class="model">MODEL: LFN-01 • ONE PAIR PER LINE</div>
+
     </div>
 
     <div class="screen-wrap">
+
       <div class="screen">
+
         <div class="row">
+
           <div class="label">
-            RULES: vowel swap (A↔O, E↔I, U↔Y). Then “the NOUN” → NOUN+en. Plural: “the cars” → “corens”. Also: words ending i/e → +g, a/o → +k.
+
+            TYPE ENGLISH. GET ELEFEN. Dictionary uses one pair per line:
+
+            <strong>english = elefen</strong>. Multi-word phrases work too.
+
           </div>
+
         </div>
 
         <div class="split">
+
           <div>
-            <textarea id="inText" placeholder="Type text...">The car is in the street.
-The cars are in the store.</textarea>
+
+            <div class="label" style="margin:0 0 6px;">INPUT / ENGLISH</div>
+
+            <textarea id="inText" placeholder="Type English here...">I want your car.
+
+Good morning, friend.</textarea>
+
           </div>
+
           <div>
-            <div class="label" style="margin:0 0 6px;">OUTPUT</div>
-            <textarea id="outText" readonly placeholder="Output appears here..."></textarea>
+
+            <div class="label" style="margin:0 0 6px;">OUTPUT / ELEFEN</div>
+
+            <textarea id="outText" readonly placeholder="Elefen appears here..."></textarea>
+
           </div>
+
         </div>
 
         <div class="controls">
+
           <div class="btns">
+
             <button class="btn-blue" id="btnTranslate">TRANSLATE</button>
+
             <button class="btn-yellow" id="btnCopy">COPY OUTPUT</button>
+
             <button class="btn-red" id="btnClear">CLEAR</button>
+
+            <button class="btn-green" id="btnVocab">SHOW VOCAB</button>
+
           </div>
 
           <div class="status">
+
             <span class="pill" id="countWords">WORDS: 0</span>
+
             <span class="pill" id="countChars">CHARS: 0</span>
+
+            <span class="pill" id="countKnown">KNOWN: 0</span>
+
+            <span class="pill" id="countUnknown">UNKNOWN: 0</span>
+
           </div>
+
         </div>
+
+        <div class="vocab-box" id="vocabBox">
+
+          <div class="label" style="margin:0 0 6px;">
+
+            VOCAB LIST — one pair per line. You can edit this here while testing.
+
+            To permanently change GitHub, edit the same list inside the code.
+
+          </div>
+
+          <textarea id="vocabText" spellcheck="false"></textarea>
+
+          <div class="controls">
+
+            <div class="btns">
+
+              <button class="btn-blue" id="btnApplyVocab">APPLY VOCAB</button>
+
+              <button class="btn-yellow" id="btnResetVocab">RESET VOCAB</button>
+
+            </div>
+
+          </div>
+
+        </div>
+
       </div>
+
     </div>
 
     <div class="foot">
-      <div>Note: “the” is removed; it becomes <code>NOUNen</code> or <code>NOUNens</code> after vowel swap.</div>
-      <div>Live mode: typing updates output automatically.</div>
+
+      <div>Unknown words stay English, so the sentence does not turn into robot soup.</div>
+
+      <div>Example: <code>I want your car</code> → <code>Me vole tua auto</code></div>
+
     </div>
+
   </div>
 
   <script>
-    const inText = document.getElementById('inText');
-    const outText = document.getElementById('outText');
-    const btnTranslate = document.getElementById('btnTranslate');
-    const btnCopy = document.getElementById('btnCopy');
-    const btnClear = document.getElementById('btnClear');
-    const countWords = document.getElementById('countWords');
-    const countChars = document.getElementById('countChars');
 
-    // Tokenize while preserving whitespace + punctuation as separate tokens:
-    // - words (letters + apostrophes)
-    // - whitespace
-    // - everything else (punctuation/symbols)
+    const DEFAULT_VOCAB_TEXT = `
+
+hello = alo
+
+friend = ami
+
+i = me
+
+you = tu
+
+he = el
+
+she = el
+
+we = nos
+
+they = los
+
+them = los
+
+that = acel
+
+this = esta
+
+car = auto
+
+my = mea
+
+mine = mea
+
+yours = tua
+
+your = tua
+
+ours = nosa
+
+house = casa
+
+good morning = bon dia
+
+want = vole
+
+wanted = ia vole
+
+will = va
+
+would = ta
+
+`.trim();
+
+    const inText = document.getElementById("inText");
+
+    const outText = document.getElementById("outText");
+
+    const vocabText = document.getElementById("vocabText");
+
+    const vocabBox = document.getElementById("vocabBox");
+
+    const btnTranslate = document.getElementById("btnTranslate");
+
+    const btnCopy = document.getElementById("btnCopy");
+
+    const btnClear = document.getElementById("btnClear");
+
+    const btnVocab = document.getElementById("btnVocab");
+
+    const btnApplyVocab = document.getElementById("btnApplyVocab");
+
+    const btnResetVocab = document.getElementById("btnResetVocab");
+
+    const countWords = document.getElementById("countWords");
+
+    const countChars = document.getElementById("countChars");
+
+    const countKnown = document.getElementById("countKnown");
+
+    const countUnknown = document.getElementById("countUnknown");
+
+    let dictionary = {};
+
+    let phraseList = [];
+
     function tokenize(text) {
+
       return text.match(/[A-Za-z']+|\s+|[^A-Za-z'\s]+/g) || [];
+
     }
 
-    function isWordToken(tok) {
-      return /^[A-Za-z']+$/.test(tok);
+    function isWordToken(token) {
+
+      return /^[A-Za-z']+$/.test(token);
+
     }
 
-    // Vowel swap: A↔O, E↔I, U↔Y (and Y↔U), preserving case.
-    function vowelSwapWord(w) {
-      const map = {
-        a:"o", o:"a", e:"i", i:"e", u:"y", y:"u",
-        A:"O", O:"A", E:"I", I:"E", U:"Y", Y:"U"
-      };
-      return w.replace(/[aeiouyAEIOUY]/g, ch => map[ch] || ch);
+    function normalizeWord(word) {
+
+      return word.toLowerCase().replace(/^'+|'+$/g, "");
+
     }
 
-    // Ending rule:
-    // ends in i/e -> add g
-    // ends in a/o -> add k
-    function applyEndingRule(w) {
-      if (!w) return w;
-      const last = w[w.length - 1];
+    function capitalizeFirst(text) {
 
-      if (last === 'i' || last === 'I') return w + 'g';
-      if (last === 'e' || last === 'E') return w + 'g';
-      if (last === 'a' || last === 'A') return w + 'k';
-      if (last === 'o' || last === 'O') return w + 'k';
+      if (!text) return text;
 
-      return w;
+      return text.charAt(0).toUpperCase() + text.slice(1);
+
     }
 
-    // Transform "the NOUN" into:
-    // - singular: NOUN+en   (NO "the" kept)
-    // - plural (noun ends with s/S): stem + "ens"  (NO "the" kept)
-    function translateText(src) {
-      const toks = tokenize(src);
-      const out = [];
-      let i = 0;
+    function shouldCapitalize(originalWord) {
 
-      while (i < toks.length) {
-        const tok = toks[i];
+      return /^[A-Z]/.test(originalWord);
 
-        // Detect standalone "the"
-        if (isWordToken(tok) && tok.toLowerCase() === "the") {
-          // Find next word token (skipping non-words)
-          let j = i + 1;
-          while (j < toks.length && !isWordToken(toks[j])) j++;
+    }
 
-          if (j < toks.length && isWordToken(toks[j])) {
-            const noun = toks[j];
+    function parseVocab(text) {
 
-            // plural = ends with s/S (simple rule)
-            const isPlural = noun.length > 1 && /[sS]$/.test(noun);
+      const dict = {};
 
-            if (isPlural) {
-              // drop 'the' and drop any spacing/punct between it and noun
-              const stem = noun.slice(0, -1);           // cars -> car
-              const swappedStem = vowelSwapWord(stem);  // car -> cor
-              out.push(applyEndingRule(swappedStem + "ens"));
-              i = j + 1;
-              continue;
-            } else {
-              const swappedNoun = vowelSwapWord(noun);
-              out.push(applyEndingRule(swappedNoun + "en"));
-              i = j + 1;
-              continue;
-            }
-          }
-          // If "the" isn't followed by a word, fall through and treat normally
-        }
+      const lines = text.split(/\r?\n/);
 
-        // Normal tokens
-        if (isWordToken(tok)) {
-          const swapped = vowelSwapWord(tok);
-          out.push(applyEndingRule(swapped));
-        } else {
-          out.push(tok);
-        }
+      for (const rawLine of lines) {
 
-        i++;
+        const line = rawLine.trim();
+
+        if (!line) continue;
+
+        if (line.startsWith("#")) continue;
+
+        if (line.startsWith("//")) continue;
+
+        const match = line.match(/^(.+?)\s*(=|-|:|→)\s*(.+)$/);
+
+        if (!match) continue;
+
+        const english = match[1].trim().toLowerCase();
+
+        const elefen = match[3].trim();
+
+        if (!english || !elefen) continue;
+
+        dict[english] = elefen;
+
       }
 
-      return out.join("");
+      return dict;
+
     }
 
-    function updateCounts(src) {
-      const words = (src.match(/[A-Za-z']+/g) || []).length;
+    function rebuildDictionary() {
+
+      dictionary = parseVocab(vocabText.value);
+
+      phraseList = Object.keys(dictionary)
+
+        .map(key => ({
+
+          english: key,
+
+          elefen: dictionary[key],
+
+          words: key.split(/\s+/).filter(Boolean)
+
+        }))
+
+        .sort((a, b) => b.words.length - a.words.length);
+
+    }
+
+    function tryMatchPhrase(tokens, startIndex, phrase) {
+
+      let tokenIndex = startIndex;
+
+      let firstWordToken = null;
+
+      for (let wordIndex = 0; wordIndex < phrase.words.length; wordIndex++) {
+
+        if (wordIndex > 0) {
+
+          let sawSpace = false;
+
+          while (tokenIndex < tokens.length && /^\s+$/.test(tokens[tokenIndex])) {
+
+            sawSpace = true;
+
+            tokenIndex++;
+
+          }
+
+          if (!sawSpace) return null;
+
+        }
+
+        if (tokenIndex >= tokens.length) return null;
+
+        if (!isWordToken(tokens[tokenIndex])) return null;
+
+        const currentWord = normalizeWord(tokens[tokenIndex]);
+
+        const neededWord = phrase.words[wordIndex];
+
+        if (currentWord !== neededWord) return null;
+
+        if (wordIndex === 0) {
+
+          firstWordToken = tokens[tokenIndex];
+
+        }
+
+        tokenIndex++;
+
+      }
+
+      let translated = phrase.elefen;
+
+      if (firstWordToken && shouldCapitalize(firstWordToken)) {
+
+        translated = capitalizeFirst(translated);
+
+      }
+
+      return {
+
+        text: translated,
+
+        nextIndex: tokenIndex,
+
+        wordCount: phrase.words.length
+
+      };
+
+    }
+
+    function translateText(source) {
+
+      const tokens = tokenize(source);
+
+      const output = [];
+
+      let known = 0;
+
+      let unknown = 0;
+
+      let i = 0;
+
+      while (i < tokens.length) {
+
+        const token = tokens[i];
+
+        if (!isWordToken(token)) {
+
+          output.push(token);
+
+          i++;
+
+          continue;
+
+        }
+
+        let matched = null;
+
+        for (const phrase of phraseList) {
+
+          matched = tryMatchPhrase(tokens, i, phrase);
+
+          if (matched) break;
+
+        }
+
+        if (matched) {
+
+          output.push(matched.text);
+
+          known += matched.wordCount;
+
+          i = matched.nextIndex;
+
+          continue;
+
+        }
+
+        output.push(token);
+
+        unknown++;
+
+        i++;
+
+      }
+
+      return {
+
+        text: output.join(""),
+
+        known,
+
+        unknown
+
+      };
+
+    }
+
+    function updateCounts(source, known, unknown) {
+
+      const words = (source.match(/[A-Za-z']+/g) || []).length;
+
       countWords.textContent = `WORDS: ${words}`;
-      countChars.textContent = `CHARS: ${src.length}`;
+
+      countChars.textContent = `CHARS: ${source.length}`;
+
+      countKnown.textContent = `KNOWN: ${known}`;
+
+      countUnknown.textContent = `UNKNOWN: ${unknown}`;
+
     }
 
     function translateNow() {
-      const src = inText.value || "";
-      outText.value = translateText(src);
-      updateCounts(src);
+
+      const source = inText.value || "";
+
+      const result = translateText(source);
+
+      outText.value = result.text;
+
+      updateCounts(source, result.known, result.unknown);
+
     }
 
     async function copyOutput() {
+
       const text = outText.value || "";
+
       if (!text) return;
 
       try {
+
         await navigator.clipboard.writeText(text);
-        btnCopy.textContent = "COPIED!";
-        setTimeout(() => (btnCopy.textContent = "COPY OUTPUT"), 900);
-      } catch (e) {
+
+      } catch (error) {
+
         outText.focus();
+
         outText.select();
-        document.execCommand('copy');
-        btnCopy.textContent = "COPIED!";
-        setTimeout(() => (btnCopy.textContent = "COPY OUTPUT"), 900);
+
+        document.execCommand("copy");
+
       }
+
+      btnCopy.textContent = "COPIED!";
+
+      setTimeout(() => {
+
+        btnCopy.textContent = "COPY OUTPUT";
+
+      }, 900);
+
     }
 
     function clearAll() {
+
       inText.value = "";
+
       outText.value = "";
+
       translateNow();
+
       inText.focus();
+
     }
 
-    // Live update
-    inText.addEventListener('input', translateNow);
+    function toggleVocab() {
 
-    btnTranslate.addEventListener('click', translateNow);
-    btnCopy.addEventListener('click', copyOutput);
-    btnClear.addEventListener('click', clearAll);
+      vocabBox.classList.toggle("open");
+
+      btnVocab.textContent = vocabBox.classList.contains("open")
+
+        ? "HIDE VOCAB"
+
+        : "SHOW VOCAB";
+
+    }
+
+    function applyVocab() {
+
+      rebuildDictionary();
+
+      translateNow();
+
+      btnApplyVocab.textContent = "APPLIED!";
+
+      setTimeout(() => {
+
+        btnApplyVocab.textContent = "APPLY VOCAB";
+
+      }, 900);
+
+    }
+
+    function resetVocab() {
+
+      vocabText.value = DEFAULT_VOCAB_TEXT;
+
+      rebuildDictionary();
+
+      translateNow();
+
+    }
+
+    vocabText.value = DEFAULT_VOCAB_TEXT;
+
+    rebuildDictionary();
+
+    inText.addEventListener("input", translateNow);
+
+    btnTranslate.addEventListener("click", translateNow);
+
+    btnCopy.addEventListener("click", copyOutput);
+
+    btnClear.addEventListener("click", clearAll);
+
+    btnVocab.addEventListener("click", toggleVocab);
+
+    btnApplyVocab.addEventListener("click", applyVocab);
+
+    btnResetVocab.addEventListener("click", resetVocab);
 
     translateNow();
+
   </script>
+
 </body>
+
 </html>
