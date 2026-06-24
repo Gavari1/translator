@@ -98,7 +98,8 @@ window.ELEFEN_RULES = {
     "should": "no debe",
     "must": "no debe"
   },
-    ACEL_THAT_NOUNS: [
+
+  ACEL_THAT_NOUNS: [
     "car", "house", "thing", "language", "person", "river", "train",
     "bus", "bicycle", "bike", "plane", "boat", "food", "water",
     "day", "night", "work", "job", "street", "store", "school",
@@ -132,15 +133,48 @@ window.ELEFEN_RULES = {
     "orange", "pink", "purple"
   ],
 
+  THAT_CLAUSE_VERBS: [
+    "think", "thinks", "thought",
+    "believe", "believes", "believed",
+    "know", "knows", "knew",
+    "say", "says", "said",
+    "tell", "tells", "told",
+    "hope", "hopes", "hoped",
+    "feel", "feels", "felt",
+    "understand", "understands", "understood",
+    "remember", "remembers", "remembered",
+    "forget", "forgets", "forgot"
+  ],
+
   cleanToken(word) {
     return String(word || "")
       .toLowerCase()
       .replace(/^[^\w']+|[^\w']+$/g, "");
   },
 
+  previousWord(tokens, index) {
+    for (let i = index - 1; i >= 0; i--) {
+      const word = this.cleanToken(tokens[i]);
+      if (word) return word;
+    }
+    return "";
+  },
+
+  isClauseVerbBeforeThat(tokens, index) {
+    const prev = this.previousWord(tokens, index);
+    return this.THAT_CLAUSE_VERBS.includes(prev);
+  },
+
   isAcelThat(tokens, index) {
     let nextIndex = index + 1;
     let next = this.cleanToken(tokens[nextIndex]);
+
+    // Do NOT change:
+    // I think that / I know that / I believe that
+    // Leave those for vocab phrase traps: "i think that = me pensa ce"
+    if (this.isClauseVerbBeforeThat(tokens, index)) {
+      return false;
+    }
 
     // I want that.
     if (!next) return true;
@@ -148,12 +182,12 @@ window.ELEFEN_RULES = {
     // that dog / that car / that house
     if (this.ACEL_THAT_NOUNS.includes(next)) return true;
 
-    // that big dog / that old car / that beautiful house
+    // that happy dog / that old car / that beautiful house
     while (this.ACEL_THAT_ADJECTIVES.includes(next)) {
       nextIndex++;
       next = this.cleanToken(tokens[nextIndex]);
 
-      if (!next) return true;
+      if (!next) return false;
       if (this.ACEL_THAT_NOUNS.includes(next)) return true;
     }
 
@@ -170,5 +204,45 @@ window.ELEFEN_RULES = {
 
       return token;
     });
+  },
+
+  resolveDetAdjNounOrder(tokens) {
+    const output = [];
+
+    for (let i = 0; i < tokens.length; i++) {
+      const current = this.cleanToken(tokens[i]);
+      const next = this.cleanToken(tokens[i + 1]);
+      const next2 = this.cleanToken(tokens[i + 2]);
+
+      const isDet =
+        current === "a" ||
+        current === "an" ||
+        current === "the" ||
+        current === "this" ||
+        current === "that" ||
+        current === "acel" ||
+        current === "my" ||
+        current === "your" ||
+        current === "his" ||
+        current === "her" ||
+        current === "our" ||
+        current === "their";
+
+      if (
+        isDet &&
+        this.ACEL_THAT_ADJECTIVES.includes(next) &&
+        this.ACEL_THAT_NOUNS.includes(next2)
+      ) {
+        output.push(tokens[i]);      // acel / the / my
+        output.push(tokens[i + 2]);  // dog
+        output.push(tokens[i + 1]);  // happy
+        i += 2;
+        continue;
+      }
+
+      output.push(tokens[i]);
+    }
+
+    return output;
   }
 };
