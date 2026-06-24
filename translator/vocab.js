@@ -129,6 +129,7 @@ moon = luna | noun
 place = loco | noun
 problem = problem | noun
 cage = caje | noun
+home = casa | noun
 
 # =========================================================
 # PREPOSITIONS / LOCATION / MOVEMENT
@@ -448,8 +449,9 @@ was going to the = ia vade a la
 was going to = ia intende
 going = vadente
 went = ia vade
+went to = ia vada a
 will go = va vade 
-will go to = ta vade a la
+will go to = ta vade a 
 would go = ta vade
 would go to = ta vade a la
 to go = vade
