@@ -212,6 +212,9 @@ they will think that = los va pensa ce
 you all think that = vos pensa ce
 you all thought that = vos ia pensa ce
 you all will think that = vos va pensa ce
+thinks that = pensa ce 
+though that = ia pensa ca
+will think that = va pensa ce
 
 i believe that = me crede ce
 i believed that = me ia crede ce
