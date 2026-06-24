@@ -36,8 +36,6 @@
 
       --yellow:#d6b12e;
 
-      --green:#2dbd79;
-
       --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
 
       --sans: system-ui, -apple-system, Segoe UI, sans-serif;
@@ -342,7 +340,7 @@
 
       align-items:center;
 
-      justify-content:space-between;
+      justify-content:flex-start;
 
     }
 
@@ -417,74 +415,6 @@
       background: linear-gradient(180deg, #ff7777, var(--red));
 
       color:#180000;
-
-    }
-
-    .btn-green{
-
-      background: linear-gradient(180deg, #75e6b1, var(--green));
-
-      color:#061b11;
-
-    }
-
-    .status{
-
-      font-family: var(--mono);
-
-      font-size:12px;
-
-      opacity:0.95;
-
-      display:flex;
-
-      gap:10px;
-
-      flex-wrap:wrap;
-
-      align-items:center;
-
-      justify-content:flex-end;
-
-    }
-
-    .pill{
-
-      border:1px solid rgba(0,0,0,0.35);
-
-      background: rgba(255,255,255,0.38);
-
-      padding:6px 10px;
-
-      border-radius:999px;
-
-      white-space:nowrap;
-
-      font-weight:700;
-
-    }
-
-    .vocab-box{
-
-      margin-top:12px;
-
-      display:none;
-
-    }
-
-    .vocab-box.open{
-
-      display:block;
-
-    }
-
-    #vocabText{
-
-      min-height:180px;
-
-      font-size:13px;
-
-      background: rgba(255,255,255,0.66);
 
     }
 
@@ -564,9 +494,7 @@
 
             <div class="label" style="margin:0 0 6px;">INPUT / ENGLISH</div>
 
-            <textarea id="inText" placeholder="Type English here...">I want your car.
-
-Good morning, friend.</textarea>
+            <textarea id="inText" placeholder="Type English here...">I wanted my house</textarea>
 
           </div>
 
@@ -590,46 +518,6 @@ Good morning, friend.</textarea>
 
             <button class="btn-red" id="btnClear">CLEAR</button>
 
-            <button class="btn-green" id="btnVocab">SHOW VOCAB</button>
-
-          </div>
-
-          <div class="status">
-
-            <span class="pill" id="countWords">WORDS: 0</span>
-
-            <span class="pill" id="countChars">CHARS: 0</span>
-
-            <span class="pill" id="countKnown">KNOWN: 0</span>
-
-            <span class="pill" id="countUnknown">UNKNOWN: 0</span>
-
-          </div>
-
-        </div>
-
-        <div class="vocab-box" id="vocabBox">
-
-          <div class="label" style="margin:0 0 6px;">
-
-            VOCAB LIST — one pair per line. You can edit this here while testing.
-
-            To permanently change GitHub, edit the same list inside the code.
-
-          </div>
-
-          <textarea id="vocabText" spellcheck="false"></textarea>
-
-          <div class="controls">
-
-            <div class="btns">
-
-              <button class="btn-blue" id="btnApplyVocab">APPLY VOCAB</button>
-
-              <button class="btn-yellow" id="btnResetVocab">RESET VOCAB</button>
-
-            </div>
-
           </div>
 
         </div>
@@ -640,7 +528,7 @@ Good morning, friend.</textarea>
 
     <div class="foot">
 
-      <div>Unknown words stay English, so the sentence does not turn into robot soup.</div>
+      <div>Unknown words stay in English so the sentence still makes sense.</div>
 
       <div>Example: <code>I want your car</code> → <code>Me vole tua auto</code></div>
 
@@ -704,29 +592,11 @@ would = ta
 
     const outText = document.getElementById("outText");
 
-    const vocabText = document.getElementById("vocabText");
-
-    const vocabBox = document.getElementById("vocabBox");
-
     const btnTranslate = document.getElementById("btnTranslate");
 
     const btnCopy = document.getElementById("btnCopy");
 
     const btnClear = document.getElementById("btnClear");
-
-    const btnVocab = document.getElementById("btnVocab");
-
-    const btnApplyVocab = document.getElementById("btnApplyVocab");
-
-    const btnResetVocab = document.getElementById("btnResetVocab");
-
-    const countWords = document.getElementById("countWords");
-
-    const countChars = document.getElementById("countChars");
-
-    const countKnown = document.getElementById("countKnown");
-
-    const countUnknown = document.getElementById("countUnknown");
 
     let dictionary = {};
 
@@ -776,10 +646,6 @@ would = ta
 
         if (!line) continue;
 
-        if (line.startsWith("#")) continue;
-
-        if (line.startsWith("//")) continue;
-
         const match = line.match(/^(.+?)\s*(=|-|:|→)\s*(.+)$/);
 
         if (!match) continue;
@@ -800,7 +666,7 @@ would = ta
 
     function rebuildDictionary() {
 
-      dictionary = parseVocab(vocabText.value);
+      dictionary = parseVocab(DEFAULT_VOCAB_TEXT);
 
       phraseList = Object.keys(dictionary)
 
@@ -874,9 +740,7 @@ would = ta
 
         text: translated,
 
-        nextIndex: tokenIndex,
-
-        wordCount: phrase.words.length
+        nextIndex: tokenIndex
 
       };
 
@@ -887,10 +751,6 @@ would = ta
       const tokens = tokenize(source);
 
       const output = [];
-
-      let known = 0;
-
-      let unknown = 0;
 
       let i = 0;
 
@@ -922,8 +782,6 @@ would = ta
 
           output.push(matched.text);
 
-          known += matched.wordCount;
-
           i = matched.nextIndex;
 
           continue;
@@ -932,35 +790,11 @@ would = ta
 
         output.push(token);
 
-        unknown++;
-
         i++;
 
       }
 
-      return {
-
-        text: output.join(""),
-
-        known,
-
-        unknown
-
-      };
-
-    }
-
-    function updateCounts(source, known, unknown) {
-
-      const words = (source.match(/[A-Za-z']+/g) || []).length;
-
-      countWords.textContent = `WORDS: ${words}`;
-
-      countChars.textContent = `CHARS: ${source.length}`;
-
-      countKnown.textContent = `KNOWN: ${known}`;
-
-      countUnknown.textContent = `UNKNOWN: ${unknown}`;
+      return output.join("");
 
     }
 
@@ -968,11 +802,7 @@ would = ta
 
       const source = inText.value || "";
 
-      const result = translateText(source);
-
-      outText.value = result.text;
-
-      updateCounts(source, result.known, result.unknown);
+      outText.value = translateText(source);
 
     }
 
@@ -1012,51 +842,9 @@ would = ta
 
       outText.value = "";
 
-      translateNow();
-
       inText.focus();
 
     }
-
-    function toggleVocab() {
-
-      vocabBox.classList.toggle("open");
-
-      btnVocab.textContent = vocabBox.classList.contains("open")
-
-        ? "HIDE VOCAB"
-
-        : "SHOW VOCAB";
-
-    }
-
-    function applyVocab() {
-
-      rebuildDictionary();
-
-      translateNow();
-
-      btnApplyVocab.textContent = "APPLIED!";
-
-      setTimeout(() => {
-
-        btnApplyVocab.textContent = "APPLY VOCAB";
-
-      }, 900);
-
-    }
-
-    function resetVocab() {
-
-      vocabText.value = DEFAULT_VOCAB_TEXT;
-
-      rebuildDictionary();
-
-      translateNow();
-
-    }
-
-    vocabText.value = DEFAULT_VOCAB_TEXT;
 
     rebuildDictionary();
 
@@ -1067,12 +855,6 @@ would = ta
     btnCopy.addEventListener("click", copyOutput);
 
     btnClear.addEventListener("click", clearAll);
-
-    btnVocab.addEventListener("click", toggleVocab);
-
-    btnApplyVocab.addEventListener("click", applyVocab);
-
-    btnResetVocab.addEventListener("click", resetVocab);
 
     translateNow();
 
