@@ -2709,462 +2709,611 @@ purple = purpur | adj
 
 `.trim();
 
-      const inText = document.getElementById("inText");
-    const outText = document.getElementById("outText");
-    const btnTranslate = document.getElementById("btnTranslate");
-    const btnCopy = document.getElementById("btnCopy");
-    const btnClear = document.getElementById("btnClear");
+            const inText = document.getElementById("inText");
+      const outText = document.getElementById("outText");
+      const btnTranslate = document.getElementById("btnTranslate");
+      const btnCopy = document.getElementById("btnCopy");
+      const btnClear = document.getElementById("btnClear");
 
-    let dictionary = {};
-    let vocabTags = {};
-    let phraseList = [];
+      let dictionary = {};
+      let vocabTags = {};
+      let phraseList = [];
 
-    const DET_TRANSLATIONS = {
-      "a": "un",
-      "an": "un",
-      "the": "la",
-      "this": "esta",
-      "that": "acel",
-      "my": "mea",
-      "your": "tua",
-      "his": "sua",
-      "her": "sua",
-      "its": "sua",
-      "our": "nosa",
-      "their": "lor"
-    };
-
-    function tokenize(text) {
-      return text.match(/[A-Za-z']+|\s+|[^A-Za-z'\s]+/g) || [];
-    }
-
-    function isWordToken(token) {
-      return /^[A-Za-z']+$/.test(token);
-    }
-
-    function isSpaceToken(token) {
-      return /^\s+$/.test(token);
-    }
-
-    function normalizeWord(word) {
-      return word.toLowerCase().replace(/^'+|'+$/g, "");
-    }
-
-    function capitalizeFirst(text) {
-      if (!text) return text;
-      return text.charAt(0).toUpperCase() + text.slice(1);
-    }
-
-    function isSentenceStart(tokens, index) {
-      let j = index - 1;
-
-      while (j >= 0 && isSpaceToken(tokens[j])) {
-        j--;
-      }
-
-      if (j < 0) return true;
-      return /[.!?]$/.test(tokens[j]);
-    }
-
-    function shouldCapitalize(tokens, index) {
-      return isSentenceStart(tokens, index) && /^[A-Z]/.test(tokens[index] || "");
-    }
-
-    function maybeCapitalize(text, tokens, index) {
-      return shouldCapitalize(tokens, index) ? capitalizeFirst(text) : text;
-    }
-
-    function parseVocab(text) {
-      const dict = {};
-      const tags = {};
-      const lines = text.split(/\r?\n/);
-
-      for (const rawLine of lines) {
-        const line = rawLine.trim();
-
-        if (!line) continue;
-        if (line.startsWith("#")) continue;
-
-        const match = line.match(/^(.+?)\s*(=|-|:|→)\s*(.+)$/);
-        if (!match) continue;
-
-        const english = match[1].trim().toLowerCase();
-
-        let elefenAndTag = match[3].trim();
-        let elefen = elefenAndTag;
-        let tag = "";
-
-        if (elefenAndTag.includes("|")) {
-          const parts = elefenAndTag.split("|");
-          elefen = parts[0].trim();
-          tag = parts.slice(1).join("|").trim().toLowerCase();
-        }
-
-        if (!english || !elefen) continue;
-
-        dict[english] = elefen;
-
-        if (tag) {
-          tags[english] = tag;
-        }
-      }
-
-      return { dict, tags };
-    }
-
-    function rebuildDictionary() {
-      const parsed = parseVocab(DEFAULT_VOCAB_TEXT);
-
-      dictionary = parsed.dict;
-      vocabTags = parsed.tags;
-
-      phraseList = Object.keys(dictionary)
-        .map(key => ({
-          english: key,
-          elefen: dictionary[key],
-          words: key.split(/\s+/).filter(Boolean)
-        }))
-        .sort((a, b) => b.words.length - a.words.length);
-    }
-
-    function getTag(word) {
-      return vocabTags[normalizeWord(word)] || "";
-    }
-
-    function hasTag(word, wantedTag) {
-      const tag = getTag(word);
-      if (!tag) return false;
-      return tag.split(/[,\s]+/).includes(wantedTag);
-    }
-
-    function translateWord(word) {
-      const clean = normalizeWord(word);
-      return dictionary[clean] || word;
-    }
-
-    function skipSpaces(tokens, index) {
-      while (index < tokens.length && isSpaceToken(tokens[index])) {
-        index++;
-      }
-
-      return index;
-    }
-
-    /*
-      NEGATION PATCH
-
-      This catches English patterns like:
-      is not, are not, was not, will not, would not,
-      do not, does not, did not,
-      can not, cannot, should not, must not.
-
-      It puts Elefen "no" before the verb / tense marker:
-      are not = no es
-      did not = no ia
-      will not = no va
-      would not = no ta
-    */
-    function tryNegationRule(tokens, startIndex) {
-      if (!isWordToken(tokens[startIndex])) return null;
-
-      const word = normalizeWord(tokens[startIndex]);
-
-      const nextIndex = skipSpaces(tokens, startIndex + 1);
-      const nextWord =
-        nextIndex < tokens.length && isWordToken(tokens[nextIndex])
-          ? normalizeWord(tokens[nextIndex])
-          : "";
-
-      const contractionMap = {
-        "isn't": "no es",
-        "aren't": "no es",
-        "wasn't": "no ia es",
-        "weren't": "no ia es",
-
-        "won't": "no va",
-        "wouldn't": "no ta",
-
-        "don't": "no",
-        "doesn't": "no",
-        "didn't": "no ia",
-
-        "can't": "no pote",
-        "cannot": "no pote",
-        "couldn't": "no ta pote",
-        "shouldn't": "no debe",
-        "mustn't": "no debe"
+      const DET_TRANSLATIONS = {
+        "a": "un",
+        "an": "un",
+        "the": "la",
+        "this": "esta",
+        "that": "acel",
+        "my": "mea",
+        "your": "tua",
+        "his": "sua",
+        "her": "sua",
+        "its": "sua",
+        "our": "nosa",
+        "their": "lor"
       };
 
-      if (contractionMap[word]) {
+      function tokenize(text) {
+        return text.match(/[A-Za-z']+|\s+|[^A-Za-z'\s]+/g) || [];
+      }
+
+      function isWordToken(token) {
+        return /^[A-Za-z']+$/.test(token);
+      }
+
+      function isSpaceToken(token) {
+        return /^\s+$/.test(token);
+      }
+
+      function normalizeWord(word) {
+        return word.toLowerCase().replace(/^'+|'+$/g, "");
+      }
+
+      function capitalizeFirst(text) {
+        if (!text) return text;
+        return text.charAt(0).toUpperCase() + text.slice(1);
+      }
+
+      function isSentenceStart(tokens, index) {
+        let j = index - 1;
+
+        while (j >= 0 && isSpaceToken(tokens[j])) {
+          j--;
+        }
+
+        if (j < 0) return true;
+        return /[.!?]$/.test(tokens[j]);
+      }
+
+      function shouldCapitalize(tokens, index) {
+        return isSentenceStart(tokens, index) && /^[A-Z]/.test(tokens[index] || "");
+      }
+
+      function maybeCapitalize(text, tokens, index) {
+        return shouldCapitalize(tokens, index) ? capitalizeFirst(text) : text;
+      }
+
+      function parseVocab(text) {
+        const dict = {};
+        const tags = {};
+        const lines = text.split(/\r?\n/);
+
+        for (const rawLine of lines) {
+          const line = rawLine.trim();
+
+          if (!line) continue;
+          if (line.startsWith("#")) continue;
+
+          const match = line.match(/^(.+?)\s*(=|-|:|→)\s*(.+)$/);
+          if (!match) continue;
+
+          const english = match[1].trim().toLowerCase();
+
+          let elefenAndTag = match[3].trim();
+          let elefen = elefenAndTag;
+          let tag = "";
+
+          if (elefenAndTag.includes("|")) {
+            const parts = elefenAndTag.split("|");
+            elefen = parts[0].trim();
+            tag = parts.slice(1).join("|").trim().toLowerCase();
+          }
+
+          if (!english || !elefen) continue;
+
+          dict[english] = elefen;
+
+          if (tag) {
+            tags[english] = tag;
+          }
+        }
+
+        return { dict, tags };
+      }
+
+      function rebuildDictionary() {
+        const parsed = parseVocab(DEFAULT_VOCAB_TEXT);
+
+        dictionary = parsed.dict;
+        vocabTags = parsed.tags;
+
+        phraseList = Object.keys(dictionary)
+          .map(key => ({
+            english: key,
+            elefen: dictionary[key],
+            words: key.split(/\s+/).filter(Boolean)
+          }))
+          .sort((a, b) => b.words.length - a.words.length);
+      }
+
+      function getTag(word) {
+        return vocabTags[normalizeWord(word)] || "";
+      }
+
+      function hasTag(word, wantedTag) {
+        const tag = getTag(word);
+        if (!tag) return false;
+        return tag.split(/[,\s]+/).includes(wantedTag);
+      }
+
+      function translateWord(word) {
+        const clean = normalizeWord(word);
+        return dictionary[clean] || word;
+      }
+
+      function skipSpaces(tokens, index) {
+        while (index < tokens.length && isSpaceToken(tokens[index])) {
+          index++;
+        }
+
+        return index;
+      }
+
+      /*
+        YES/NO QUESTION PATCH
+
+        English:
+        Do you understand me?
+        Did you eat?
+        Can you help her?
+        Are you happy?
+
+        Elefen:
+        Esce tu comprende me?
+        Esce tu ia come?
+        Esce tu pote aida el?
+        Esce tu es felis?
+      */
+      function tryYesNoQuestionRule(tokens, startIndex) {
+        if (!isWordToken(tokens[startIndex])) return null;
+        if (!isSentenceStart(tokens, startIndex)) return null;
+
+        const aux = normalizeWord(tokens[startIndex]);
+
+        const auxMap = {
+          "do": "",
+          "does": "",
+          "did": "ia",
+
+          "can": "pote",
+          "could": "ta pote",
+          "should": "debe",
+          "must": "debe",
+
+          "will": "va",
+          "would": "ta",
+
+          "am": "es",
+          "are": "es",
+          "is": "es",
+          "was": "ia es",
+          "were": "ia es"
+        };
+
+        if (!(aux in auxMap)) return null;
+
+        let subjectIndex = skipSpaces(tokens, startIndex + 1);
+
+        if (subjectIndex >= tokens.length || !isWordToken(tokens[subjectIndex])) {
+          return null;
+        }
+
+        let subjectWord = normalizeWord(tokens[subjectIndex]);
+
+        const subjectMap = {
+          "i": "me",
+          "me": "me",
+          "you": "tu",
+          "he": "el",
+          "him": "el",
+          "she": "el",
+          "her": "el",
+          "it": "lo",
+          "we": "nos",
+          "us": "nos",
+          "they": "los",
+          "them": "los"
+        };
+
+        let subject = subjectMap[subjectWord];
+
+        if (!subject) return null;
+
+        let restStart = subjectIndex + 1;
+
+        // Handle "you all"
+        if (subjectWord === "you") {
+          const possibleAllIndex = skipSpaces(tokens, subjectIndex + 1);
+
+          if (
+            possibleAllIndex < tokens.length &&
+            isWordToken(tokens[possibleAllIndex]) &&
+            normalizeWord(tokens[possibleAllIndex]) === "all"
+          ) {
+            subject = "vos";
+            restStart = possibleAllIndex + 1;
+          }
+        }
+
+        restStart = skipSpaces(tokens, restStart);
+
+        let isNegative = false;
+
+        if (
+          restStart < tokens.length &&
+          isWordToken(tokens[restStart]) &&
+          normalizeWord(tokens[restStart]) === "not"
+        ) {
+          isNegative = true;
+          restStart = skipSpaces(tokens, restStart + 1);
+        }
+
+        let sentenceEnd = restStart;
+
+        while (
+          sentenceEnd < tokens.length &&
+          !/[.!?]/.test(tokens[sentenceEnd])
+        ) {
+          sentenceEnd++;
+        }
+
+        const restSource = tokens.slice(restStart, sentenceEnd).join("").trim();
+        const translatedRest = restSource ? translateText(restSource, false).trim() : "";
+
+        let marker = auxMap[aux];
+
+        if (isNegative) {
+          marker = marker ? "no " + marker : "no";
+        }
+
+        const parts = ["Esce", subject];
+
+        if (marker) parts.push(marker);
+        if (translatedRest) parts.push(translatedRest);
+
         return {
-          text: maybeCapitalize(contractionMap[word], tokens, startIndex),
-          nextIndex: startIndex + 1
+          text: parts.join(" "),
+          nextIndex: sentenceEnd
         };
       }
 
-      if (nextWord === "not") {
-        const negationMap = {
-          "am": "no es",
-          "is": "no es",
-          "are": "no es",
-          "was": "no ia es",
-          "were": "no ia es",
+      /*
+        NEGATION PATCH
 
-          "will": "no va",
-          "would": "no ta",
+        English:
+        is not, are not, was not, will not, would not,
+        do not, does not, did not,
+        can not, cannot, should not, must not.
 
-          "do": "no",
-          "does": "no",
-          "did": "no ia",
+        Elefen:
+        no goes before the verb / tense marker.
+      */
+      function tryNegationRule(tokens, startIndex) {
+        if (!isWordToken(tokens[startIndex])) return null;
 
-          "can": "no pote",
-          "could": "no ta pote",
-          "should": "no debe",
-          "must": "no debe"
+        const word = normalizeWord(tokens[startIndex]);
+
+        const nextIndex = skipSpaces(tokens, startIndex + 1);
+        const nextWord =
+          nextIndex < tokens.length && isWordToken(tokens[nextIndex])
+            ? normalizeWord(tokens[nextIndex])
+            : "";
+
+        const contractionMap = {
+          "isn't": "no es",
+          "aren't": "no es",
+          "wasn't": "no ia es",
+          "weren't": "no ia es",
+
+          "won't": "no va",
+          "wouldn't": "no ta",
+
+          "don't": "no",
+          "doesn't": "no",
+          "didn't": "no ia",
+
+          "can't": "no pote",
+          "cannot": "no pote",
+          "couldn't": "no ta pote",
+          "shouldn't": "no debe",
+          "mustn't": "no debe"
         };
 
-        if (negationMap[word]) {
+        if (contractionMap[word]) {
           return {
-            text: maybeCapitalize(negationMap[word], tokens, startIndex),
-            nextIndex: nextIndex + 1
+            text: maybeCapitalize(contractionMap[word], tokens, startIndex),
+            nextIndex: startIndex + 1
           };
         }
-      }
 
-      return null;
-    }
+        if (nextWord === "not") {
+          const negationMap = {
+            "am": "no es",
+            "is": "no es",
+            "are": "no es",
+            "was": "no ia es",
+            "were": "no ia es",
 
-    function isDeterminer(word) {
-      const clean = normalizeWord(word);
-      return !!DET_TRANSLATIONS[clean] || hasTag(clean, "det");
-    }
+            "will": "no va",
+            "would": "no ta",
 
-    function translateDeterminer(word) {
-      const clean = normalizeWord(word);
-      return DET_TRANSLATIONS[clean] || translateWord(word);
-    }
+            "do": "no",
+            "does": "no",
+            "did": "no ia",
 
-    function tryMatchPhrase(tokens, startIndex, phrase, multiWordOnly = false) {
-      if (multiWordOnly && phrase.words.length < 2) return null;
+            "can": "no pote",
+            "could": "no ta pote",
+            "should": "no debe",
+            "must": "no debe"
+          };
 
-      let tokenIndex = startIndex;
-
-      for (let wordIndex = 0; wordIndex < phrase.words.length; wordIndex++) {
-        if (wordIndex > 0) {
-          let sawSpace = false;
-
-          while (tokenIndex < tokens.length && isSpaceToken(tokens[tokenIndex])) {
-            sawSpace = true;
-            tokenIndex++;
+          if (negationMap[word]) {
+            return {
+              text: maybeCapitalize(negationMap[word], tokens, startIndex),
+              nextIndex: nextIndex + 1
+            };
           }
-
-          if (!sawSpace) return null;
         }
 
-        if (tokenIndex >= tokens.length) return null;
-        if (!isWordToken(tokens[tokenIndex])) return null;
-
-        const currentWord = normalizeWord(tokens[tokenIndex]);
-        const neededWord = phrase.words[wordIndex];
-
-        if (currentWord !== neededWord) return null;
-
-        tokenIndex++;
+        return null;
       }
 
-      return {
-        text: maybeCapitalize(phrase.elefen, tokens, startIndex),
-        nextIndex: tokenIndex
-      };
-    }
-
-    function tryAnyPhrase(tokens, startIndex, multiWordOnly = false) {
-      for (const phrase of phraseList) {
-        const matched = tryMatchPhrase(tokens, startIndex, phrase, multiWordOnly);
-        if (matched) return matched;
+      function isDeterminer(word) {
+        const clean = normalizeWord(word);
+        return !!DET_TRANSLATIONS[clean] || hasTag(clean, "det");
       }
 
-      return null;
-    }
-
-    function tryAdjectiveNounRule(tokens, startIndex) {
-      if (!isWordToken(tokens[startIndex])) return null;
-
-      let i = startIndex;
-      let determiner = "";
-      let hasDeterminer = false;
-
-      const firstWord = normalizeWord(tokens[i]);
-
-      if (isDeterminer(firstWord)) {
-        hasDeterminer = true;
-        determiner = translateDeterminer(firstWord);
-
-        i++;
-        i = skipSpaces(tokens, i);
+      function translateDeterminer(word) {
+        const clean = normalizeWord(word);
+        return DET_TRANSLATIONS[clean] || translateWord(word);
       }
 
-      const modifiers = [];
+      function tryMatchPhrase(tokens, startIndex, phrase, multiWordOnly = false) {
+        if (multiWordOnly && phrase.words.length < 2) return null;
 
-      while (i < tokens.length && isWordToken(tokens[i])) {
-        const current = normalizeWord(tokens[i]);
+        let tokenIndex = startIndex;
 
-        if (hasTag(current, "adv")) {
-          const advToken = tokens[i];
-          let nextIndex = skipSpaces(tokens, i + 1);
+        for (let wordIndex = 0; wordIndex < phrase.words.length; wordIndex++) {
+          if (wordIndex > 0) {
+            let sawSpace = false;
 
-          if (nextIndex < tokens.length && isWordToken(tokens[nextIndex])) {
-            const nextWord = normalizeWord(tokens[nextIndex]);
-
-            if (hasTag(nextWord, "adj")) {
-              modifiers.push(translateWord(advToken) + " " + translateWord(tokens[nextIndex]));
-              i = nextIndex + 1;
-              i = skipSpaces(tokens, i);
-              continue;
+            while (tokenIndex < tokens.length && isSpaceToken(tokens[tokenIndex])) {
+              sawSpace = true;
+              tokenIndex++;
             }
+
+            if (!sawSpace) return null;
           }
+
+          if (tokenIndex >= tokens.length) return null;
+          if (!isWordToken(tokens[tokenIndex])) return null;
+
+          const currentWord = normalizeWord(tokens[tokenIndex]);
+          const neededWord = phrase.words[wordIndex];
+
+          if (currentWord !== neededWord) return null;
+
+          tokenIndex++;
         }
 
-        if (hasTag(current, "adj")) {
-          modifiers.push(translateWord(tokens[i]));
+        return {
+          text: maybeCapitalize(phrase.elefen, tokens, startIndex),
+          nextIndex: tokenIndex
+        };
+      }
+
+      function tryAnyPhrase(tokens, startIndex, multiWordOnly = false) {
+        for (const phrase of phraseList) {
+          const matched = tryMatchPhrase(tokens, startIndex, phrase, multiWordOnly);
+          if (matched) return matched;
+        }
+
+        return null;
+      }
+
+      function tryAdjectiveNounRule(tokens, startIndex) {
+        if (!isWordToken(tokens[startIndex])) return null;
+
+        let i = startIndex;
+        let determiner = "";
+        let hasDeterminer = false;
+
+        const firstWord = normalizeWord(tokens[i]);
+
+        if (isDeterminer(firstWord)) {
+          hasDeterminer = true;
+          determiner = translateDeterminer(firstWord);
+
           i++;
           i = skipSpaces(tokens, i);
-          continue;
         }
 
-        break;
+        const modifiers = [];
+
+        while (i < tokens.length && isWordToken(tokens[i])) {
+          const current = normalizeWord(tokens[i]);
+
+          if (hasTag(current, "adv")) {
+            const advToken = tokens[i];
+            let nextIndex = skipSpaces(tokens, i + 1);
+
+            if (nextIndex < tokens.length && isWordToken(tokens[nextIndex])) {
+              const nextWord = normalizeWord(tokens[nextIndex]);
+
+              if (hasTag(nextWord, "adj")) {
+                modifiers.push(translateWord(advToken) + " " + translateWord(tokens[nextIndex]));
+                i = nextIndex + 1;
+                i = skipSpaces(tokens, i);
+                continue;
+              }
+            }
+          }
+
+          if (hasTag(current, "adj")) {
+            modifiers.push(translateWord(tokens[i]));
+            i++;
+            i = skipSpaces(tokens, i);
+            continue;
+          }
+
+          break;
+        }
+
+        if (i >= tokens.length || !isWordToken(tokens[i])) return null;
+
+        const possibleNoun = normalizeWord(tokens[i]);
+        if (!hasTag(possibleNoun, "noun")) return null;
+
+        if (!hasDeterminer && modifiers.length === 0) return null;
+
+        const noun = translateWord(tokens[i]);
+        const parts = [];
+
+        if (hasDeterminer) parts.push(determiner);
+        parts.push(noun);
+
+        for (const modifier of modifiers) {
+          parts.push(modifier);
+        }
+
+        return {
+          text: maybeCapitalize(parts.join(" "), tokens, startIndex),
+          nextIndex: i + 1
+        };
       }
 
-      if (i >= tokens.length || !isWordToken(tokens[i])) return null;
+      function translateText(source, allowQuestionRule = true) {
+        const tokens = tokenize(source);
+        const output = [];
 
-      const possibleNoun = normalizeWord(tokens[i]);
-      if (!hasTag(possibleNoun, "noun")) return null;
+        let i = 0;
 
-      if (!hasDeterminer && modifiers.length === 0) return null;
+        while (i < tokens.length) {
+          const token = tokens[i];
 
-      const noun = translateWord(tokens[i]);
-      const parts = [];
+          if (!isWordToken(token)) {
+            output.push(token);
+            i++;
+            continue;
+          }
 
-      if (hasDeterminer) parts.push(determiner);
-      parts.push(noun);
+          /*
+            Order matters:
 
-      for (const modifier of modifiers) {
-        parts.push(modifier);
-      }
+            1. Yes/no question rule:
+               "Do you understand me?" -> "Esce tu comprende me?"
 
-      return {
-        text: maybeCapitalize(parts.join(" "), tokens, startIndex),
-        nextIndex: i + 1
-      };
-    }
+            2. Negation rule:
+               "are not" -> "no es"
+               "did not" -> "no ia"
 
-    function translateText(source) {
-      const tokens = tokenize(source);
-      const output = [];
+            3. Long phrase traps:
+               "if you wanted to", "i think that", "you have to"
 
-      let i = 0;
+            4. Adjective+noun rule:
+               "my blue car" -> "mea auto blu"
 
-      while (i < tokens.length) {
-        const token = tokens[i];
+            5. Single word lookup.
+          */
 
-        if (!isWordToken(token)) {
+          const yesNoQuestion = allowQuestionRule
+            ? tryYesNoQuestionRule(tokens, i)
+            : null;
+
+          if (yesNoQuestion) {
+            output.push(yesNoQuestion.text);
+            i = yesNoQuestion.nextIndex;
+            continue;
+          }
+
+          const negationRule = tryNegationRule(tokens, i);
+
+          if (negationRule) {
+            output.push(negationRule.text);
+            i = negationRule.nextIndex;
+            continue;
+          }
+
+          const multiPhrase = tryAnyPhrase(tokens, i, true);
+
+          if (multiPhrase) {
+            output.push(multiPhrase.text);
+            i = multiPhrase.nextIndex;
+            continue;
+          }
+
+          const adjectiveNoun = tryAdjectiveNounRule(tokens, i);
+
+          if (adjectiveNoun) {
+            output.push(adjectiveNoun.text);
+            i = adjectiveNoun.nextIndex;
+            continue;
+          }
+
+          const singlePhrase = tryAnyPhrase(tokens, i, false);
+
+          if (singlePhrase) {
+            output.push(singlePhrase.text);
+            i = singlePhrase.nextIndex;
+            continue;
+          }
+
           output.push(token);
           i++;
-          continue;
         }
 
-        /*
-          Order matters:
-
-          1. Long phrase traps:
-             "you are not" / "if you wanted to" / "i think that"
-
-          2. Negation rule:
-             catches leftover "are not", "does not", "did not", etc.
-
-          3. Adjective+noun rule:
-             "my blue car" -> "mea auto blu"
-
-          4. Single word lookup.
-        */
-
-        const multiPhrase = tryAnyPhrase(tokens, i, true);
-
-        if (multiPhrase) {
-          output.push(multiPhrase.text);
-          i = multiPhrase.nextIndex;
-          continue;
-        }
-
-        const negationRule = tryNegationRule(tokens, i);
-
-        if (negationRule) {
-          output.push(negationRule.text);
-          i = negationRule.nextIndex;
-          continue;
-        }
-
-        const adjectiveNoun = tryAdjectiveNounRule(tokens, i);
-
-        if (adjectiveNoun) {
-          output.push(adjectiveNoun.text);
-          i = adjectiveNoun.nextIndex;
-          continue;
-        }
-
-        const singlePhrase = tryAnyPhrase(tokens, i, false);
-
-        if (singlePhrase) {
-          output.push(singlePhrase.text);
-          i = singlePhrase.nextIndex;
-          continue;
-        }
-
-        output.push(token);
-        i++;
+        return output.join("");
       }
 
-      return output.join("");
-    }
-
-    function translateNow() {
-      const source = inText.value || "";
-      outText.value = translateText(source);
-    }
-
-    async function copyOutput() {
-      const text = outText.value || "";
-      if (!text) return;
-
-      try {
-        await navigator.clipboard.writeText(text);
-      } catch (error) {
-        outText.focus();
-        outText.select();
-        document.execCommand("copy");
+      function translateNow() {
+        const source = inText.value || "";
+        outText.value = translateText(source);
       }
 
-      btnCopy.textContent = "COPIED!";
+      async function copyOutput() {
+        const text = outText.value || "";
+        if (!text) return;
 
-      setTimeout(() => {
-        btnCopy.textContent = "COPY OUTPUT";
-      }, 900);
-    }
+        try {
+          await navigator.clipboard.writeText(text);
+        } catch (error) {
+          outText.focus();
+          outText.select();
+          document.execCommand("copy");
+        }
 
-    function clearAll() {
-      inText.value = "";
-      outText.value = "";
-      inText.focus();
-    }
+        btnCopy.textContent = "COPIED!";
 
-    rebuildDictionary();
+        setTimeout(() => {
+          btnCopy.textContent = "COPY OUTPUT";
+        }, 900);
+      }
 
-    inText.addEventListener("input", translateNow);
-    btnTranslate.addEventListener("click", translateNow);
-    btnCopy.addEventListener("click", copyOutput);
-    btnClear.addEventListener("click", clearAll);
+      function clearAll() {
+        inText.value = "";
+        outText.value = "";
+        inText.focus();
+      }
 
-    translateNow();
-  </script>
-</body>
+      rebuildDictionary();
+
+      inText.addEventListener("input", translateNow);
+      btnTranslate.addEventListener("click", translateNow);
+      btnCopy.addEventListener("click", copyOutput);
+      btnClear.addEventListener("click", clearAll);
+
+      translateNow();
+    </script>
+  </body>
 </html>
+    
+      
+        
+      
+      
+        
+          
+      
+
+        
