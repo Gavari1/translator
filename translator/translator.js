@@ -36,7 +36,7 @@ function isSpaceToken(token) {
 }
 
 function normalizeWord(word) {
-  return word.toLowerCase().replace(/^'+|'+$/g, "");
+  return String(word || "").toLowerCase().replace(/^'+|'+$/g, "");
 }
 
 function capitalizeFirst(text) {
@@ -407,9 +407,20 @@ function tryAdjectiveNounRule(tokens, startIndex) {
 
 function translateText(source, allowQuestionRule = true) {
   let tokens = tokenize(source);
-tokens = window.ELEFEN_RULES.resolveAcelThat(tokens);
-  const output = [];
 
+  // Special "that" rules from rules.js:
+  // that dog / I want that -> acel
+  // the dog that I saw -> cual
+  // the man that helped me -> ci
+  if (typeof RULES.resolveAcelThat === "function") {
+    tokens = RULES.resolveAcelThat(tokens);
+  }
+
+  if (typeof RULES.resolveRelativeThat === "function") {
+    tokens = RULES.resolveRelativeThat(tokens);
+  }
+
+  const output = [];
   let i = 0;
 
   while (i < tokens.length) {
