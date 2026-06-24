@@ -188,7 +188,7 @@ to you all = a vos
 
 # =========================================================
 # THINK THAT / BELIEVE THAT / KNOW THAT
-# Keep standalone "that" as acel. These phrase traps use ce.
+
 # =========================================================
 i think that = me pensa ce
 i thought that = me ia pensa ce
