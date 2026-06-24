@@ -406,7 +406,8 @@ function tryAdjectiveNounRule(tokens, startIndex) {
 }
 
 function translateText(source, allowQuestionRule = true) {
-  const tokens = tokenize(source);
+  let tokens = tokenize(source);
+tokens = window.ELEFEN_RULES.resolveAcelThat(tokens);
   const output = [];
 
   let i = 0;
