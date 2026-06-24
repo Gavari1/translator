@@ -146,6 +146,33 @@ window.ELEFEN_RULES = {
     "forget", "forgets", "forgot"
   ],
 
+  RELATIVE_HUMAN_NOUNS: [
+    "person", "people", "man", "woman", "child", "baby",
+    "mother", "father", "friend"
+  ],
+
+  RELATIVE_THAT_SUBJECTS: [
+    "i", "me", "you", "he", "him", "she", "her", "it",
+    "we", "us", "they", "them"
+  ],
+
+  RELATIVE_THAT_AUX_OR_BE: [
+    "am", "are", "is", "was", "were",
+    "do", "does", "did",
+    "can", "could", "should", "must",
+    "will", "would"
+  ],
+
+  RELATIVE_THAT_VERB_STARTERS: [
+    "bought", "helped", "made", "did", "said", "saw", "heard",
+    "ate", "drank", "went", "came", "wrote", "read", "found",
+    "gave", "took", "used", "wanted", "needed", "liked", "loved",
+    "worked", "lived", "spoke", "translated", "created", "opened",
+    "closed", "broke", "started", "finished", "changed", "cleaned",
+    "repaired", "showed", "sent", "received", "met", "arrived",
+    "waited", "looked", "moved"
+  ],
+
   cleanToken(word) {
     return String(word || "")
       .toLowerCase()
@@ -160,9 +187,33 @@ window.ELEFEN_RULES = {
     return "";
   },
 
+  isLikelyNoun(word) {
+    return this.ACEL_THAT_NOUNS.includes(this.cleanToken(word));
+  },
+
+  isHumanNoun(word) {
+    return this.RELATIVE_HUMAN_NOUNS.includes(this.cleanToken(word));
+  },
+
   isClauseVerbBeforeThat(tokens, index) {
     const prev = this.previousWord(tokens, index);
     return this.THAT_CLAUSE_VERBS.includes(prev);
+  },
+
+  hasVerbSoon(tokens, startIndex, distance = 5) {
+    for (let i = startIndex; i < Math.min(tokens.length, startIndex + distance); i++) {
+      const word = this.cleanToken(tokens[i]);
+
+      if (!word) continue;
+      if (this.RELATIVE_THAT_AUX_OR_BE.includes(word)) return true;
+      if (this.RELATIVE_THAT_VERB_STARTERS.includes(word)) return true;
+      if (this.THAT_CLAUSE_VERBS.includes(word)) return true;
+
+      // crude fallback: helped, wanted, created, translated, etc.
+      if (word.endsWith("ed")) return true;
+    }
+
+    return false;
   },
 
   isAcelThat(tokens, index) {
@@ -200,6 +251,51 @@ window.ELEFEN_RULES = {
 
       if (clean === "that" && this.isAcelThat(tokens, index)) {
         return "acel";
+      }
+
+      return token;
+    });
+  },
+
+  looksLikeRelativeThat(tokens, index) {
+    const prev = this.previousWord(tokens, index);
+    const next = this.cleanToken(tokens[index + 1]);
+
+    // Must be: noun + that + ...
+    // the dog that...
+    // the man that...
+    if (!this.isLikelyNoun(prev)) return false;
+
+    // the dog that I saw
+    if (this.RELATIVE_THAT_SUBJECTS.includes(next)) {
+      return this.hasVerbSoon(tokens, index + 1);
+    }
+
+    // the dog that is happy
+    if (this.RELATIVE_THAT_AUX_OR_BE.includes(next)) {
+      return true;
+    }
+
+    // the man that helped me
+    if (this.RELATIVE_THAT_VERB_STARTERS.includes(next)) {
+      return true;
+    }
+
+    // fallback for simple -ed verbs
+    if (next.endsWith("ed")) {
+      return true;
+    }
+
+    return false;
+  },
+
+  resolveRelativeThat(tokens) {
+    return tokens.map((token, index) => {
+      const clean = this.cleanToken(token);
+
+      if (clean === "that" && this.looksLikeRelativeThat(tokens, index)) {
+        const prev = this.previousWord(tokens, index);
+        return this.isHumanNoun(prev) ? "ci" : "cual";
       }
 
       return token;
