@@ -91,7 +91,6 @@ function parseVocab(text) {
 
     if (!english || !elefen) continue;
 
-    // Later duplicates intentionally overwrite earlier ones.
     dict[english] = elefen;
 
     if (tag) {
@@ -146,10 +145,12 @@ function skipSpaces(tokens, index) {
   English:
     the dog that I saw
     the man that helped me
+    the man that sees me
 
   Elefen:
     la can cual me ia vide
     la om ci ia aida me
+    la om ci vide me
 */
 
 function previousWordToken(tokens, index) {
@@ -203,6 +204,74 @@ function isLikelyRelativeNoun(word) {
   ].includes(clean);
 }
 
+function isLikelyVerbWord(word) {
+  const clean = normalizeWord(word);
+
+  if (!clean) return false;
+
+  if (hasTag(clean, "verb")) return true;
+
+  if ([
+    "be", "am", "are", "is", "was", "were",
+    "do", "does", "did",
+    "can", "could", "should", "must",
+    "will", "would",
+
+    "go", "goes", "went",
+    "come", "comes", "came",
+    "see", "sees", "saw",
+    "hear", "hears", "heard",
+    "help", "helps", "helped",
+    "buy", "buys", "bought",
+    "make", "makes", "made",
+    "say", "says", "said",
+    "tell", "tells", "told",
+    "eat", "eats", "ate",
+    "drink", "drinks", "drank",
+    "write", "writes", "wrote",
+    "read", "reads",
+    "find", "finds", "found",
+    "give", "gives", "gave",
+    "take", "takes", "took",
+    "use", "uses", "used",
+    "want", "wants", "wanted",
+    "need", "needs", "needed",
+    "like", "likes", "liked",
+    "love", "loves", "loved",
+    "work", "works", "worked",
+    "live", "lives", "lived",
+    "speak", "speaks", "spoke",
+    "translate", "translates", "translated",
+    "create", "creates", "created",
+    "open", "opens", "opened",
+    "close", "closes", "closed",
+    "start", "starts", "started",
+    "finish", "finishes", "finished",
+    "change", "changes", "changed",
+    "clean", "cleans", "cleaned",
+    "repair", "repairs", "repaired",
+    "think", "thinks", "thought",
+    "believe", "believes", "believed",
+    "know", "knows", "knew"
+  ].includes(clean)) {
+    return true;
+  }
+
+  if (clean.endsWith("ed")) return true;
+
+  if (
+    dictionary[clean] &&
+    !hasTag(clean, "noun") &&
+    !hasTag(clean, "adj") &&
+    !hasTag(clean, "det") &&
+    !hasTag(clean, "adv")
+  ) {
+    return true;
+  }
+
+  return false;
+}
+
 function hasVerbSoonAfter(tokens, startIndex, maxWords = 6) {
   let wordsSeen = 0;
 
@@ -212,27 +281,7 @@ function hasVerbSoonAfter(tokens, startIndex, maxWords = 6) {
     const word = normalizeWord(tokens[i]);
     wordsSeen++;
 
-    if ([
-      "am", "are", "is", "was", "were",
-      "do", "does", "did",
-      "can", "could", "should", "must",
-      "will", "would"
-    ].includes(word)) {
-      return true;
-    }
-
-    if ([
-      "bought", "helped", "made", "did", "said", "saw", "heard",
-      "ate", "drank", "went", "came", "wrote", "read", "found",
-      "gave", "took", "used", "wanted", "needed", "liked", "loved",
-      "worked", "lived", "spoke", "translated", "created", "opened",
-      "closed", "started", "finished", "changed", "cleaned", "repaired"
-    ].includes(word)) {
-      return true;
-    }
-
-    if (hasTag(word, "verb")) return true;
-    if (word.endsWith("ed")) return true;
+    if (isLikelyVerbWord(word)) return true;
   }
 
   return false;
@@ -268,19 +317,10 @@ function looksLikeRelativeThatLocal(tokens, index) {
     return true;
   }
 
-  // the man that helped me
-  if ([
-    "bought", "helped", "made", "did", "said", "saw", "heard",
-    "ate", "drank", "went", "came", "wrote", "read", "found",
-    "gave", "took", "used", "wanted", "needed", "liked", "loved",
-    "worked", "lived", "spoke", "translated", "created", "opened",
-    "closed", "started", "finished", "changed", "cleaned", "repaired"
-  ].includes(next)) {
+  // the man that helped me / the man that sees me
+  if (isLikelyVerbWord(next)) {
     return true;
   }
-
-  if (hasTag(next, "verb")) return true;
-  if (next.endsWith("ed")) return true;
 
   return false;
 }
@@ -298,18 +338,6 @@ function resolveRelativeThatLocal(tokens) {
 
 /*
   YES/NO QUESTION RULE
-
-  English:
-    Do you understand me?
-    Did you eat?
-    Can you help her?
-    Are you happy?
-
-  Elefen:
-    Esce tu comprende me?
-    Esce tu ia come?
-    Esce tu pote aida el?
-    Esce tu es felis?
 */
 function tryYesNoQuestionRule(tokens, startIndex) {
   if (!isWordToken(tokens[startIndex])) return null;
@@ -331,7 +359,6 @@ function tryYesNoQuestionRule(tokens, startIndex) {
 
   let restStart = subjectIndex + 1;
 
-  // Handle "you all"
   if (subjectWord === "you") {
     const possibleAllIndex = skipSpaces(tokens, subjectIndex + 1);
 
@@ -389,14 +416,6 @@ function tryYesNoQuestionRule(tokens, startIndex) {
 
 /*
   NEGATION RULE
-
-  English:
-    is not, are not, was not, will not, would not,
-    do not, does not, did not,
-    can not, cannot, should not, must not.
-
-  Elefen:
-    no goes before the verb / tense marker.
 */
 function tryNegationRule(tokens, startIndex) {
   if (!isWordToken(tokens[startIndex])) return null;
@@ -481,14 +500,6 @@ function tryAnyPhrase(tokens, startIndex, multiWordOnly = false) {
 
 /*
   ADJECTIVE + NOUN RULE
-
-  English:
-    my blue car
-    your very old house
-
-  Elefen:
-    mea auto blu
-    tua casa multe vea
 */
 function tryAdjectiveNounRule(tokens, startIndex) {
   if (!isWordToken(tokens[startIndex])) return null;
@@ -565,13 +576,7 @@ function translateText(source, allowQuestionRule = true) {
   let tokens = tokenize(source);
 
   // Order matters:
-  // 1. Relative that first:
-  //    the dog that I saw -> cual
-  //    the man that helped me -> ci
-  //
-  // 2. Acel that second:
-  //    that dog / I want that -> acel
-
+  // relative that first, acel that second.
   tokens = resolveRelativeThatLocal(tokens);
 
   if (typeof RULES.resolveRelativeThat === "function") {
@@ -593,25 +598,6 @@ function translateText(source, allowQuestionRule = true) {
       i++;
       continue;
     }
-
-    /*
-      Order matters:
-
-      1. Yes/no question rule:
-         "Do you understand me?" -> "Esce tu comprende me?"
-
-      2. Negation rule:
-         "are not" -> "no es"
-         "did not" -> "no ia"
-
-      3. Long phrase traps:
-         "if you wanted to", "i think that", "you have to"
-
-      4. Adjective+noun rule:
-         "my blue car" -> "mea auto blu"
-
-      5. Single word lookup.
-    */
 
     const yesNoQuestion = allowQuestionRule
       ? tryYesNoQuestionRule(tokens, i)
