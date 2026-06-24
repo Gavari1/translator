@@ -367,8 +367,12 @@ because = car
 when = cuando
 where = do
 why = perce
-that = cual
-who = ci
+what = cua
+# that is handled by rules.js
+acel = acel
+ce = ce
+cual = cual 
+ci = ci
 if i = si me
 if you = si tu
 if he = si el
