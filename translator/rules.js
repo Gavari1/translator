@@ -36,7 +36,6 @@ window.ELEFEN_RULES = {
     "them": "los"
   },
 
-  // If an English sentence starts with one of these helpers, Elefen uses Esce.
   YES_NO_AUX_MAP: {
     "do": "",
     "does": "",
@@ -57,7 +56,6 @@ window.ELEFEN_RULES = {
     "were": "ia es"
   },
 
-  // English contraction -> Elefen negation chunk.
   NEGATION_CONTRACTIONS: {
     "isn't": "no es",
     "aren't": "no es",
@@ -78,7 +76,6 @@ window.ELEFEN_RULES = {
     "mustn't": "no debe"
   },
 
-  // English helper + not -> Elefen negation chunk.
   NEGATION_AUX_MAP: {
     "am": "no es",
     "is": "no es",
@@ -187,6 +184,14 @@ window.ELEFEN_RULES = {
     return "";
   },
 
+  nextWordIndex(tokens, index) {
+    for (let i = index + 1; i < tokens.length; i++) {
+      const word = this.cleanToken(tokens[i]);
+      if (word) return i;
+    }
+    return -1;
+  },
+
   isLikelyNoun(word) {
     return this.ACEL_THAT_NOUNS.includes(this.cleanToken(word));
   },
@@ -200,75 +205,37 @@ window.ELEFEN_RULES = {
     return this.THAT_CLAUSE_VERBS.includes(prev);
   },
 
-  hasVerbSoon(tokens, startIndex, distance = 5) {
-    for (let i = startIndex; i < Math.min(tokens.length, startIndex + distance); i++) {
-      const word = this.cleanToken(tokens[i]);
+  hasVerbSoon(tokens, startIndex, maxWords = 6) {
+    let wordsSeen = 0;
 
+    for (let i = startIndex; i < tokens.length && wordsSeen < maxWords; i++) {
+      const word = this.cleanToken(tokens[i]);
       if (!word) continue;
+
+      wordsSeen++;
+
       if (this.RELATIVE_THAT_AUX_OR_BE.includes(word)) return true;
       if (this.RELATIVE_THAT_VERB_STARTERS.includes(word)) return true;
       if (this.THAT_CLAUSE_VERBS.includes(word)) return true;
-
-      // crude fallback: helped, wanted, created, translated, etc.
       if (word.endsWith("ed")) return true;
     }
 
     return false;
   },
 
-  isAcelThat(tokens, index) {
-    let nextIndex = index + 1;
-    let next = this.cleanToken(tokens[nextIndex]);
-
-    // Do NOT change:
-    // I think that / I know that / I believe that
-    // Leave those for vocab phrase traps: "i think that = me pensa ce"
-    if (this.isClauseVerbBeforeThat(tokens, index)) {
-      return false;
-    }
-
-    // I want that.
-    if (!next) return true;
-
-    // that dog / that car / that house
-    if (this.ACEL_THAT_NOUNS.includes(next)) return true;
-
-    // that happy dog / that old car / that beautiful house
-    while (this.ACEL_THAT_ADJECTIVES.includes(next)) {
-      nextIndex++;
-      next = this.cleanToken(tokens[nextIndex]);
-
-      if (!next) return false;
-      if (this.ACEL_THAT_NOUNS.includes(next)) return true;
-    }
-
-    return false;
-  },
-
-  resolveAcelThat(tokens) {
-    return tokens.map((token, index) => {
-      const clean = this.cleanToken(token);
-
-      if (clean === "that" && this.isAcelThat(tokens, index)) {
-        return "acel";
-      }
-
-      return token;
-    });
-  },
-
   looksLikeRelativeThat(tokens, index) {
     const prev = this.previousWord(tokens, index);
-    const next = this.cleanToken(tokens[index + 1]);
+    const nextIndex = this.nextWordIndex(tokens, index);
+    const next = nextIndex >= 0 ? this.cleanToken(tokens[nextIndex]) : "";
 
-    // Must be: noun + that + ...
+    // Must be noun + that + ...
     // the dog that...
     // the man that...
     if (!this.isLikelyNoun(prev)) return false;
 
     // the dog that I saw
     if (this.RELATIVE_THAT_SUBJECTS.includes(next)) {
-      return this.hasVerbSoon(tokens, index + 1);
+      return this.hasVerbSoon(tokens, nextIndex);
     }
 
     // the dog that is happy
@@ -289,6 +256,59 @@ window.ELEFEN_RULES = {
     return false;
   },
 
+  isAcelThat(tokens, index) {
+    const nextIndex = this.nextWordIndex(tokens, index);
+    const next = nextIndex >= 0 ? this.cleanToken(tokens[nextIndex]) : "";
+
+    // Do NOT touch relative that:
+    // the man that helped me
+    // the dog that I saw
+    if (this.looksLikeRelativeThat(tokens, index)) {
+      return false;
+    }
+
+    // Do NOT change:
+    // I think that / I know that / I believe that
+    if (this.isClauseVerbBeforeThat(tokens, index)) {
+      return false;
+    }
+
+    // I want that.
+    if (!next) return true;
+
+    // that dog / that car / that house
+    if (this.ACEL_THAT_NOUNS.includes(next)) return true;
+
+    // that happy dog / that old blue car
+    let checkIndex = nextIndex;
+
+    while (checkIndex >= 0 && this.ACEL_THAT_ADJECTIVES.includes(this.cleanToken(tokens[checkIndex]))) {
+      checkIndex = this.nextWordIndex(tokens, checkIndex);
+
+      if (checkIndex < 0) return false;
+
+      const possibleNoun = this.cleanToken(tokens[checkIndex]);
+
+      if (this.ACEL_THAT_NOUNS.includes(possibleNoun)) {
+        return true;
+      }
+    }
+
+    return false;
+  },
+
+  resolveAcelThat(tokens) {
+    return tokens.map((token, index) => {
+      const clean = this.cleanToken(token);
+
+      if (clean === "that" && this.isAcelThat(tokens, index)) {
+        return "acel";
+      }
+
+      return token;
+    });
+  },
+
   resolveRelativeThat(tokens) {
     return tokens.map((token, index) => {
       const clean = this.cleanToken(token);
@@ -307,8 +327,10 @@ window.ELEFEN_RULES = {
 
     for (let i = 0; i < tokens.length; i++) {
       const current = this.cleanToken(tokens[i]);
-      const next = this.cleanToken(tokens[i + 1]);
-      const next2 = this.cleanToken(tokens[i + 2]);
+      const nextIndex = this.nextWordIndex(tokens, i);
+      const next = nextIndex >= 0 ? this.cleanToken(tokens[nextIndex]) : "";
+      const next2Index = nextIndex >= 0 ? this.nextWordIndex(tokens, nextIndex) : -1;
+      const next2 = next2Index >= 0 ? this.cleanToken(tokens[next2Index]) : "";
 
       const isDet =
         current === "a" ||
@@ -329,10 +351,18 @@ window.ELEFEN_RULES = {
         this.ACEL_THAT_ADJECTIVES.includes(next) &&
         this.ACEL_THAT_NOUNS.includes(next2)
       ) {
-        output.push(tokens[i]);      // acel / the / my
-        output.push(tokens[i + 2]);  // dog
-        output.push(tokens[i + 1]);  // happy
-        i += 2;
+        output.push(tokens[i]);
+
+        // preserve the original space pattern enough to avoid smashed words
+        if (tokens[i + 1] && /^\s+$/.test(tokens[i + 1])) output.push(tokens[i + 1]);
+
+        output.push(tokens[next2Index]);
+
+        if (tokens[nextIndex + 1] && /^\s+$/.test(tokens[nextIndex + 1])) output.push(tokens[nextIndex + 1]);
+
+        output.push(tokens[nextIndex]);
+
+        i = next2Index;
         continue;
       }
 
