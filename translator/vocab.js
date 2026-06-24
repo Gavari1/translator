@@ -46,7 +46,6 @@ a = un | det
 an = un | det
 the = la | det
 this = esta | det
-that = acel | det
 my = mea | det
 mine = mea
 your = tua | det
