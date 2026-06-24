@@ -437,6 +437,7 @@ to do = fa
 to make = fa
 go = vade
 goes = vade
+going = vade
 went = ia vade
 will go = va vade
 would go = ta vade
