@@ -413,6 +413,303 @@ we will be needing = nos va nesesa
 they will be needing = los va nesesa
 you all will be needing = vos va nesesa
 
+# NEED someone to - PRESENT
+
+i need myself to = me nesesa ce me
+i need you to = me nesesa ce tu
+i need him to = me nesesa ce el
+i need her to = me nesesa ce el
+i need it to = me nesesa ce lo
+i need us to = me nesesa ce nos
+i need them to = me nesesa ce los
+i need you all to = me nesesa ce vos
+
+you need me to = tu nesesa ce me
+you need yourself to = tu nesesa ce tu
+you need him to = tu nesesa ce el
+you need her to = tu nesesa ce el
+you need it to = tu nesesa ce lo
+you need us to = tu nesesa ce nos
+you need them to = tu nesesa ce los
+you need you all to = tu nesesa ce vos
+
+he needs me to = el nesesa ce me
+he needs you to = el nesesa ce tu
+he needs himself to = el nesesa ce el
+he needs her to = el nesesa ce el
+he needs it to = el nesesa ce lo
+he needs us to = el nesesa ce nos
+he needs them to = el nesesa ce los
+he needs you all to = el nesesa ce vos
+
+she needs me to = el nesesa ce me
+she needs you to = el nesesa ce tu
+she needs him to = el nesesa ce el
+she needs herself to = el nesesa ce el
+she needs it to = el nesesa ce lo
+she needs us to = el nesesa ce nos
+she needs them to = el nesesa ce los
+she needs you all to = el nesesa ce vos
+
+it needs me to = lo nesesa ce me
+it needs you to = lo nesesa ce tu
+it needs him to = lo nesesa ce el
+it needs her to = lo nesesa ce el
+it needs itself to = lo nesesa ce lo
+it needs us to = lo nesesa ce nos
+it needs them to = lo nesesa ce los
+it needs you all to = lo nesesa ce vos
+
+we need me to = nos nesesa ce me
+we need you to = nos nesesa ce tu
+we need him to = nos nesesa ce el
+we need her to = nos nesesa ce el
+we need it to = nos nesesa ce lo
+we need ourselves to = nos nesesa ce nos
+we need them to = nos nesesa ce los
+we need you all to = nos nesesa ce vos
+
+they need me to = los nesesa ce me
+they need you to = los nesesa ce tu
+they need him to = los nesesa ce el
+they need her to = los nesesa ce el
+they need it to = los nesesa ce lo
+they need us to = los nesesa ce nos
+they need themselves to = los nesesa ce los
+they need you all to = los nesesa ce vos
+
+you all need me to = vos nesesa ce me
+you all need you to = vos nesesa ce tu
+you all need him to = vos nesesa ce el
+you all need her to = vos nesesa ce el
+you all need it to = vos nesesa ce lo
+you all need us to = vos nesesa ce nos
+you all need them to = vos nesesa ce los
+you all need yourselves to = vos nesesa ce vos
+
+# NEED someone to - PAST
+
+i needed myself to = me ia nesesa ce me
+i needed you to = me ia nesesa ce tu
+i needed him to = me ia nesesa ce el
+i needed her to = me ia nesesa ce el
+i needed it to = me ia nesesa ce lo
+i needed us to = me ia nesesa ce nos
+i needed them to = me ia nesesa ce los
+i needed you all to = me ia nesesa ce vos
+
+you needed me to = tu ia nesesa ce me
+you needed yourself to = tu ia nesesa ce tu
+you needed him to = tu ia nesesa ce el
+you needed her to = tu ia nesesa ce el
+you needed it to = tu ia nesesa ce lo
+you needed us to = tu ia nesesa ce nos
+you needed them to = tu ia nesesa ce los
+you needed you all to = tu ia nesesa ce vos
+
+he needed me to = el ia nesesa ce me
+he needed you to = el ia nesesa ce tu
+he needed himself to = el ia nesesa ce el
+he needed her to = el ia nesesa ce el
+he needed it to = el ia nesesa ce lo
+he needed us to = el ia nesesa ce nos
+he needed them to = el ia nesesa ce los
+he needed you all to = el ia nesesa ce vos
+
+she needed me to = el ia nesesa ce me
+she needed you to = el ia nesesa ce tu
+she needed him to = el ia nesesa ce el
+she needed herself to = el ia nesesa ce el
+she needed it to = el ia nesesa ce lo
+she needed us to = el ia nesesa ce nos
+she needed them to = el ia nesesa ce los
+she needed you all to = el ia nesesa ce vos
+
+it needed me to = lo ia nesesa ce me
+it needed you to = lo ia nesesa ce tu
+it needed him to = lo ia nesesa ce el
+it needed her to = lo ia nesesa ce el
+it needed itself to = lo ia nesesa ce lo
+it needed us to = lo ia nesesa ce nos
+it needed them to = lo ia nesesa ce los
+it needed you all to = lo ia nesesa ce vos
+
+we needed me to = nos ia nesesa ce me
+we needed you to = nos ia nesesa ce tu
+we needed him to = nos ia nesesa ce el
+we needed her to = nos ia nesesa ce el
+we needed it to = nos ia nesesa ce lo
+we needed ourselves to = nos ia nesesa ce nos
+we needed them to = nos ia nesesa ce los
+we needed you all to = nos ia nesesa ce vos
+
+they needed me to = los ia nesesa ce me
+they needed you to = los ia nesesa ce tu
+they needed him to = los ia nesesa ce el
+they needed her to = los ia nesesa ce el
+they needed it to = los ia nesesa ce lo
+they needed us to = los ia nesesa ce nos
+they needed themselves to = los ia nesesa ce los
+they needed you all to = los ia nesesa ce vos
+
+you all needed me to = vos ia nesesa ce me
+you all needed you to = vos ia nesesa ce tu
+you all needed him to = vos ia nesesa ce el
+you all needed her to = vos ia nesesa ce el
+you all needed it to = vos ia nesesa ce lo
+you all needed us to = vos ia nesesa ce nos
+you all needed them to = vos ia nesesa ce los
+you all needed yourselves to = vos ia nesesa ce vos
+
+# NEED someone to - FUTURE
+
+i will need myself to = me va nesesa ce me
+i will need you to = me va nesesa ce tu
+i will need him to = me va nesesa ce el
+i will need her to = me va nesesa ce el
+i will need it to = me va nesesa ce lo
+i will need us to = me va nesesa ce nos
+i will need them to = me va nesesa ce los
+i will need you all to = me va nesesa ce vos
+
+you will need me to = tu va nesesa ce me
+you will need yourself to = tu va nesesa ce tu
+you will need him to = tu va nesesa ce el
+you will need her to = tu va nesesa ce el
+you will need it to = tu va nesesa ce lo
+you will need us to = tu va nesesa ce nos
+you will need them to = tu va nesesa ce los
+you will need you all to = tu va nesesa ce vos
+
+he will need me to = el va nesesa ce me
+he will need you to = el va nesesa ce tu
+he will need himself to = el va nesesa ce el
+he will need her to = el va nesesa ce el
+he will need it to = el va nesesa ce lo
+he will need us to = el va nesesa ce nos
+he will need them to = el va nesesa ce los
+he will need you all to = el va nesesa ce vos
+
+she will need me to = el va nesesa ce me
+she will need you to = el va nesesa ce tu
+she will need him to = el va nesesa ce el
+she will need herself to = el va nesesa ce el
+she will need it to = el va nesesa ce lo
+she will need us to = el va nesesa ce nos
+she will need them to = el va nesesa ce los
+she will need you all to = el va nesesa ce vos
+
+it will need me to = lo va nesesa ce me
+it will need you to = lo va nesesa ce tu
+it will need him to = lo va nesesa ce el
+it will need her to = lo va nesesa ce el
+it will need itself to = lo va nesesa ce lo
+it will need us to = lo va nesesa ce nos
+it will need them to = lo va nesesa ce los
+it will need you all to = lo va nesesa ce vos
+
+we will need me to = nos va nesesa ce me
+we will need you to = nos va nesesa ce tu
+we will need him to = nos va nesesa ce el
+we will need her to = nos va nesesa ce el
+we will need it to = nos va nesesa ce lo
+we will need ourselves to = nos va nesesa ce nos
+we will need them to = nos va nesesa ce los
+we will need you all to = nos va nesesa ce vos
+
+they will need me to = los va nesesa ce me
+they will need you to = los va nesesa ce tu
+they will need him to = los va nesesa ce el
+they will need her to = los va nesesa ce el
+they will need it to = los va nesesa ce lo
+they will need us to = los va nesesa ce nos
+they will need themselves to = los va nesesa ce los
+they will need you all to = los va nesesa ce vos
+
+you all will need me to = vos va nesesa ce me
+you all will need you to = vos va nesesa ce tu
+you all will need him to = vos va nesesa ce el
+you all will need her to = vos va nesesa ce el
+you all will need it to = vos va nesesa ce lo
+you all will need us to = vos va nesesa ce nos
+you all will need them to = vos va nesesa ce los
+you all will need yourselves to = vos va nesesa ce vos
+
+# NEED someone to - CONDITIONAL
+
+i would need myself to = me ta nesesa ce me
+i would need you to = me ta nesesa ce tu
+i would need him to = me ta nesesa ce el
+i would need her to = me ta nesesa ce el
+i would need it to = me ta nesesa ce lo
+i would need us to = me ta nesesa ce nos
+i would need them to = me ta nesesa ce los
+i would need you all to = me ta nesesa ce vos
+
+you would need me to = tu ta nesesa ce me
+you would need yourself to = tu ta nesesa ce tu
+you would need him to = tu ta nesesa ce el
+you would need her to = tu ta nesesa ce el
+you would need it to = tu ta nesesa ce lo
+you would need us to = tu ta nesesa ce nos
+you would need them to = tu ta nesesa ce los
+you would need you all to = tu ta nesesa ce vos
+
+he would need me to = el ta nesesa ce me
+he would need you to = el ta nesesa ce tu
+he would need himself to = el ta nesesa ce el
+he would need her to = el ta nesesa ce el
+he would need it to = el ta nesesa ce lo
+he would need us to = el ta nesesa ce nos
+he would need them to = el ta nesesa ce los
+he would need you all to = el ta nesesa ce vos
+
+she would need me to = el ta nesesa ce me
+she would need you to = el ta nesesa ce tu
+she would need him to = el ta nesesa ce el
+she would need herself to = el ta nesesa ce el
+she would need it to = el ta nesesa ce lo
+she would need us to = el ta nesesa ce nos
+she would need them to = el ta nesesa ce los
+she would need you all to = el ta nesesa ce vos
+
+it would need me to = lo ta nesesa ce me
+it would need you to = lo ta nesesa ce tu
+it would need him to = lo ta nesesa ce el
+it would need her to = lo ta nesesa ce el
+it would need itself to = lo ta nesesa ce lo
+it would need us to = lo ta nesesa ce nos
+it would need them to = lo ta nesesa ce los
+it would need you all to = lo ta nesesa ce vos
+
+we would need me to = nos ta nesesa ce me
+we would need you to = nos ta nesesa ce tu
+we would need him to = nos ta nesesa ce el
+we would need her to = nos ta nesesa ce el
+we would need it to = nos ta nesesa ce lo
+we would need ourselves to = nos ta nesesa ce nos
+we would need them to = nos ta nesesa ce los
+we would need you all to = nos ta nesesa ce vos
+
+they would need me to = los ta nesesa ce me
+they would need you to = los ta nesesa ce tu
+they would need him to = los ta nesesa ce el
+they would need her to = los ta nesesa ce el
+they would need it to = los ta nesesa ce lo
+they would need us to = los ta nesesa ce nos
+they would need themselves to = los ta nesesa ce los
+they would need you all to = los ta nesesa ce vos
+
+you all would need me to = vos ta nesesa ce me
+you all would need you to = vos ta nesesa ce tu
+you all would need him to = vos ta nesesa ce el
+you all would need her to = vos ta nesesa ce el
+you all would need it to = vos ta nesesa ce lo
+you all would need us to = vos ta nesesa ce nos
+you all would need them to = vos ta nesesa ce los
+you all would need yourselves to = vos ta nesesa ce vos
+
+
 # =========================================================
 # IF / BECAUSE / WHEN / WHERE / QUESTIONS
 # =========================================================
