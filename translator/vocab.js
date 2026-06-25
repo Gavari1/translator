@@ -747,6 +747,23 @@ you all would need us to = vos ta nesesa ce nos
 you all would need them to = vos ta nesesa ce los
 you all would need yourselves to = vos ta nesesa ce vos
 
+# COMENSA
+start = comensa | verb
+starts = comensa | verb
+started = ia comensa
+starting = comensante
+to start = comensa
+will start = va comensa
+would start = ta comensa
+
+begin = comensa | verb
+begins = comensa | verb
+began = ia comensa
+beginning = comensante
+to begin = comensa
+will begin = va comensa
+would begin = ta comensa
+
 
 # =========================================================
 # IF / BECAUSE / WHEN / WHERE / QUESTIONS
