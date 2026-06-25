@@ -252,7 +252,12 @@ function isLikelyVerbWord(word) {
     "repair", "repairs", "repaired",
     "think", "thinks", "thought",
     "believe", "believes", "believed",
-    "know", "knows", "knew"
+    "know", "knows", "knew",
+    "understand", "understands", "understood",
+    "remember", "remembers", "remembered",
+    "forget", "forgets", "forgot",
+    "hope", "hopes", "hoped",
+    "feel", "feels", "felt"
   ].includes(clean)) {
     return true;
   }
@@ -330,6 +335,50 @@ function resolveRelativeThatLocal(tokens) {
     if (isWordToken(token) && looksLikeRelativeThatLocal(tokens, index)) {
       const prev = previousWordToken(tokens, index);
       return isHumanRelativeNoun(prev) ? "ci" : "cual";
+    }
+
+    return token;
+  });
+}
+
+/*
+  CLAUSE THAT RULE
+
+  English:
+    know that you are happy
+    think that it is correct
+    believe that this is true
+
+  Elefen:
+    sabe ce tu es felis
+    pensa ce lo es coreta
+    crede ce esta es vera
+*/
+
+function isClauseThatLocal(tokens, index) {
+  if (!isWordToken(tokens[index])) return false;
+  if (normalizeWord(tokens[index]) !== "that") return false;
+
+  const prev = previousWordToken(tokens, index);
+
+  return [
+    "think", "thinks", "thought",
+    "believe", "believes", "believed",
+    "know", "knows", "knew",
+    "say", "says", "said",
+    "tell", "tells", "told",
+    "hope", "hopes", "hoped",
+    "feel", "feels", "felt",
+    "understand", "understands", "understood",
+    "remember", "remembers", "remembered",
+    "forget", "forgets", "forgot"
+  ].includes(prev);
+}
+
+function resolveClauseThatLocal(tokens) {
+  return tokens.map((token, index) => {
+    if (isClauseThatLocal(tokens, index)) {
+      return "ce";
     }
 
     return token;
@@ -576,8 +625,19 @@ function translateText(source, allowQuestionRule = true) {
   let tokens = tokenize(source);
 
   // Order matters:
-  // relative that first, acel that second.
+  // 1. Relative that:
+  //    the dog that eats -> cual
+  //    the man that sees -> ci
+  //
+  // 2. Clause that:
+  //    know that -> ce
+  //    think that -> ce
+  //
+  // 3. Acel that:
+  //    that dog / I want that -> acel
+
   tokens = resolveRelativeThatLocal(tokens);
+  tokens = resolveClauseThatLocal(tokens);
 
   if (typeof RULES.resolveRelativeThat === "function") {
     tokens = RULES.resolveRelativeThat(tokens);
