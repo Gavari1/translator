@@ -141,16 +141,6 @@ function skipSpaces(tokens, index) {
 
 /*
   RELATIVE THAT SAFETY RULE
-
-  English:
-    the dog that I saw
-    the man that helped me
-    the man that sees me
-
-  Elefen:
-    la can cual me ia vide
-    la om ci ia aida me
-    la om ci vide me
 */
 
 function previousWordToken(tokens, index) {
@@ -246,6 +236,7 @@ function isLikelyVerbWord(word) {
     "open", "opens", "opened",
     "close", "closes", "closed",
     "start", "starts", "started",
+    "begin", "begins", "began",
     "finish", "finishes", "finished",
     "change", "changes", "changed",
     "clean", "cleans", "cleaned",
@@ -304,7 +295,6 @@ function looksLikeRelativeThatLocal(tokens, index) {
 
   const next = normalizeWord(tokens[nextIndex]);
 
-  // the dog that I saw
   if ([
     "i", "me", "you", "he", "him", "she", "her", "it",
     "we", "us", "they", "them"
@@ -312,7 +302,6 @@ function looksLikeRelativeThatLocal(tokens, index) {
     return hasVerbSoonAfter(tokens, nextIndex);
   }
 
-  // the dog that is happy
   if ([
     "am", "are", "is", "was", "were",
     "do", "does", "did",
@@ -322,7 +311,6 @@ function looksLikeRelativeThatLocal(tokens, index) {
     return true;
   }
 
-  // the man that helped me / the man that sees me
   if (isLikelyVerbWord(next)) {
     return true;
   }
@@ -343,16 +331,6 @@ function resolveRelativeThatLocal(tokens) {
 
 /*
   CLAUSE THAT RULE
-
-  English:
-    know that you are happy
-    think that it is correct
-    believe that this is true
-
-  Elefen:
-    sabe ce tu es felis
-    pensa ce lo es coreta
-    crede ce esta es vera
 */
 
 function isClauseThatLocal(tokens, index) {
@@ -387,20 +365,6 @@ function resolveClauseThatLocal(tokens) {
 
 /*
   ACEL THAT FALLBACK RULE
-
-  This runs AFTER relative that and clause that.
-
-  English:
-    eat that
-    want that
-    that dog
-    that car
-
-  Elefen:
-    come acel
-    vole acel
-    acel can
-    acel auto
 */
 
 function resolveAcelThatLocal(tokens) {
@@ -414,9 +378,31 @@ function resolveAcelThatLocal(tokens) {
 }
 
 /*
-  GO + DESTINATION RULE
+  DESTINATION HELPERS
 
-  This adds English "to" internally before destination nouns after go/goes/went/going.
+  If you add new place words later, you can tag them like:
+    restaurant = restorante | noun place
+
+  Then the rules below can recognize them as destinations.
+*/
+
+function isDestinationWord(word) {
+  const clean = normalizeWord(word);
+
+  if (hasTag(clean, "place")) return true;
+  if (hasTag(clean, "destination")) return true;
+
+  return [
+    "home", "house", "work", "job", "school", "store", "church",
+    "city", "country", "room", "place", "street", "river",
+    "car", "bus", "train", "plane", "boat", "airport",
+    "station", "hotel", "restaurant", "office", "park",
+    "beach", "mountain", "lake", "door"
+  ].includes(clean);
+}
+
+/*
+  GO + DESTINATION RULE
 
   English:
     go home
@@ -441,8 +427,7 @@ function isGoMotionWord(word) {
   return [
     "go",
     "goes",
-    "went",
-    "going"
+    "went"
   ].includes(normalizeWord(word));
 }
 
@@ -492,7 +477,7 @@ function looksLikeGoDestination(tokens, startIndex) {
     if (
       nounIndex >= 0 &&
       isWordToken(tokens[nounIndex]) &&
-      hasTag(tokens[nounIndex], "noun")
+      isDestinationWord(tokens[nounIndex])
     ) {
       return true;
     }
@@ -501,7 +486,7 @@ function looksLikeGoDestination(tokens, startIndex) {
   }
 
   // go home / go school / go work / go church
-  if (hasTag(firstWord, "noun")) return true;
+  if (isDestinationWord(firstWord)) return true;
 
   return false;
 }
@@ -522,7 +507,6 @@ function insertToBeforeGoDestinations(tokens) {
     }
   }
 
-  // Insert from back to front so earlier indexes do not shift.
   for (let i = insertIndexes.length - 1; i >= 0; i--) {
     result.splice(insertIndexes[i], 0, "to", " ");
   }
@@ -531,8 +515,59 @@ function insertToBeforeGoDestinations(tokens) {
 }
 
 /*
+  PURPOSE "TO" AFTER DESTINATION RULE
+
+  English:
+    went to the store to buy food
+    go home to sleep
+    went to school to study
+
+  Internal:
+    went to the store for buy food
+    go to home for sleep
+    went to school for study
+
+  Elefen:
+    ia vade a la boteca per compra comeda
+    vade a casa per dormi
+    ia vade a scola per studia
+*/
+
+function isPurposeToAfterDestination(tokens, index) {
+  if (!isWordToken(tokens[index])) return false;
+  if (normalizeWord(tokens[index]) !== "to") return false;
+
+  const nextIndex = nextWordTokenIndex(tokens, index);
+  if (nextIndex < 0) return false;
+
+  const nextWord = normalizeWord(tokens[nextIndex]);
+
+  // to buy / to eat / to study / to sleep
+  if (!isLikelyVerbWord(nextWord)) return false;
+
+  const prevWord = previousWordToken(tokens, index);
+  if (!prevWord) return false;
+
+  // store to buy / home to sleep / school to study
+  if (isDestinationWord(prevWord)) return true;
+
+  return false;
+}
+
+function convertPurposeToAfterDestinations(tokens) {
+  return tokens.map((token, index) => {
+    if (isPurposeToAfterDestination(tokens, index)) {
+      return "for";
+    }
+
+    return token;
+  });
+}
+
+/*
   YES/NO QUESTION RULE
 */
+
 function tryYesNoQuestionRule(tokens, startIndex) {
   if (!isWordToken(tokens[startIndex])) return null;
   if (!isSentenceStart(tokens, startIndex)) return null;
@@ -611,6 +646,7 @@ function tryYesNoQuestionRule(tokens, startIndex) {
 /*
   NEGATION RULE
 */
+
 function tryNegationRule(tokens, startIndex) {
   if (!isWordToken(tokens[startIndex])) return null;
 
@@ -695,6 +731,7 @@ function tryAnyPhrase(tokens, startIndex, multiWordOnly = false) {
 /*
   ADJECTIVE + NOUN RULE
 */
+
 function tryAdjectiveNounRule(tokens, startIndex) {
   if (!isWordToken(tokens[startIndex])) return null;
 
@@ -781,12 +818,16 @@ function translateText(source, allowQuestionRule = true) {
   // 3. Go + destination:
   //    go home -> go to home -> vade a casa
   //
-  // 4. Acel that:
+  // 4. Purpose to after destination:
+  //    store to buy -> store for buy -> boteca per compra
+  //
+  // 5. Acel that:
   //    that dog / I want that / eat that -> acel
 
   tokens = resolveRelativeThatLocal(tokens);
   tokens = resolveClauseThatLocal(tokens);
   tokens = insertToBeforeGoDestinations(tokens);
+  tokens = convertPurposeToAfterDestinations(tokens);
 
   if (typeof RULES.resolveRelativeThat === "function") {
     tokens = RULES.resolveRelativeThat(tokens);
