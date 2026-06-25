@@ -187,6 +187,8 @@ to her = a el
 to us = a nos
 to them = a los
 to you all = a vos
+will = ia 
+would = ta 
 
 # =========================================================
 # THINK THAT / BELIEVE THAT / KNOW THAT
