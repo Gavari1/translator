@@ -386,6 +386,34 @@ function resolveClauseThatLocal(tokens) {
 }
 
 /*
+  ACEL THAT FALLBACK RULE
+
+  This runs AFTER relative that and clause that.
+
+  English:
+    eat that
+    want that
+    that dog
+    that car
+
+  Elefen:
+    come acel
+    vole acel
+    acel can
+    acel auto
+*/
+
+function resolveAcelThatLocal(tokens) {
+  return tokens.map((token) => {
+    if (isWordToken(token) && normalizeWord(token) === "that") {
+      return "acel";
+    }
+
+    return token;
+  });
+}
+
+/*
   YES/NO QUESTION RULE
 */
 function tryYesNoQuestionRule(tokens, startIndex) {
@@ -634,7 +662,7 @@ function translateText(source, allowQuestionRule = true) {
   //    think that -> ce
   //
   // 3. Acel that:
-  //    that dog / I want that -> acel
+  //    that dog / I want that / eat that -> acel
 
   tokens = resolveRelativeThatLocal(tokens);
   tokens = resolveClauseThatLocal(tokens);
@@ -642,6 +670,8 @@ function translateText(source, allowQuestionRule = true) {
   if (typeof RULES.resolveRelativeThat === "function") {
     tokens = RULES.resolveRelativeThat(tokens);
   }
+
+  tokens = resolveAcelThatLocal(tokens);
 
   if (typeof RULES.resolveAcelThat === "function") {
     tokens = RULES.resolveAcelThat(tokens);
