@@ -508,6 +508,7 @@ will drink = va bevi
 would drink = ta bevi
 to drink = bevi
 hear = oia
+hears = oia
 listen = escuta
 see = vide
 sees = vide
