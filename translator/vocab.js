@@ -131,6 +131,140 @@ cage = caje | noun
 home = casa | noun
 thing = cosa | noun
 things = cosas | noun
+
+# =========================================================
+# ADVERBS - MANNER / HOW
+# =========================================================
+well = bon | adv
+badly = mal | adv
+quickly = rapida | adv
+slowly = lenta | adv
+clearly = clar | adv
+correctly = coreta | adv
+wrongly = falsa | adv
+truly = vera | adv
+falsely = falsa | adv
+directly = direta | adv
+simply = simple | adv
+logically = lojical | adv
+naturally = natural | adv
+personally = personal | adv
+publicly = publica | adv
+privately = privada | adv
+locally = local | adv
+commonly = comun | adv
+differently = diferente | adv
+safely = secur | adv
+dangerously = perilosa | adv
+strongly = forte | adv
+weakly = debil | adv
+softly = suave | adv
+loudly = forte | adv
+quietly = silente | adv
+beautifully = bela | adv
+honestly = onesta | adv
+curiously = curiosa | adv
+comfortably = comfortosa | adv
+uncomfortably = noncomfortosa | adv
+happily = felis | adv
+sadly = triste | adv
+angrily = coler | adv
+carefully = cauta | adv
+easily = fasil | adv
+strangely = strana | adv
+specially = spesial | adv
+usefully = usosa | adv
+
+# =========================================================
+# ADVERBS - TIME
+# =========================================================
+currently = corente | adv
+recently = resente | adv
+finally = final | adv
+initially = inial | adv
+eventually = eventual | adv
+immediately = imediata | adv
+suddenly = subita | adv
+temporarily = temporaria | adv
+permanently = permanente | adv
+early = temprana | adv
+daily = dial | adv
+weekly = semanal | adv
+monthly = mensal | adv
+yearly = anual | adv
+
+# =========================================================
+# ADVERBS - FREQUENCY
+# =========================================================
+usually = usual | adv
+frequently = frecuente | adv
+rarely = rara | adv
+constantly = constante | adv
+regularly = regular | adv
+normally = normal | adv
+daily = dial | adv
+weekly = semanal | adv
+monthly = mensal | adv
+yearly = anual | adv
+
+# =========================================================
+# ADVERBS - DEGREE / AMOUNT
+# =========================================================
+completely = completa | adv
+totally = total | adv
+partly = partal | adv
+mostly = per la plu parte | adv
+especially = spesial | adv
+exactly = esata | adv
+approximately = aproximada | adv
+barely = apena | adv
+really = real | adv
+truly = vera | adv
+fully = plen | adv
+halfway = a media | adv
+
+# =========================================================
+# ADVERBS - PLACE / DIRECTION
+# =========================================================
+outside = estra | adv
+inside = interna | adv
+nearby = prosima | adv
+far away = distante | adv
+forward = a fronte | adv
+backward = a retro | adv
+upward = a supra | adv
+downward = a infra | adv
+together = junta | adv
+apart = separada | adv
+separately = separada | adv
+
+# =========================================================
+# ADVERBS - OPINION / CERTAINTY
+# =========================================================
+certainly = serta | adv
+surely = serta | adv
+possibly = posible | adv
+impossibly = nonposible | adv
+clearly = clar | adv
+obviously = evidente | adv
+apparently = aparente | adv
+probably = probable | adv
+maybe = forsan | adv
+
+# =========================================================
+# ADVERBS - COMPARISON / STYLE
+# =========================================================
+better = plu bon | adv
+worse = plu mal | adv
+best = la plu bon | adv
+worst = la plu mal | adv
+more clearly = plu clar | adv
+less clearly = min clar | adv
+more slowly = plu lenta | adv
+less slowly = min lenta | adv
+more quickly = plu rapida | adv
+less quickly = min rapida | adv
+
 # =========================================================
 # PREPOSITIONS / LOCATION / MOVEMENT
 # =========================================================
