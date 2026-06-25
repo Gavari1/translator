@@ -258,6 +258,7 @@ they will know that = los va sabe ce
 you all know that = vos sabe ce
 you all knew that = vos ia sabe ce
 you all will know that = vos va sabe ce
+know that = sabe ce 
 
 # =========================================================
 # WANT TO / WANT SOMEONE TO
