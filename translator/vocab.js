@@ -131,6 +131,60 @@ cage = caje | noun
 home = casa | noun
 thing = cosa | noun
 things = cosas | noun
+# =========================================================
+# COMMON NOUNS (ADDITIONAL)
+# =========================================================
+table = table | noun
+chair = seja | noun
+bed = leto | noun
+wall = mur | noun
+floor = solo | noun
+ceiling = plafon | noun
+picture = piture | noun
+paper = paper | noun
+pencil = lapis | noun
+pen = pen | noun
+computer = computador | noun
+letter = letera | noun
+music = musica | noun
+song = canta | noun
+clothes = vestes | noun
+shirt = camisa | noun
+pants = pantalon | noun
+shoe = sapato | noun
+hat = xapo | noun
+bag = saco | noun
+brush = brosa | noun
+soap = sapon | noun
+sponge = spongo | noun
+towel = tualia | noun
+mirror = miror | noun
+engine = motor | noun
+oil = olio | noun
+wheel = rota | noun
+key = clave | noun
+lock = serur | noun
+box = caxa | noun
+cube = cubo | noun
+game = jua | noun
+ball = bal | noun
+brother = frate | noun
+sister = sore | noun
+friend = ami | noun
+money = mone | noun
+price = preso | noun
+color = color | noun
+art = arte | noun
+blood = sangue | noun
+bone = oso | noun
+fire = foco | noun
+earth = tera | noun
+wind = vento | noun
+sky = sielo | noun
+sea = mar | noun
+mountain = monte | noun
+island = isola | noun
+
 
 # =========================================================
 # ADVERBS - MANNER / HOW
