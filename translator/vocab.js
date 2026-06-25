@@ -349,6 +349,10 @@ after you all = pos ce vos
 # =========================================================
 do that = fa acel
 do it = fa lo
+do = fa
+did = ia fa
+will do = va fa
+would do = ta fa 
 can do that = pote fa acel
 could do that = ta pote fa acel
 will do that = va fa acel
