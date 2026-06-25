@@ -1308,4 +1308,55 @@ for (const s of subjects) {
   }
 }
 
-window.DEFAULT_VOCAB_TEXT = [BASE_VOCAB_TEXT, generatedVocabLines.join("\n")].join("\n").trim();
+const forcedVocabOverrides = `
+# =========================================================
+# FORCED OVERRIDES - WANT SOMEONE TO
+# These stay at the very end so they win over duplicates.
+# =========================================================
+
+want me to = vole ce me
+wanted me to = ia vole ce me
+will want me to = va vole ce me
+would want me to = ta vole ce me
+
+want you to = vole ce tu
+wanted you to = ia vole ce tu
+will want you to = va vole ce tu
+would want you to = ta vole ce tu
+
+want him to = vole ce el
+wanted him to = ia vole ce el
+will want him to = va vole ce el
+would want him to = ta vole ce el
+
+want her to = vole ce el
+wanted her to = ia vole ce el
+will want her to = va vole ce el
+would want her to = ta vole ce el
+
+want it to = vole ce lo
+wanted it to = ia vole ce lo
+will want it to = va vole ce lo
+would want it to = ta vole ce lo
+
+want us to = vole ce nos
+wanted us to = ia vole ce nos
+will want us to = va vole ce nos
+would want us to = ta vole ce nos
+
+want them to = vole ce los
+wanted them to = ia vole ce los
+will want them to = va vole ce los
+would want them to = ta vole ce los
+
+want you all to = vole ce vos
+wanted you all to = ia vole ce vos
+will want you all to = va vole ce vos
+would want you all to = ta vole ce vos
+`;
+
+window.DEFAULT_VOCAB_TEXT = [
+  BASE_VOCAB_TEXT,
+  generatedVocabLines.join("\n"),
+  forcedVocabOverrides
+].join("\n").trim();
