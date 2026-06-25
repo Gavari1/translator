@@ -140,6 +140,7 @@ with = con
 without = sin
 for = per
 to = a
+than = ca 
 from = de
 at = a
 near = prosima
