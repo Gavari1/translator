@@ -1310,7 +1310,7 @@ for (const s of subjects) {
 
 const forcedVocabOverrides = `
 # =========================================================
-# FORCED OVERRIDES - WANT SOMEONE TO
+# FORCED OVERRIDES PERM - WANT SOMEONE TO
 # These stay at the very end so they win over duplicates.
 # =========================================================
 
