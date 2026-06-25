@@ -1034,8 +1034,11 @@ need = nesesa | verb
 look = regarda | verb
 look at = regarda | verb
 move = move | verb
-
-to buy = 
+see = vide | verb
+sees = vide
+saw = ia vide
+will see = va vide
+would see = ta vide 
 
 # =========================================================
 # BASIC CONNECTORS / LITTLE WORDS
