@@ -564,10 +564,86 @@ function convertPurposeToAfterDestinations(tokens) {
   });
 }
 
+function negateTranslatedVerbPhrase(phrase) {
+  if (!phrase) return phrase;
+  return "no " + phrase;
+}
+
+function tryGoingToQuestionRest(tokens, aux, restStart, sentenceEnd) {
+  if (restStart >= sentenceEnd) return null;
+  if (!isWordToken(tokens[restStart])) return null;
+
+  const first = normalizeWord(tokens[restStart]);
+  if (first !== "going") return null;
+
+  const toIndex = skipSpaces(tokens, restStart + 1);
+
+  if (
+    toIndex >= sentenceEnd ||
+    !isWordToken(tokens[toIndex]) ||
+    normalizeWord(tokens[toIndex]) !== "to"
+  ) {
+    return null;
+  }
+
+  const afterToIndex = skipSpaces(tokens, toIndex + 1);
+
+  if (
+    afterToIndex >= sentenceEnd ||
+    !isWordToken(tokens[afterToIndex])
+  ) {
+    return null;
+  }
+
+  const afterToWord = normalizeWord(tokens[afterToIndex]);
+  const tailSource = tokens.slice(afterToIndex, sentenceEnd).join("").trim();
+
+  const isPastGoingTo = aux === "was" || aux === "were";
+
+  /*
+    Are you going to buy?
+    -> Esce tu va compra?
+
+    Was he going to buy?
+    -> Esce el ia intende compra?
+  */
+  if (isLikelyVerbWord(afterToWord)) {
+    const translatedTail = tailSource
+      ? translateText(tailSource, false).trim()
+      : "";
+
+    const marker = isPastGoingTo ? "ia intende" : "va";
+
+    return translatedTail
+      ? marker + " " + translatedTail
+      : marker;
+  }
+
+  /*
+    Are you going to the store?
+    -> Esce tu vade a la boteca?
+
+    Was he going to the store?
+    -> Esce el ia vade a la boteca?
+  */
+  const destinationSource = tokens.slice(afterToIndex, sentenceEnd).join("").trim();
+  const motionSource = "go to " + destinationSource;
+  let translatedMotion = translateText(motionSource, false).trim();
+
+  if (isPastGoingTo) {
+    if (translatedMotion === "vade") {
+      translatedMotion = "ia vade";
+    } else if (translatedMotion.startsWith("vade ")) {
+      translatedMotion = "ia " + translatedMotion;
+    }
+  }
+
+  return translatedMotion;
+}
+
 /*
   YES/NO QUESTION RULE
 */
-
 function tryYesNoQuestionRule(tokens, startIndex) {
   if (!isWordToken(tokens[startIndex])) return null;
   if (!isSentenceStart(tokens, startIndex)) return null;
@@ -623,6 +699,31 @@ function tryYesNoQuestionRule(tokens, startIndex) {
     sentenceEnd++;
   }
 
+  /*
+    Special fix:
+      Are you going to buy?
+      -> Esce tu va compra?
+
+      Are you going to the store?
+      -> Esce tu vade a la boteca?
+  */
+  const goingToRest = tryGoingToQuestionRest(tokens, aux, restStart, sentenceEnd);
+
+  if (goingToRest) {
+    const parts = ["Esce", subject];
+
+    parts.push(
+      isNegative
+        ? negateTranslatedVerbPhrase(goingToRest)
+        : goingToRest
+    );
+
+    return {
+      text: parts.join(" "),
+      nextIndex: sentenceEnd
+    };
+  }
+
   const restSource = tokens.slice(restStart, sentenceEnd).join("").trim();
   const translatedRest = restSource ? translateText(restSource, false).trim() : "";
 
@@ -642,7 +743,6 @@ function tryYesNoQuestionRule(tokens, startIndex) {
     nextIndex: sentenceEnd
   };
 }
-
 /*
   NEGATION RULE
 */
