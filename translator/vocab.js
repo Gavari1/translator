@@ -894,7 +894,7 @@ was going to the = ia vade a la
 was going to = ia intende
 going = vadente
 went = ia vade
-went to = ia vada a
+went to = ia vade a
 will go = va vade 
 will go to = ta vade a 
 would go = ta vade
@@ -1034,6 +1034,8 @@ need = nesesa | verb
 look = regarda | verb
 look at = regarda | verb
 move = move | verb
+
+to buy = 
 
 # =========================================================
 # BASIC CONNECTORS / LITTLE WORDS
