@@ -414,6 +414,123 @@ function resolveAcelThatLocal(tokens) {
 }
 
 /*
+  GO + DESTINATION RULE
+
+  This adds English "to" internally before destination nouns after go/goes/went/going.
+
+  English:
+    go home
+    go school
+    went church
+    to go home
+
+  Internal:
+    go to home
+    go to school
+    went to church
+    to go to home
+
+  Elefen:
+    vade a casa
+    vade a scola
+    ia vade a eglesa
+    vade a casa
+*/
+
+function isGoMotionWord(word) {
+  return [
+    "go",
+    "goes",
+    "went",
+    "going"
+  ].includes(normalizeWord(word));
+}
+
+function isBlockedGoDestinationWord(word) {
+  return [
+    "to",
+    "into",
+    "onto",
+    "toward",
+    "towards",
+    "from",
+    "in",
+    "on",
+    "at",
+    "with",
+    "without",
+    "for",
+    "by",
+
+    "today",
+    "tomorrow",
+    "yesterday",
+    "now",
+    "later",
+    "soon",
+    "there",
+    "here",
+    "back",
+    "again",
+
+    "crazy"
+  ].includes(normalizeWord(word));
+}
+
+function looksLikeGoDestination(tokens, startIndex) {
+  if (startIndex < 0 || startIndex >= tokens.length) return false;
+  if (!isWordToken(tokens[startIndex])) return false;
+
+  const firstWord = normalizeWord(tokens[startIndex]);
+
+  if (isBlockedGoDestinationWord(firstWord)) return false;
+
+  // go the house / go my house / go your school
+  if (isDeterminer(firstWord)) {
+    const nounIndex = nextWordTokenIndex(tokens, startIndex);
+
+    if (
+      nounIndex >= 0 &&
+      isWordToken(tokens[nounIndex]) &&
+      hasTag(tokens[nounIndex], "noun")
+    ) {
+      return true;
+    }
+
+    return false;
+  }
+
+  // go home / go school / go work / go church
+  if (hasTag(firstWord, "noun")) return true;
+
+  return false;
+}
+
+function insertToBeforeGoDestinations(tokens) {
+  const result = [...tokens];
+  const insertIndexes = [];
+
+  for (let i = 0; i < tokens.length; i++) {
+    if (!isWordToken(tokens[i])) continue;
+    if (!isGoMotionWord(tokens[i])) continue;
+
+    const nextIndex = nextWordTokenIndex(tokens, i);
+    if (nextIndex < 0) continue;
+
+    if (looksLikeGoDestination(tokens, nextIndex)) {
+      insertIndexes.push(nextIndex);
+    }
+  }
+
+  // Insert from back to front so earlier indexes do not shift.
+  for (let i = insertIndexes.length - 1; i >= 0; i--) {
+    result.splice(insertIndexes[i], 0, "to", " ");
+  }
+
+  return result;
+}
+
+/*
   YES/NO QUESTION RULE
 */
 function tryYesNoQuestionRule(tokens, startIndex) {
@@ -661,11 +778,15 @@ function translateText(source, allowQuestionRule = true) {
   //    know that -> ce
   //    think that -> ce
   //
-  // 3. Acel that:
+  // 3. Go + destination:
+  //    go home -> go to home -> vade a casa
+  //
+  // 4. Acel that:
   //    that dog / I want that / eat that -> acel
 
   tokens = resolveRelativeThatLocal(tokens);
   tokens = resolveClauseThatLocal(tokens);
+  tokens = insertToBeforeGoDestinations(tokens);
 
   if (typeof RULES.resolveRelativeThat === "function") {
     tokens = RULES.resolveRelativeThat(tokens);
