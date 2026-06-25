@@ -129,7 +129,8 @@ place = loco | noun
 problem = problem | noun
 cage = caje | noun
 home = casa | noun
-
+thing = cosa | noun
+things = cosas | noun
 # =========================================================
 # PREPOSITIONS / LOCATION / MOVEMENT
 # =========================================================
