@@ -368,6 +368,51 @@ have to tell us = debe dise a nos
 have to tell them = debe dise a los
 have to tell you all = debe dise a vos
 
+# NEED
+need = nesesa | verb
+needs = nesesa | verb
+needed = ia nesesa
+needing = nesesante
+to need = nesesa
+will need = va nesesa
+would need = ta nesesa
+going to need = va nesesa
+am going to need = va nesesa
+is going to need = va nesesa
+are going to need = va nesesa
+was needing = ia nesesa
+were needing = ia nesesa
+will be needing = va nesesa
+would be needing = ta nesesa
+
+# NEED progressive phrase traps
+i am needing = me nesesa
+you are needing = tu nesesa
+he is needing = el nesesa
+she is needing = el nesesa
+it is needing = lo nesesa
+we are needing = nos nesesa
+they are needing = los nesesa
+you all are needing = vos nesesa
+
+i was needing = me ia nesesa
+you were needing = tu ia nesesa
+he was needing = el ia nesesa
+she was needing = el ia nesesa
+it was needing = lo ia nesesa
+we were needing = nos ia nesesa
+they were needing = los ia nesesa
+you all were needing = vos ia nesesa
+
+i will be needing = me va nesesa
+you will be needing = tu va nesesa
+he will be needing = el va nesesa
+she will be needing = el va nesesa
+it will be needing = lo va nesesa
+we will be needing = nos va nesesa
+they will be needing = los va nesesa
+you all will be needing = vos va nesesa
+
 # =========================================================
 # IF / BECAUSE / WHEN / WHERE / QUESTIONS
 # =========================================================
