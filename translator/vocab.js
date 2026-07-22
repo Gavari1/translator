@@ -411,6 +411,7 @@ thought = ia pensa
 thought that = ia pensa ce 
 think that = pensa ce 
 think = pensa 
+thinks = pensa
 will think = va pensa 
 
 i believe that = me crede ce
