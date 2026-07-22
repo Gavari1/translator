@@ -36,7 +36,9 @@ function isSpaceToken(token) {
 }
 
 function normalizeWord(word) {
-  return String(word || "").toLowerCase().replace(/^'+|'+$/g, "");
+  return String(word || "")
+    .toLowerCase()
+    .replace(/^'+|'+$/g, "");
 }
 
 function capitalizeFirst(text) {
@@ -52,16 +54,26 @@ function isSentenceStart(tokens, index) {
   }
 
   if (j < 0) return true;
+
   return /[.!?]$/.test(tokens[j]);
 }
 
 function shouldCapitalize(tokens, index) {
-  return isSentenceStart(tokens, index) && /^[A-Z]/.test(tokens[index] || "");
+  return (
+    isSentenceStart(tokens, index) &&
+    /^[A-Z]/.test(tokens[index] || "")
+  );
 }
 
 function maybeCapitalize(text, tokens, index) {
-  return shouldCapitalize(tokens, index) ? capitalizeFirst(text) : text;
+  return shouldCapitalize(tokens, index)
+    ? capitalizeFirst(text)
+    : text;
 }
+
+/*
+  VOCABULARY PARSING
+*/
 
 function parseVocab(text) {
   const dict = {};
@@ -75,6 +87,7 @@ function parseVocab(text) {
     if (line.startsWith("#")) continue;
 
     const match = line.match(/^(.+?)\s*(=|-|:|→)\s*(.+)$/);
+
     if (!match) continue;
 
     const english = match[1].trim().toLowerCase();
@@ -85,8 +98,13 @@ function parseVocab(text) {
 
     if (elefenAndTag.includes("|")) {
       const parts = elefenAndTag.split("|");
+
       elefen = parts[0].trim();
-      tag = parts.slice(1).join("|").trim().toLowerCase();
+      tag = parts
+        .slice(1)
+        .join("|")
+        .trim()
+        .toLowerCase();
     }
 
     if (!english || !elefen) continue;
@@ -98,20 +116,27 @@ function parseVocab(text) {
     }
   }
 
-  return { dict, tags };
+  return {
+    dict,
+    tags
+  };
 }
 
 function rebuildDictionary() {
-  const parsed = parseVocab(window.DEFAULT_VOCAB_TEXT || "");
+  const parsed = parseVocab(
+    window.DEFAULT_VOCAB_TEXT || ""
+  );
 
   dictionary = parsed.dict;
   vocabTags = parsed.tags;
 
   phraseList = Object.keys(dictionary)
-    .map(key => ({
+    .map((key) => ({
       english: key,
       elefen: dictionary[key],
-      words: key.split(/\s+/).filter(Boolean)
+      words: key
+        .split(/\s+/)
+        .filter(Boolean)
     }))
     .sort((a, b) => b.words.length - a.words.length);
 }
@@ -122,17 +147,25 @@ function getTag(word) {
 
 function hasTag(word, wantedTag) {
   const tag = getTag(word);
+
   if (!tag) return false;
-  return tag.split(/[,\s]+/).includes(wantedTag);
+
+  return tag
+    .split(/[,\s]+/)
+    .includes(wantedTag);
 }
 
 function translateWord(word) {
   const clean = normalizeWord(word);
+
   return dictionary[clean] || word;
 }
 
 function skipSpaces(tokens, index) {
-  while (index < tokens.length && isSpaceToken(tokens[index])) {
+  while (
+    index < tokens.length &&
+    isSpaceToken(tokens[index])
+  ) {
     index++;
   }
 
@@ -140,7 +173,7 @@ function skipSpaces(tokens, index) {
 }
 
 /*
-  RELATIVE THAT SAFETY RULE
+  GENERAL TOKEN HELPERS
 */
 
 function previousWordToken(tokens, index) {
@@ -167,10 +200,21 @@ function nextWordTokenIndex(tokens, index) {
   return -1;
 }
 
+/*
+  RELATIVE THAT SAFETY RULE
+*/
+
 function isHumanRelativeNoun(word) {
   return [
-    "person", "people", "man", "woman", "child", "baby",
-    "mother", "father", "friend"
+    "person",
+    "people",
+    "man",
+    "woman",
+    "child",
+    "baby",
+    "mother",
+    "father",
+    "friend"
   ].includes(normalizeWord(word));
 }
 
@@ -180,17 +224,78 @@ function isLikelyRelativeNoun(word) {
   if (hasTag(clean, "noun")) return true;
 
   return [
-    "car", "house", "thing", "language", "person", "river", "train",
-    "bus", "bicycle", "bike", "plane", "boat", "food", "water",
-    "day", "night", "work", "job", "street", "store", "school",
-    "city", "country", "world", "word", "sentence", "time", "year",
-    "month", "week", "hour", "minute", "morning", "church", "evening",
-    "room", "door", "window", "book", "phone", "name", "family",
-    "mother", "father", "child", "baby", "woman", "man", "people",
-    "body", "head", "hand", "eye", "mouth", "heart", "coffee",
-    "bread", "fruit", "animal", "dog", "cat", "tree", "flower",
-    "sun", "moon", "place", "problem", "cage", "home",
-    "translation", "translations", "translator"
+    "car",
+    "house",
+    "thing",
+    "language",
+    "person",
+    "river",
+    "train",
+    "bus",
+    "bicycle",
+    "bike",
+    "plane",
+    "boat",
+    "food",
+    "water",
+    "day",
+    "night",
+    "work",
+    "job",
+    "street",
+    "store",
+    "school",
+    "city",
+    "country",
+    "world",
+    "word",
+    "sentence",
+    "time",
+    "year",
+    "month",
+    "week",
+    "hour",
+    "minute",
+    "morning",
+    "church",
+    "evening",
+    "room",
+    "door",
+    "window",
+    "book",
+    "phone",
+    "name",
+    "family",
+    "mother",
+    "father",
+    "child",
+    "baby",
+    "woman",
+    "man",
+    "people",
+    "body",
+    "head",
+    "hand",
+    "eye",
+    "mouth",
+    "heart",
+    "coffee",
+    "bread",
+    "fruit",
+    "animal",
+    "dog",
+    "cat",
+    "tree",
+    "flower",
+    "sun",
+    "moon",
+    "place",
+    "problem",
+    "cage",
+    "home",
+    "translation",
+    "translations",
+    "translator"
   ].includes(clean);
 }
 
@@ -199,61 +304,205 @@ function isLikelyVerbWord(word) {
 
   if (!clean) return false;
 
-  if (hasTag(clean, "verb")) return true;
-
-  if ([
-    "be", "am", "are", "is", "was", "were",
-    "do", "does", "did",
-    "can", "could", "should", "must",
-    "will", "would",
-
-    "go", "goes", "went",
-    "come", "comes", "came",
-    "see", "sees", "saw",
-    "hear", "hears", "heard",
-    "help", "helps", "helped",
-    "buy", "buys", "bought",
-    "make", "makes", "made",
-    "say", "says", "said",
-    "tell", "tells", "told",
-    "eat", "eats", "ate",
-    "drink", "drinks", "drank",
-    "write", "writes", "wrote",
-    "read", "reads",
-    "find", "finds", "found",
-    "give", "gives", "gave",
-    "take", "takes", "took",
-    "use", "uses", "used",
-    "want", "wants", "wanted",
-    "need", "needs", "needed",
-    "like", "likes", "liked",
-    "love", "loves", "loved",
-    "work", "works", "worked",
-    "live", "lives", "lived",
-    "speak", "speaks", "spoke",
-    "translate", "translates", "translated",
-    "create", "creates", "created",
-    "open", "opens", "opened",
-    "close", "closes", "closed",
-    "start", "starts", "started",
-    "begin", "begins", "began",
-    "finish", "finishes", "finished",
-    "change", "changes", "changed",
-    "clean", "cleans", "cleaned",
-    "repair", "repairs", "repaired",
-    "think", "thinks", "thought",
-    "believe", "believes", "believed",
-    "know", "knows", "knew",
-    "understand", "understands", "understood",
-    "remember", "remembers", "remembered",
-    "forget", "forgets", "forgot",
-    "hope", "hopes", "hoped",
-    "feel", "feels", "felt"
-  ].includes(clean)) {
+  if (hasTag(clean, "verb")) {
     return true;
   }
 
-  if (clean.endsWith("ed")) return true;
+  if (
+    [
+      "be",
+      "am",
+      "are",
+      "is",
+      "was",
+      "were",
+
+      "do",
+      "does",
+      "did",
+
+      "can",
+      "could",
+      "should",
+      "must",
+
+      "will",
+      "would",
+
+      "go",
+      "goes",
+      "went",
+
+      "come",
+      "comes",
+      "came",
+
+      "see",
+      "sees",
+      "saw",
+
+      "hear",
+      "hears",
+      "heard",
+
+      "help",
+      "helps",
+      "helped",
+
+      "buy",
+      "buys",
+      "bought",
+
+      "make",
+      "makes",
+      "made",
+
+      "say",
+      "says",
+      "said",
+
+      "tell",
+      "tells",
+      "told",
+
+      "eat",
+      "eats",
+      "ate",
+
+      "drink",
+      "drinks",
+      "drank",
+
+      "write",
+      "writes",
+      "wrote",
+
+      "read",
+      "reads",
+
+      "find",
+      "finds",
+      "found",
+
+      "give",
+      "gives",
+      "gave",
+
+      "take",
+      "takes",
+      "took",
+
+      "use",
+      "uses",
+      "used",
+
+      "want",
+      "wants",
+      "wanted",
+
+      "need",
+      "needs",
+      "needed",
+
+      "like",
+      "likes",
+      "liked",
+
+      "love",
+      "loves",
+      "loved",
+
+      "work",
+      "works",
+      "worked",
+
+      "live",
+      "lives",
+      "lived",
+
+      "speak",
+      "speaks",
+      "spoke",
+
+      "translate",
+      "translates",
+      "translated",
+
+      "create",
+      "creates",
+      "created",
+
+      "open",
+      "opens",
+      "opened",
+
+      "close",
+      "closes",
+      "closed",
+
+      "start",
+      "starts",
+      "started",
+
+      "begin",
+      "begins",
+      "began",
+
+      "finish",
+      "finishes",
+      "finished",
+
+      "change",
+      "changes",
+      "changed",
+
+      "clean",
+      "cleans",
+      "cleaned",
+
+      "repair",
+      "repairs",
+      "repaired",
+
+      "think",
+      "thinks",
+      "thought",
+
+      "believe",
+      "believes",
+      "believed",
+
+      "know",
+      "knows",
+      "knew",
+
+      "understand",
+      "understands",
+      "understood",
+
+      "remember",
+      "remembers",
+      "remembered",
+
+      "forget",
+      "forgets",
+      "forgot",
+
+      "hope",
+      "hopes",
+      "hoped",
+
+      "feel",
+      "feels",
+      "felt"
+    ].includes(clean)
+  ) {
+    return true;
+  }
+
+  if (clean.endsWith("ed")) {
+    return true;
+  }
 
   if (
     dictionary[clean] &&
@@ -268,16 +517,27 @@ function isLikelyVerbWord(word) {
   return false;
 }
 
-function hasVerbSoonAfter(tokens, startIndex, maxWords = 6) {
+function hasVerbSoonAfter(
+  tokens,
+  startIndex,
+  maxWords = 6
+) {
   let wordsSeen = 0;
 
-  for (let i = startIndex; i < tokens.length && wordsSeen < maxWords; i++) {
+  for (
+    let i = startIndex;
+    i < tokens.length && wordsSeen < maxWords;
+    i++
+  ) {
     if (!isWordToken(tokens[i])) continue;
 
     const word = normalizeWord(tokens[i]);
+
     wordsSeen++;
 
-    if (isLikelyVerbWord(word)) return true;
+    if (isLikelyVerbWord(word)) {
+      return true;
+    }
   }
 
   return false;
@@ -285,29 +545,58 @@ function hasVerbSoonAfter(tokens, startIndex, maxWords = 6) {
 
 function looksLikeRelativeThatLocal(tokens, index) {
   const current = normalizeWord(tokens[index]);
+
   if (current !== "that") return false;
 
   const prev = previousWordToken(tokens, index);
-  if (!isLikelyRelativeNoun(prev)) return false;
+
+  if (!isLikelyRelativeNoun(prev)) {
+    return false;
+  }
 
   const nextIndex = nextWordTokenIndex(tokens, index);
+
   if (nextIndex < 0) return false;
 
   const next = normalizeWord(tokens[nextIndex]);
 
-  if ([
-    "i", "me", "you", "he", "him", "she", "her", "it",
-    "we", "us", "they", "them"
-  ].includes(next)) {
+  if (
+    [
+      "i",
+      "me",
+      "you",
+      "he",
+      "him",
+      "she",
+      "her",
+      "it",
+      "we",
+      "us",
+      "they",
+      "them"
+    ].includes(next)
+  ) {
     return hasVerbSoonAfter(tokens, nextIndex);
   }
 
-  if ([
-    "am", "are", "is", "was", "were",
-    "do", "does", "did",
-    "can", "could", "should", "must",
-    "will", "would"
-  ].includes(next)) {
+  if (
+    [
+      "am",
+      "are",
+      "is",
+      "was",
+      "were",
+      "do",
+      "does",
+      "did",
+      "can",
+      "could",
+      "should",
+      "must",
+      "will",
+      "would"
+    ].includes(next)
+  ) {
     return true;
   }
 
@@ -320,9 +609,15 @@ function looksLikeRelativeThatLocal(tokens, index) {
 
 function resolveRelativeThatLocal(tokens) {
   return tokens.map((token, index) => {
-    if (isWordToken(token) && looksLikeRelativeThatLocal(tokens, index)) {
+    if (
+      isWordToken(token) &&
+      looksLikeRelativeThatLocal(tokens, index)
+    ) {
       const prev = previousWordToken(tokens, index);
-      return isHumanRelativeNoun(prev) ? "ci" : "cual";
+
+      return isHumanRelativeNoun(prev)
+        ? "ci"
+        : "cual";
     }
 
     return token;
@@ -334,22 +629,58 @@ function resolveRelativeThatLocal(tokens) {
 */
 
 function isClauseThatLocal(tokens, index) {
-  if (!isWordToken(tokens[index])) return false;
-  if (normalizeWord(tokens[index]) !== "that") return false;
+  if (!isWordToken(tokens[index])) {
+    return false;
+  }
+
+  if (
+    normalizeWord(tokens[index]) !== "that"
+  ) {
+    return false;
+  }
 
   const prev = previousWordToken(tokens, index);
 
   return [
-    "think", "thinks", "thought",
-    "believe", "believes", "believed",
-    "know", "knows", "knew",
-    "say", "says", "said",
-    "tell", "tells", "told",
-    "hope", "hopes", "hoped",
-    "feel", "feels", "felt",
-    "understand", "understands", "understood",
-    "remember", "remembers", "remembered",
-    "forget", "forgets", "forgot"
+    "think",
+    "thinks",
+    "thought",
+
+    "believe",
+    "believes",
+    "believed",
+
+    "know",
+    "knows",
+    "knew",
+
+    "say",
+    "says",
+    "said",
+
+    "tell",
+    "tells",
+    "told",
+
+    "hope",
+    "hopes",
+    "hoped",
+
+    "feel",
+    "feels",
+    "felt",
+
+    "understand",
+    "understands",
+    "understood",
+
+    "remember",
+    "remembers",
+    "remembered",
+
+    "forget",
+    "forgets",
+    "forgot"
   ].includes(prev);
 }
 
@@ -369,7 +700,10 @@ function resolveClauseThatLocal(tokens) {
 
 function resolveAcelThatLocal(tokens) {
   return tokens.map((token) => {
-    if (isWordToken(token) && normalizeWord(token) === "that") {
+    if (
+      isWordToken(token) &&
+      normalizeWord(token) === "that"
+    ) {
       return "acel";
     }
 
@@ -380,24 +714,50 @@ function resolveAcelThatLocal(tokens) {
 /*
   DESTINATION HELPERS
 
-  If you add new place words later, you can tag them like:
+  New destination words can be tagged like:
     restaurant = restorante | noun place
-
-  Then the rules below can recognize them as destinations.
 */
 
 function isDestinationWord(word) {
   const clean = normalizeWord(word);
 
-  if (hasTag(clean, "place")) return true;
-  if (hasTag(clean, "destination")) return true;
+  if (hasTag(clean, "place")) {
+    return true;
+  }
+
+  if (hasTag(clean, "destination")) {
+    return true;
+  }
 
   return [
-    "home", "house", "work", "job", "school", "store", "church",
-    "city", "country", "room", "place", "street", "river",
-    "car", "bus", "train", "plane", "boat", "airport",
-    "station", "hotel", "restaurant", "office", "park",
-    "beach", "mountain", "lake", "door"
+    "home",
+    "house",
+    "work",
+    "job",
+    "school",
+    "store",
+    "church",
+    "city",
+    "country",
+    "room",
+    "place",
+    "street",
+    "river",
+    "car",
+    "bus",
+    "train",
+    "plane",
+    "boat",
+    "airport",
+    "station",
+    "hotel",
+    "restaurant",
+    "office",
+    "park",
+    "beach",
+    "mountain",
+    "lake",
+    "door"
   ].includes(clean);
 }
 
@@ -462,17 +822,42 @@ function isBlockedGoDestinationWord(word) {
   ].includes(normalizeWord(word));
 }
 
-function looksLikeGoDestination(tokens, startIndex) {
-  if (startIndex < 0 || startIndex >= tokens.length) return false;
-  if (!isWordToken(tokens[startIndex])) return false;
+function looksLikeGoDestination(
+  tokens,
+  startIndex
+) {
+  if (
+    startIndex < 0 ||
+    startIndex >= tokens.length
+  ) {
+    return false;
+  }
 
-  const firstWord = normalizeWord(tokens[startIndex]);
+  if (!isWordToken(tokens[startIndex])) {
+    return false;
+  }
 
-  if (isBlockedGoDestinationWord(firstWord)) return false;
+  const firstWord = normalizeWord(
+    tokens[startIndex]
+  );
 
-  // go the house / go my house / go your school
+  if (
+    isBlockedGoDestinationWord(firstWord)
+  ) {
+    return false;
+  }
+
+  /*
+    go the house
+    go my house
+    go your school
+  */
+
   if (isDeterminer(firstWord)) {
-    const nounIndex = nextWordTokenIndex(tokens, startIndex);
+    const nounIndex = nextWordTokenIndex(
+      tokens,
+      startIndex
+    );
 
     if (
       nounIndex >= 0 &&
@@ -485,8 +870,16 @@ function looksLikeGoDestination(tokens, startIndex) {
     return false;
   }
 
-  // go home / go school / go work / go church
-  if (isDestinationWord(firstWord)) return true;
+  /*
+    go home
+    go school
+    go work
+    go church
+  */
+
+  if (isDestinationWord(firstWord)) {
+    return true;
+  }
 
   return false;
 }
@@ -499,16 +892,34 @@ function insertToBeforeGoDestinations(tokens) {
     if (!isWordToken(tokens[i])) continue;
     if (!isGoMotionWord(tokens[i])) continue;
 
-    const nextIndex = nextWordTokenIndex(tokens, i);
+    const nextIndex = nextWordTokenIndex(
+      tokens,
+      i
+    );
+
     if (nextIndex < 0) continue;
 
-    if (looksLikeGoDestination(tokens, nextIndex)) {
+    if (
+      looksLikeGoDestination(
+        tokens,
+        nextIndex
+      )
+    ) {
       insertIndexes.push(nextIndex);
     }
   }
 
-  for (let i = insertIndexes.length - 1; i >= 0; i--) {
-    result.splice(insertIndexes[i], 0, "to", " ");
+  for (
+    let i = insertIndexes.length - 1;
+    i >= 0;
+    i--
+  ) {
+    result.splice(
+      insertIndexes[i],
+      0,
+      "to",
+      " "
+    );
   }
 
   return result;
@@ -533,30 +944,59 @@ function insertToBeforeGoDestinations(tokens) {
     ia vade a scola per studia
 */
 
-function isPurposeToAfterDestination(tokens, index) {
-  if (!isWordToken(tokens[index])) return false;
-  if (normalizeWord(tokens[index]) !== "to") return false;
+function isPurposeToAfterDestination(
+  tokens,
+  index
+) {
+  if (!isWordToken(tokens[index])) {
+    return false;
+  }
 
-  const nextIndex = nextWordTokenIndex(tokens, index);
+  if (
+    normalizeWord(tokens[index]) !== "to"
+  ) {
+    return false;
+  }
+
+  const nextIndex = nextWordTokenIndex(
+    tokens,
+    index
+  );
+
   if (nextIndex < 0) return false;
 
-  const nextWord = normalizeWord(tokens[nextIndex]);
+  const nextWord = normalizeWord(
+    tokens[nextIndex]
+  );
 
-  // to buy / to eat / to study / to sleep
-  if (!isLikelyVerbWord(nextWord)) return false;
+  if (!isLikelyVerbWord(nextWord)) {
+    return false;
+  }
 
-  const prevWord = previousWordToken(tokens, index);
+  const prevWord = previousWordToken(
+    tokens,
+    index
+  );
+
   if (!prevWord) return false;
 
-  // store to buy / home to sleep / school to study
-  if (isDestinationWord(prevWord)) return true;
+  if (isDestinationWord(prevWord)) {
+    return true;
+  }
 
   return false;
 }
 
-function convertPurposeToAfterDestinations(tokens) {
+function convertPurposeToAfterDestinations(
+  tokens
+) {
   return tokens.map((token, index) => {
-    if (isPurposeToAfterDestination(tokens, index)) {
+    if (
+      isPurposeToAfterDestination(
+        tokens,
+        index
+      )
+    ) {
       return "for";
     }
 
@@ -566,17 +1006,40 @@ function convertPurposeToAfterDestinations(tokens) {
 
 function negateTranslatedVerbPhrase(phrase) {
   if (!phrase) return phrase;
+
   return "no " + phrase;
 }
 
-function tryGoingToQuestionRest(tokens, aux, restStart, sentenceEnd) {
-  if (restStart >= sentenceEnd) return null;
-  if (!isWordToken(tokens[restStart])) return null;
+/*
+  GOING TO QUESTION RULE
+*/
 
-  const first = normalizeWord(tokens[restStart]);
-  if (first !== "going") return null;
+function tryGoingToQuestionRest(
+  tokens,
+  aux,
+  restStart,
+  sentenceEnd
+) {
+  if (restStart >= sentenceEnd) {
+    return null;
+  }
 
-  const toIndex = skipSpaces(tokens, restStart + 1);
+  if (!isWordToken(tokens[restStart])) {
+    return null;
+  }
+
+  const first = normalizeWord(
+    tokens[restStart]
+  );
+
+  if (first !== "going") {
+    return null;
+  }
+
+  const toIndex = skipSpaces(
+    tokens,
+    restStart + 1
+  );
 
   if (
     toIndex >= sentenceEnd ||
@@ -586,7 +1049,10 @@ function tryGoingToQuestionRest(tokens, aux, restStart, sentenceEnd) {
     return null;
   }
 
-  const afterToIndex = skipSpaces(tokens, toIndex + 1);
+  const afterToIndex = skipSpaces(
+    tokens,
+    toIndex + 1
+  );
 
   if (
     afterToIndex >= sentenceEnd ||
@@ -595,10 +1061,18 @@ function tryGoingToQuestionRest(tokens, aux, restStart, sentenceEnd) {
     return null;
   }
 
-  const afterToWord = normalizeWord(tokens[afterToIndex]);
-  const tailSource = tokens.slice(afterToIndex, sentenceEnd).join("").trim();
+  const afterToWord = normalizeWord(
+    tokens[afterToIndex]
+  );
 
-  const isPastGoingTo = aux === "was" || aux === "were";
+  const tailSource = tokens
+    .slice(afterToIndex, sentenceEnd)
+    .join("")
+    .trim();
+
+  const isPastGoingTo =
+    aux === "was" ||
+    aux === "were";
 
   /*
     Are you going to buy?
@@ -607,12 +1081,15 @@ function tryGoingToQuestionRest(tokens, aux, restStart, sentenceEnd) {
     Was he going to buy?
     -> Esce el ia intende compra?
   */
+
   if (isLikelyVerbWord(afterToWord)) {
     const translatedTail = tailSource
       ? translateText(tailSource, false).trim()
       : "";
 
-    const marker = isPastGoingTo ? "ia intende" : "va";
+    const marker = isPastGoingTo
+      ? "ia intende"
+      : "va";
 
     return translatedTail
       ? marker + " " + translatedTail
@@ -626,15 +1103,28 @@ function tryGoingToQuestionRest(tokens, aux, restStart, sentenceEnd) {
     Was he going to the store?
     -> Esce el ia vade a la boteca?
   */
-  const destinationSource = tokens.slice(afterToIndex, sentenceEnd).join("").trim();
-  const motionSource = "go to " + destinationSource;
-  let translatedMotion = translateText(motionSource, false).trim();
+
+  const destinationSource = tokens
+    .slice(afterToIndex, sentenceEnd)
+    .join("")
+    .trim();
+
+  const motionSource =
+    "go to " + destinationSource;
+
+  let translatedMotion = translateText(
+    motionSource,
+    false
+  ).trim();
 
   if (isPastGoingTo) {
     if (translatedMotion === "vade") {
       translatedMotion = "ia vade";
-    } else if (translatedMotion.startsWith("vade ")) {
-      translatedMotion = "ia " + translatedMotion;
+    } else if (
+      translatedMotion.startsWith("vade ")
+    ) {
+      translatedMotion =
+        "ia " + translatedMotion;
     }
   }
 
@@ -644,40 +1134,76 @@ function tryGoingToQuestionRest(tokens, aux, restStart, sentenceEnd) {
 /*
   YES/NO QUESTION RULE
 */
-function tryYesNoQuestionRule(tokens, startIndex) {
-  if (!isWordToken(tokens[startIndex])) return null;
-  if (!isSentenceStart(tokens, startIndex)) return null;
 
-  const aux = normalizeWord(tokens[startIndex]);
-  if (!(aux in YES_NO_AUX_MAP)) return null;
-
-  let subjectIndex = skipSpaces(tokens, startIndex + 1);
-
-  if (subjectIndex >= tokens.length || !isWordToken(tokens[subjectIndex])) {
+function tryYesNoQuestionRule(
+  tokens,
+  startIndex
+) {
+  if (!isWordToken(tokens[startIndex])) {
     return null;
   }
 
-  let subjectWord = normalizeWord(tokens[subjectIndex]);
-  let subject = SUBJECT_TRANSLATIONS[subjectWord];
+  if (
+    !isSentenceStart(tokens, startIndex)
+  ) {
+    return null;
+  }
 
-  if (!subject) return null;
+  const aux = normalizeWord(
+    tokens[startIndex]
+  );
+
+  if (!(aux in YES_NO_AUX_MAP)) {
+    return null;
+  }
+
+  let subjectIndex = skipSpaces(
+    tokens,
+    startIndex + 1
+  );
+
+  if (
+    subjectIndex >= tokens.length ||
+    !isWordToken(tokens[subjectIndex])
+  ) {
+    return null;
+  }
+
+  const subjectWord = normalizeWord(
+    tokens[subjectIndex]
+  );
+
+  let subject =
+    SUBJECT_TRANSLATIONS[subjectWord];
+
+  if (!subject) {
+    return null;
+  }
 
   let restStart = subjectIndex + 1;
 
   if (subjectWord === "you") {
-    const possibleAllIndex = skipSpaces(tokens, subjectIndex + 1);
+    const possibleAllIndex = skipSpaces(
+      tokens,
+      subjectIndex + 1
+    );
 
     if (
       possibleAllIndex < tokens.length &&
       isWordToken(tokens[possibleAllIndex]) &&
-      normalizeWord(tokens[possibleAllIndex]) === "all"
+      normalizeWord(
+        tokens[possibleAllIndex]
+      ) === "all"
     ) {
       subject = "vos";
       restStart = possibleAllIndex + 1;
     }
   }
 
-  restStart = skipSpaces(tokens, restStart);
+  restStart = skipSpaces(
+    tokens,
+    restStart
+  );
 
   let isNegative = false;
 
@@ -687,7 +1213,11 @@ function tryYesNoQuestionRule(tokens, startIndex) {
     normalizeWord(tokens[restStart]) === "not"
   ) {
     isNegative = true;
-    restStart = skipSpaces(tokens, restStart + 1);
+
+    restStart = skipSpaces(
+      tokens,
+      restStart + 1
+    );
   }
 
   let sentenceEnd = restStart;
@@ -699,22 +1229,25 @@ function tryYesNoQuestionRule(tokens, startIndex) {
     sentenceEnd++;
   }
 
-  /*
-    Special fix:
-      Are you going to buy?
-      -> Esce tu va compra?
-
-      Are you going to the store?
-      -> Esce tu vade a la boteca?
-  */
-  const goingToRest = tryGoingToQuestionRest(tokens, aux, restStart, sentenceEnd);
+  const goingToRest =
+    tryGoingToQuestionRest(
+      tokens,
+      aux,
+      restStart,
+      sentenceEnd
+    );
 
   if (goingToRest) {
-    const parts = ["Esce", subject];
+    const parts = [
+      "Esce",
+      subject
+    ];
 
     parts.push(
       isNegative
-        ? negateTranslatedVerbPhrase(goingToRest)
+        ? negateTranslatedVerbPhrase(
+            goingToRest
+          )
         : goingToRest
     );
 
@@ -724,50 +1257,93 @@ function tryYesNoQuestionRule(tokens, startIndex) {
     };
   }
 
-  const restSource = tokens.slice(restStart, sentenceEnd).join("").trim();
-  const translatedRest = restSource ? translateText(restSource, false).trim() : "";
+  const restSource = tokens
+    .slice(restStart, sentenceEnd)
+    .join("")
+    .trim();
+
+  const translatedRest = restSource
+    ? translateText(
+        restSource,
+        false
+      ).trim()
+    : "";
 
   let marker = YES_NO_AUX_MAP[aux];
 
   if (isNegative) {
-    marker = marker ? "no " + marker : "no";
+    marker = marker
+      ? "no " + marker
+      : "no";
   }
 
-  const parts = ["Esce", subject];
+  const parts = [
+    "Esce",
+    subject
+  ];
 
-  if (marker) parts.push(marker);
-  if (translatedRest) parts.push(translatedRest);
+  if (marker) {
+    parts.push(marker);
+  }
+
+  if (translatedRest) {
+    parts.push(translatedRest);
+  }
 
   return {
     text: parts.join(" "),
     nextIndex: sentenceEnd
   };
 }
+
 /*
   NEGATION RULE
 */
 
-function tryNegationRule(tokens, startIndex) {
-  if (!isWordToken(tokens[startIndex])) return null;
+function tryNegationRule(
+  tokens,
+  startIndex
+) {
+  if (!isWordToken(tokens[startIndex])) {
+    return null;
+  }
 
-  const word = normalizeWord(tokens[startIndex]);
+  const word = normalizeWord(
+    tokens[startIndex]
+  );
 
-  const nextIndex = skipSpaces(tokens, startIndex + 1);
+  const nextIndex = skipSpaces(
+    tokens,
+    startIndex + 1
+  );
+
   const nextWord =
-    nextIndex < tokens.length && isWordToken(tokens[nextIndex])
+    nextIndex < tokens.length &&
+    isWordToken(tokens[nextIndex])
       ? normalizeWord(tokens[nextIndex])
       : "";
 
   if (NEGATION_CONTRACTIONS[word]) {
     return {
-      text: maybeCapitalize(NEGATION_CONTRACTIONS[word], tokens, startIndex),
+      text: maybeCapitalize(
+        NEGATION_CONTRACTIONS[word],
+        tokens,
+        startIndex
+      ),
       nextIndex: startIndex + 1
     };
   }
 
-  if (nextWord === "not" && NEGATION_AUX_MAP[word]) {
+  if (
+    nextWord === "not" &&
+    NEGATION_AUX_MAP[word]
+  ) {
     return {
-      text: maybeCapitalize(NEGATION_AUX_MAP[word], tokens, startIndex),
+      text: maybeCapitalize(
+        NEGATION_AUX_MAP[word],
+        tokens,
+        startIndex
+      ),
       nextIndex: nextIndex + 1
     };
   }
@@ -775,75 +1351,320 @@ function tryNegationRule(tokens, startIndex) {
   return null;
 }
 
+/*
+  DETERMINERS
+*/
+
 function isDeterminer(word) {
   const clean = normalizeWord(word);
-  return !!DET_TRANSLATIONS[clean] || hasTag(clean, "det");
+
+  return (
+    !!DET_TRANSLATIONS[clean] ||
+    hasTag(clean, "det")
+  );
 }
 
 function translateDeterminer(word) {
   const clean = normalizeWord(word);
-  return DET_TRANSLATIONS[clean] || translateWord(word);
+
+  return (
+    DET_TRANSLATIONS[clean] ||
+    translateWord(word)
+  );
 }
 
-function tryMatchPhrase(tokens, startIndex, phrase, multiWordOnly = false) {
-  if (multiWordOnly && phrase.words.length < 2) return null;
+/*
+  PHRASE MATCHING
+*/
+
+function tryMatchPhrase(
+  tokens,
+  startIndex,
+  phrase,
+  multiWordOnly = false
+) {
+  if (
+    multiWordOnly &&
+    phrase.words.length < 2
+  ) {
+    return null;
+  }
 
   let tokenIndex = startIndex;
 
-  for (let wordIndex = 0; wordIndex < phrase.words.length; wordIndex++) {
+  for (
+    let wordIndex = 0;
+    wordIndex < phrase.words.length;
+    wordIndex++
+  ) {
     if (wordIndex > 0) {
       let sawSpace = false;
 
-      while (tokenIndex < tokens.length && isSpaceToken(tokens[tokenIndex])) {
+      while (
+        tokenIndex < tokens.length &&
+        isSpaceToken(tokens[tokenIndex])
+      ) {
         sawSpace = true;
         tokenIndex++;
       }
 
-      if (!sawSpace) return null;
+      if (!sawSpace) {
+        return null;
+      }
     }
 
-    if (tokenIndex >= tokens.length) return null;
-    if (!isWordToken(tokens[tokenIndex])) return null;
+    if (tokenIndex >= tokens.length) {
+      return null;
+    }
 
-    const currentWord = normalizeWord(tokens[tokenIndex]);
-    const neededWord = phrase.words[wordIndex];
+    if (!isWordToken(tokens[tokenIndex])) {
+      return null;
+    }
 
-    if (currentWord !== neededWord) return null;
+    const currentWord = normalizeWord(
+      tokens[tokenIndex]
+    );
+
+    const neededWord =
+      phrase.words[wordIndex];
+
+    if (currentWord !== neededWord) {
+      return null;
+    }
 
     tokenIndex++;
   }
 
   return {
-    text: maybeCapitalize(phrase.elefen, tokens, startIndex),
+    text: maybeCapitalize(
+      phrase.elefen,
+      tokens,
+      startIndex
+    ),
     nextIndex: tokenIndex
   };
 }
 
-function tryAnyPhrase(tokens, startIndex, multiWordOnly = false) {
+function tryAnyPhrase(
+  tokens,
+  startIndex,
+  multiWordOnly = false
+) {
   for (const phrase of phraseList) {
-    const matched = tryMatchPhrase(tokens, startIndex, phrase, multiWordOnly);
-    if (matched) return matched;
+    const matched = tryMatchPhrase(
+      tokens,
+      startIndex,
+      phrase,
+      multiWordOnly
+    );
+
+    if (matched) {
+      return matched;
+    }
   }
 
   return null;
 }
 
 /*
+  MAKE + PERSON + ADJECTIVE RULE
+
+  make you happy
+  -> fa ce tu es felis
+
+  makes him sad
+  -> fa ce el es triste
+
+  made them angry
+  -> ia fa ce los es coler
+
+  make you very happy
+  -> fa ce tu es multe felis
+*/
+
+function tryMakePersonAdjectiveRule(
+  tokens,
+  startIndex
+) {
+  if (!isWordToken(tokens[startIndex])) {
+    return null;
+  }
+
+  const makeForms = {
+    make: "fa",
+    makes: "fa",
+    made: "ia fa"
+  };
+
+  const objectTranslations = {
+    me: "me",
+    you: "tu",
+    him: "el",
+    her: "el",
+    it: "lo",
+    us: "nos",
+    them: "los"
+  };
+
+  const makeWord = normalizeWord(
+    tokens[startIndex]
+  );
+
+  const translatedMake =
+    makeForms[makeWord];
+
+  if (!translatedMake) {
+    return null;
+  }
+
+  let objectIndex = skipSpaces(
+    tokens,
+    startIndex + 1
+  );
+
+  if (
+    objectIndex >= tokens.length ||
+    !isWordToken(tokens[objectIndex])
+  ) {
+    return null;
+  }
+
+  const objectWord = normalizeWord(
+    tokens[objectIndex]
+  );
+
+  let translatedObject =
+    objectTranslations[objectWord];
+
+  if (!translatedObject) {
+    return null;
+  }
+
+  let adjectiveIndex = skipSpaces(
+    tokens,
+    objectIndex + 1
+  );
+
+  /*
+    make you all happy
+    -> fa ce vos es felis
+  */
+
+  if (
+    objectWord === "you" &&
+    adjectiveIndex < tokens.length &&
+    isWordToken(tokens[adjectiveIndex]) &&
+    normalizeWord(
+      tokens[adjectiveIndex]
+    ) === "all"
+  ) {
+    translatedObject = "vos";
+
+    adjectiveIndex = skipSpaces(
+      tokens,
+      adjectiveIndex + 1
+    );
+  }
+
+  if (
+    adjectiveIndex >= tokens.length ||
+    !isWordToken(tokens[adjectiveIndex])
+  ) {
+    return null;
+  }
+
+  let adjectiveText = "";
+  let finalIndex = adjectiveIndex;
+
+  const possibleModifier = normalizeWord(
+    tokens[adjectiveIndex]
+  );
+
+  /*
+    make you very happy
+    make him extremely angry
+
+    This works whenever the modifier
+    is tagged as an adverb and the next
+    word is tagged as an adjective.
+  */
+
+  if (hasTag(possibleModifier, "adv")) {
+    const nextIndex = skipSpaces(
+      tokens,
+      adjectiveIndex + 1
+    );
+
+    if (
+      nextIndex >= tokens.length ||
+      !isWordToken(tokens[nextIndex]) ||
+      !hasTag(tokens[nextIndex], "adj")
+    ) {
+      return null;
+    }
+
+    adjectiveText =
+      translateWord(tokens[adjectiveIndex]) +
+      " " +
+      translateWord(tokens[nextIndex]);
+
+    finalIndex = nextIndex;
+  } else {
+    if (
+      !hasTag(possibleModifier, "adj")
+    ) {
+      return null;
+    }
+
+    adjectiveText = translateWord(
+      tokens[adjectiveIndex]
+    );
+  }
+
+  const translation = [
+    translatedMake,
+    "ce",
+    translatedObject,
+    "es",
+    adjectiveText
+  ].join(" ");
+
+  return {
+    text: maybeCapitalize(
+      translation,
+      tokens,
+      startIndex
+    ),
+    nextIndex: finalIndex + 1
+  };
+}
+
+/*
   ADJECTIVE + NOUN RULE
 */
 
-function tryAdjectiveNounRule(tokens, startIndex) {
-  if (!isWordToken(tokens[startIndex])) return null;
+function tryAdjectiveNounRule(
+  tokens,
+  startIndex
+) {
+  if (!isWordToken(tokens[startIndex])) {
+    return null;
+  }
 
   let i = startIndex;
   let determiner = "";
   let hasDeterminer = false;
 
-  const firstWord = normalizeWord(tokens[i]);
+  const firstWord = normalizeWord(
+    tokens[i]
+  );
 
   if (isDeterminer(firstWord)) {
     hasDeterminer = true;
-    determiner = translateDeterminer(firstWord);
+
+    determiner = translateDeterminer(
+      firstWord
+    );
 
     i++;
     i = skipSpaces(tokens, i);
@@ -851,46 +1672,90 @@ function tryAdjectiveNounRule(tokens, startIndex) {
 
   const modifiers = [];
 
-  while (i < tokens.length && isWordToken(tokens[i])) {
-    const current = normalizeWord(tokens[i]);
+  while (
+    i < tokens.length &&
+    isWordToken(tokens[i])
+  ) {
+    const current = normalizeWord(
+      tokens[i]
+    );
 
     if (hasTag(current, "adv")) {
       const advToken = tokens[i];
-      let nextIndex = skipSpaces(tokens, i + 1);
 
-      if (nextIndex < tokens.length && isWordToken(tokens[nextIndex])) {
-        const nextWord = normalizeWord(tokens[nextIndex]);
+      const nextIndex = skipSpaces(
+        tokens,
+        i + 1
+      );
+
+      if (
+        nextIndex < tokens.length &&
+        isWordToken(tokens[nextIndex])
+      ) {
+        const nextWord = normalizeWord(
+          tokens[nextIndex]
+        );
 
         if (hasTag(nextWord, "adj")) {
-          modifiers.push(translateWord(advToken) + " " + translateWord(tokens[nextIndex]));
+          modifiers.push(
+            translateWord(advToken) +
+            " " +
+            translateWord(
+              tokens[nextIndex]
+            )
+          );
+
           i = nextIndex + 1;
           i = skipSpaces(tokens, i);
+
           continue;
         }
       }
     }
 
     if (hasTag(current, "adj")) {
-      modifiers.push(translateWord(tokens[i]));
+      modifiers.push(
+        translateWord(tokens[i])
+      );
+
       i++;
       i = skipSpaces(tokens, i);
+
       continue;
     }
 
     break;
   }
 
-  if (i >= tokens.length || !isWordToken(tokens[i])) return null;
+  if (
+    i >= tokens.length ||
+    !isWordToken(tokens[i])
+  ) {
+    return null;
+  }
 
-  const possibleNoun = normalizeWord(tokens[i]);
-  if (!hasTag(possibleNoun, "noun")) return null;
+  const possibleNoun = normalizeWord(
+    tokens[i]
+  );
 
-  if (!hasDeterminer && modifiers.length === 0) return null;
+  if (!hasTag(possibleNoun, "noun")) {
+    return null;
+  }
+
+  if (
+    !hasDeterminer &&
+    modifiers.length === 0
+  ) {
+    return null;
+  }
 
   const noun = translateWord(tokens[i]);
   const parts = [];
 
-  if (hasDeterminer) parts.push(determiner);
+  if (hasDeterminer) {
+    parts.push(determiner);
+  }
+
   parts.push(noun);
 
   for (const modifier of modifiers) {
@@ -898,45 +1763,75 @@ function tryAdjectiveNounRule(tokens, startIndex) {
   }
 
   return {
-    text: maybeCapitalize(parts.join(" "), tokens, startIndex),
+    text: maybeCapitalize(
+      parts.join(" "),
+      tokens,
+      startIndex
+    ),
     nextIndex: i + 1
   };
 }
 
-function translateText(source, allowQuestionRule = true) {
+/*
+  MAIN TRANSLATION ENGINE
+*/
+
+function translateText(
+  source,
+  allowQuestionRule = true
+) {
   let tokens = tokenize(source);
 
-  // Order matters:
-  // 1. Relative that:
-  //    the dog that eats -> cual
-  //    the man that sees -> ci
-  //
-  // 2. Clause that:
-  //    know that -> ce
-  //    think that -> ce
-  //
-  // 3. Go + destination:
-  //    go home -> go to home -> vade a casa
-  //
-  // 4. Purpose to after destination:
-  //    store to buy -> store for buy -> boteca per compra
-  //
-  // 5. Acel that:
-  //    that dog / I want that / eat that -> acel
+  /*
+    Order matters:
+
+    1. Relative that:
+       the dog that eats -> cual
+       the man that sees -> ci
+
+    2. Clause that:
+       know that -> ce
+       think that -> ce
+
+    3. Go + destination:
+       go home
+       -> go to home
+       -> vade a casa
+
+    4. Purpose to after destination:
+       store to buy
+       -> store for buy
+       -> boteca per compra
+
+    5. Acel that:
+       that dog
+       I want that
+       eat that
+       -> acel
+  */
 
   tokens = resolveRelativeThatLocal(tokens);
   tokens = resolveClauseThatLocal(tokens);
   tokens = insertToBeforeGoDestinations(tokens);
-  tokens = convertPurposeToAfterDestinations(tokens);
+  tokens =
+    convertPurposeToAfterDestinations(tokens);
 
-  if (typeof RULES.resolveRelativeThat === "function") {
-    tokens = RULES.resolveRelativeThat(tokens);
+  if (
+    typeof RULES.resolveRelativeThat ===
+    "function"
+  ) {
+    tokens =
+      RULES.resolveRelativeThat(tokens);
   }
 
   tokens = resolveAcelThatLocal(tokens);
 
-  if (typeof RULES.resolveAcelThat === "function") {
-    tokens = RULES.resolveAcelThat(tokens);
+  if (
+    typeof RULES.resolveAcelThat ===
+    "function"
+  ) {
+    tokens =
+      RULES.resolveAcelThat(tokens);
   }
 
   const output = [];
@@ -948,48 +1843,93 @@ function translateText(source, allowQuestionRule = true) {
     if (!isWordToken(token)) {
       output.push(token);
       i++;
+
       continue;
     }
 
-    const yesNoQuestion = allowQuestionRule
-      ? tryYesNoQuestionRule(tokens, i)
-      : null;
+    const yesNoQuestion =
+      allowQuestionRule
+        ? tryYesNoQuestionRule(tokens, i)
+        : null;
 
     if (yesNoQuestion) {
       output.push(yesNoQuestion.text);
       i = yesNoQuestion.nextIndex;
+
       continue;
     }
 
-    const negationRule = tryNegationRule(tokens, i);
+    const negationRule =
+      tryNegationRule(tokens, i);
 
     if (negationRule) {
       output.push(negationRule.text);
       i = negationRule.nextIndex;
+
       continue;
     }
 
-    const multiPhrase = tryAnyPhrase(tokens, i, true);
+    /*
+      This rule must run before ordinary
+      phrase matching so that:
+
+      make you happy
+
+      is understood as:
+
+      fa ce tu es felis
+    */
+
+    const makePersonAdjective =
+      tryMakePersonAdjectiveRule(
+        tokens,
+        i
+      );
+
+    if (makePersonAdjective) {
+      output.push(
+        makePersonAdjective.text
+      );
+
+      i =
+        makePersonAdjective.nextIndex;
+
+      continue;
+    }
+
+    const multiPhrase = tryAnyPhrase(
+      tokens,
+      i,
+      true
+    );
 
     if (multiPhrase) {
       output.push(multiPhrase.text);
       i = multiPhrase.nextIndex;
+
       continue;
     }
 
-    const adjectiveNoun = tryAdjectiveNounRule(tokens, i);
+    const adjectiveNoun =
+      tryAdjectiveNounRule(tokens, i);
 
     if (adjectiveNoun) {
       output.push(adjectiveNoun.text);
       i = adjectiveNoun.nextIndex;
+
       continue;
     }
 
-    const singlePhrase = tryAnyPhrase(tokens, i, false);
+    const singlePhrase = tryAnyPhrase(
+      tokens,
+      i,
+      false
+    );
 
     if (singlePhrase) {
       output.push(singlePhrase.text);
       i = singlePhrase.nextIndex;
+
       continue;
     }
 
@@ -1000,20 +1940,30 @@ function translateText(source, allowQuestionRule = true) {
   return output.join("");
 }
 
+/*
+  PAGE CONTROLS
+*/
+
 function translateNow() {
   const source = inText.value || "";
-  outText.value = translateText(source);
+
+  outText.value =
+    translateText(source);
 }
 
 async function copyOutput() {
   const text = outText.value || "";
+
   if (!text) return;
 
   try {
-    await navigator.clipboard.writeText(text);
+    await navigator.clipboard.writeText(
+      text
+    );
   } catch (error) {
     outText.focus();
     outText.select();
+
     document.execCommand("copy");
   }
 
@@ -1027,14 +1977,34 @@ async function copyOutput() {
 function clearAll() {
   inText.value = "";
   outText.value = "";
+
   inText.focus();
 }
 
+/*
+  STARTUP
+*/
+
 rebuildDictionary();
 
-inText.addEventListener("input", translateNow);
-btnTranslate.addEventListener("click", translateNow);
-btnCopy.addEventListener("click", copyOutput);
-btnClear.addEventListener("click", clearAll);
+inText.addEventListener(
+  "input",
+  translateNow
+);
+
+btnTranslate.addEventListener(
+  "click",
+  translateNow
+);
+
+btnCopy.addEventListener(
+  "click",
+  copyOutput
+);
+
+btnClear.addEventListener(
+  "click",
+  clearAll
+);
 
 translateNow();
