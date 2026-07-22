@@ -2,52 +2,86 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>English to Elefen Translator</title>
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1"
+  />
+
+  <meta
+    name="description"
+    content="A simple English to Elefen translation tool."
+  />
+
+  <title>Elefen Translator</title>
+
   <link rel="stylesheet" href="styles.css" />
 </head>
+
 <body>
-  <div class="device" role="application" aria-label="English to Elefen Translator">
-    <div class="topbar">
-      <div class="brand">
-        <span class="dot" aria-hidden="true"></span>
-        ENGLISH → ELEFEN TRANSLATOR
+  <main class="app">
+    <header class="app-header">
+      <h1>Elefen Translator</h1>
+    </header>
+
+    <section class="translator" aria-label="Elefen Translator">
+      <div class="translation-grid">
+        <div class="field">
+          <div class="field-header">
+            <label for="inText">English</label>
+            <span>Input</span>
+          </div>
+
+          <textarea
+            id="inText"
+            placeholder="Enter English text..."
+            spellcheck="true"
+          >I think that if you had a blue car, I would be happy.</textarea>
+        </div>
+
+        <div class="field">
+          <div class="field-header">
+            <label for="outText">Elefen</label>
+            <span>Translation</span>
+          </div>
+
+          <textarea
+            id="outText"
+            readonly
+            placeholder="Your Elefen translation will appear here..."
+            aria-live="polite"
+          ></textarea>
+        </div>
       </div>
-      <div class="model">MODEL: LFN-03 • VOCAB + RULES SPLIT</div>
-    </div>
 
-    <div class="screen-wrap">
-      <div class="screen">
-        <div class="row">
-          <div class="label"></div>
-        </div>
+      <div class="controls">
+        <button
+          type="button"
+          class="button button-primary"
+          id="btnTranslate"
+        >
+          Translate
+        </button>
 
-        <div class="split">
-          <div>
-            <div class="label" style="margin:0 0 6px;">INPUT / ENGLISH</div>
-            <textarea id="inText" placeholder="Type English here...">I think that if you had a blue car, I would be happy.</textarea>
-          </div>
+        <button
+          type="button"
+          class="button button-secondary"
+          id="btnCopy"
+        >
+          Copy Output
+        </button>
 
-          <div>
-            <div class="label" style="margin:0 0 6px;">OUTPUT / ELEFEN</div>
-            <textarea id="outText" readonly placeholder="Elefen appears here..."></textarea>
-          </div>
-        </div>
-
-        <div class="controls">
-          <div class="btns">
-            <button class="btn-blue" id="btnTranslate">TRANSLATE</button>
-            <button class="btn-yellow" id="btnCopy">COPY OUTPUT</button>
-            <button class="btn-red" id="btnClear">CLEAR</button>
-          </div>
-        </div>
+        <button
+          type="button"
+          class="button button-quiet"
+          id="btnClear"
+        >
+          Clear
+        </button>
       </div>
-    </div>
+    </section>
+  </main>
 
-    <div class="foot"></div>
-  </div>
-
-  <!-- Load order matters: vocab first, rules second, engine last. -->
+  <!-- Load order matters: vocabulary, rules, then translator engine. -->
   <script src="vocab.js"></script>
   <script src="rules.js"></script>
   <script src="translator.js"></script>
