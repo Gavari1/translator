@@ -626,22 +626,43 @@ function resolveRelativeThatLocal(tokens) {
 
 /*
   CLAUSE THAT RULE
+
+  Examples:
+    I think that he came.
+    -> Me pensa ce el ia veni.
+
+    I am happy that you came.
+    -> Me es felis ce tu ia veni.
+
+    I know that.
+    -> Me sabe acel.
+
+  A clause "that" must introduce
+  a real clause containing a verb.
 */
 
-function isClauseThatLocal(tokens, index) {
-  if (!isWordToken(tokens[index])) {
-    return false;
-  }
+function isClauseTriggerWord(word) {
+  const clean = normalizeWord(word);
 
-  if (
-    normalizeWord(tokens[index]) !== "that"
-  ) {
-    return false;
-  }
+  /*
+    Any word tagged as an adjective can
+    potentially introduce a clause:
 
-  const prev = previousWordToken(tokens, index);
+      happy that...
+      sad that...
+      certain that...
+      surprised that...
+  */
+
+  if (hasTag(clean, "adj")) {
+    return true;
+  }
 
   return [
+    /*
+      Thinking and knowing
+    */
+
     "think",
     "thinks",
     "thought",
@@ -654,22 +675,6 @@ function isClauseThatLocal(tokens, index) {
     "knows",
     "knew",
 
-    "say",
-    "says",
-    "said",
-
-    "tell",
-    "tells",
-    "told",
-
-    "hope",
-    "hopes",
-    "hoped",
-
-    "feel",
-    "feels",
-    "felt",
-
     "understand",
     "understands",
     "understood",
@@ -680,14 +685,176 @@ function isClauseThatLocal(tokens, index) {
 
     "forget",
     "forgets",
-    "forgot"
-  ].includes(prev);
+    "forgot",
+
+    /*
+      Speaking
+    */
+
+    "say",
+    "says",
+    "said",
+
+    "tell",
+    "tells",
+    "told",
+
+    /*
+      Feelings and opinions
+    */
+
+    "hope",
+    "hopes",
+    "hoped",
+
+    "feel",
+    "feels",
+    "felt",
+
+    "like",
+    "likes",
+    "liked",
+
+    "love",
+    "loves",
+    "loved",
+
+    "hate",
+    "hates",
+    "hated",
+
+    /*
+      Common adjective fallbacks.
+      These help when vocab tags
+      are missing.
+    */
+
+    "happy",
+    "glad",
+    "sad",
+    "sorry",
+    "sure",
+    "certain",
+    "afraid",
+    "surprised",
+    "angry",
+    "pleased",
+    "excited",
+    "worried"
+  ].includes(clean);
+}
+
+function hasClauseVerbAfterThat(
+  tokens,
+  thatIndex,
+  maxWords = 8
+) {
+  /*
+    Find the first word after "that."
+
+    In a clause, this is usually
+    the subject:
+
+      that YOU came
+      that JOHN came
+      that THE DOG came
+  */
+
+  const subjectIndex = nextWordTokenIndex(
+    tokens,
+    thatIndex
+  );
+
+  if (subjectIndex < 0) {
+    return false;
+  }
+
+  let wordsSeen = 0;
+
+  /*
+    Start searching after the probable
+    subject. This prevents a subject
+    pronoun or proper name from being
+    mistaken for a verb.
+  */
+
+  for (
+    let i = subjectIndex + 1;
+    i < tokens.length &&
+    wordsSeen < maxWords;
+    i++
+  ) {
+    const token = tokens[i];
+
+    /*
+      Do not search into another sentence.
+    */
+
+    if (
+      !isWordToken(token) &&
+      /[.!?]/.test(token)
+    ) {
+      break;
+    }
+
+    if (!isWordToken(token)) {
+      continue;
+    }
+
+    wordsSeen++;
+
+    if (isLikelyVerbWord(token)) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+function isClauseThatLocal(tokens, index) {
+  if (!isWordToken(tokens[index])) {
+    return false;
+  }
+
+  if (
+    normalizeWord(tokens[index]) !== "that"
+  ) {
+    return false;
+  }
+
+  const prev = previousWordToken(
+    tokens,
+    index
+  );
+
+  if (!isClauseTriggerWord(prev)) {
+    return false;
+  }
+
+  /*
+    Requiring a following verb prevents:
+
+      I know that.
+      I like that.
+      I want that car.
+
+    from incorrectly using "ce."
+  */
+
+  return hasClauseVerbAfterThat(
+    tokens,
+    index
+  );
 }
 
 function resolveClauseThatLocal(tokens) {
   return tokens.map((token, index) => {
     if (isClauseThatLocal(tokens, index)) {
-      return "ce";
+      return maybeCapitalize(
+        "ce",
+        tokens,
+        index
+      );
     }
 
     return token;
@@ -1790,8 +1957,8 @@ function translateText(
        the man that sees -> ci
 
     2. Clause that:
-       know that -> ce
-       think that -> ce
+       know that he came -> ce
+       happy that you came -> ce
 
     3. Go + destination:
        go home
@@ -1813,6 +1980,7 @@ function translateText(
   tokens = resolveRelativeThatLocal(tokens);
   tokens = resolveClauseThatLocal(tokens);
   tokens = insertToBeforeGoDestinations(tokens);
+
   tokens =
     convertPurposeToAfterDestinations(tokens);
 
