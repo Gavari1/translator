@@ -236,14 +236,14 @@
       transform: translateY(-1px);
     }
 
-    .gavari-word {
+    .english-word {
       margin: 0;
       color: var(--navy-900);
       font-size: 1.22rem;
       letter-spacing: -.02em;
     }
 
-    .meaning {
+    .gavari-word {
       margin: 7px 0 0;
       color: #42516d;
       line-height: 1.45;
@@ -305,8 +305,8 @@
       <div class="eyebrow">Republic of Gavári · Language Portal</div>
       <h1>Gavári Dictionary</h1>
       <p>
-        Search Gavári words or English meanings, or use the alphabet bar to jump
-        directly to a letter.
+        Search English words or Gavári translations, or use the alphabet bar to jump
+        directly to an English entry.
       </p>
     </header>
 
@@ -319,7 +319,7 @@
           </svg>
 
           <input id="searchInput" type="search"
-            placeholder="Search Gavári or English…"
+            placeholder="Search English or Gavári…"
             autocomplete="off" spellcheck="false"
             aria-label="Search the dictionary"/>
 
@@ -334,7 +334,7 @@
 
         <div class="empty-state" id="emptyState">
           <h2>No matching words</h2>
-          <p>Try another Gavári word or English meaning.</p>
+          <p>Try another English word or Gavári translation.</p>
         </div>
 
         <section class="affix-box" id="affixBox">
@@ -1271,12 +1271,21 @@
       return safeText.replace(new RegExp(`(${escapedQuery})`, "gi"), "<mark>$1</mark>");
     };
 
+    const primaryEnglish = (meaning) =>
+      meaning.split(";")[0].split(",")[0].trim();
+
     const sortedEntries = [...dictionaryEntries].sort((a, b) =>
-      a.word.localeCompare(b.word, "en", { sensitivity: "base" })
+      primaryEnglish(a.meaning).localeCompare(
+        primaryEnglish(b.meaning),
+        "en",
+        { sensitivity: "base" }
+      )
     );
 
     const availableLetters = [...new Set(
-      sortedEntries.map(entry => normalizeText(entry.word).charAt(0).toUpperCase())
+      sortedEntries.map(entry =>
+        normalizeText(primaryEnglish(entry.meaning)).charAt(0).toUpperCase()
+      )
     )];
 
     function buildAlphabet() {
@@ -1288,7 +1297,7 @@
         button.className = "letter-button";
         button.textContent = letter;
         button.dataset.letter = letter;
-        button.setAttribute("aria-label", `Jump to letter ${letter}`);
+        button.setAttribute("aria-label", `Jump to English letter ${letter}`);
 
         button.addEventListener("click", () => {
           searchInput.value = "";
@@ -1309,8 +1318,8 @@
       const card = document.createElement("article");
       card.className = "entry-card";
       card.innerHTML = `
-        <h3 class="gavari-word">${highlight(entry.word, query)}</h3>
-        <p class="meaning">${highlight(entry.meaning, query)}</p>
+        <h3 class="english-word">${highlight(entry.meaning, query)}</h3>
+        <p class="gavari-word">${highlight(entry.word, query)}</p>
       `;
       return card;
     }
@@ -1323,7 +1332,7 @@
       );
 
       const groupedEntries = filteredEntries.reduce((groups, entry) => {
-        const letter = normalizeText(entry.word).charAt(0).toUpperCase();
+        const letter = normalizeText(primaryEnglish(entry.meaning)).charAt(0).toUpperCase();
         if (!groups[letter]) groups[letter] = [];
         groups[letter].push(entry);
         return groups;
