@@ -1,89 +1,891 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1"
-  />
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta
     name="description"
-    content="A simple English to Elefen translation tool."
+    content="A clear guide to the grammar of the Gavári language."
   />
+  <title>Gavári Grammar</title>
 
-  <title>Elefen Translator</title>
+  <style>
+    :root {
+      --navy-950: #050b24;
+      --navy-900: #08112f;
+      --navy-850: #0b173c;
+      --blue-700: #1456a0;
+      --blue-600: #1c6ac4;
+      --blue-500: #2e7bd0;
+      --blue-100: #eaf3ff;
+      --white: #ffffff;
+      --ink: #13203a;
+      --muted: #68748d;
+      --line: #d7e3f1;
+      --yellow: #ffd451;
+      --shadow: 0 18px 48px rgba(3, 11, 40, 0.16);
+    }
 
-  <link rel="stylesheet" href="styles.css" />
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top right, rgba(46, 123, 208, 0.24), transparent 34rem),
+        linear-gradient(180deg, var(--navy-950) 0, var(--navy-900) 25rem, #edf4fc 25rem);
+      font-family:
+        Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .page-shell {
+      width: min(1180px, calc(100% - 30px));
+      margin: 0 auto;
+      padding: 34px 0 64px;
+    }
+
+    .hero {
+      color: white;
+      padding: 8px 4px 34px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+      color: #bdd8ff;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--yellow);
+      content: "";
+      box-shadow: 0 0 0 5px rgba(255, 212, 81, 0.12);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2.3rem, 5vw, 4.6rem);
+      line-height: 0.98;
+      letter-spacing: -0.05em;
+    }
+
+    .hero p {
+      max-width: 820px;
+      margin: 18px 0 0;
+      color: #d8e8ff;
+      font-size: clamp(1rem, 2vw, 1.15rem);
+      line-height: 1.7;
+    }
+
+    .grammar-app {
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.72);
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.98);
+      box-shadow: var(--shadow);
+    }
+
+    .toolbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      padding: 22px 24px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(14px);
+    }
+
+    .section-nav {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 2px 0 5px;
+      scrollbar-width: thin;
+    }
+
+    .section-button {
+      flex: 0 0 auto;
+      min-height: 40px;
+      padding: 0 14px;
+      border: 1px solid #ccd9e9;
+      border-radius: 10px;
+      color: #24426e;
+      background: white;
+      font-weight: 800;
+      cursor: pointer;
+      transition: 140ms ease;
+    }
+
+    .section-button:hover,
+    .section-button.active {
+      border-color: var(--blue-600);
+      color: white;
+      background: var(--blue-600);
+      transform: translateY(-1px);
+    }
+
+    .grammar-content {
+      max-height: 72vh;
+      overflow-y: auto;
+      padding: 10px 24px 34px;
+    }
+
+    .grammar-section {
+      scroll-margin-top: 14px;
+    }
+
+    .section-heading {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin: 0;
+      padding: 22px 0 12px;
+      color: var(--blue-700);
+      background: linear-gradient(180deg, #fff 74%, rgba(255, 255, 255, 0));
+      font-size: 1.55rem;
+    }
+
+    .section-heading::after {
+      flex: 1;
+      height: 1px;
+      background: var(--line);
+      content: "";
+    }
+
+    .intro-card,
+    .rule-card,
+    .table-card,
+    .example-card,
+    .note-card {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background:
+        linear-gradient(145deg, rgba(234, 243, 255, 0.72), transparent 48%),
+        white;
+    }
+
+    .intro-card {
+      margin-top: 4px;
+      padding: 22px;
+    }
+
+    .intro-card p,
+    .rule-card p,
+    .note-card p {
+      margin: 0;
+      color: #42516d;
+      line-height: 1.7;
+    }
+
+    .rule-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .rule-card {
+      padding: 20px;
+    }
+
+    .rule-card h3,
+    .example-card h3,
+    .note-card h3 {
+      margin: 0 0 9px;
+      color: var(--navy-900);
+      font-size: 1.12rem;
+    }
+
+    .formula {
+      margin: 14px 0 0;
+      padding: 14px 16px;
+      border-left: 4px solid var(--blue-500);
+      border-radius: 0 12px 12px 0;
+      color: var(--blue-700);
+      background: #f4f8ff;
+      font-size: 1.05rem;
+      font-weight: 850;
+    }
+
+    .table-card {
+      overflow: hidden;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      color: var(--blue-700);
+      background: #f3f8ff;
+      font-size: 0.82rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .gavari {
+      color: var(--navy-900);
+      font-weight: 850;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .example-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .example-card {
+      padding: 18px;
+    }
+
+    .example-line {
+      margin: 0;
+      color: var(--navy-900);
+      font-size: 1.05rem;
+      font-weight: 850;
+    }
+
+    .translation {
+      margin: 7px 0 0;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .mini-label {
+      display: inline-block;
+      margin-bottom: 9px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      color: var(--blue-700);
+      background: var(--blue-100);
+      font-size: 0.72rem;
+      font-weight: 850;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .note-card {
+      margin-top: 14px;
+      padding: 18px 20px;
+      border-color: #bed4ee;
+      background: linear-gradient(135deg, #edf5ff, #f9fcff);
+    }
+
+    .compound {
+      display: grid;
+      place-items: center;
+      min-height: 150px;
+      padding: 18px;
+      text-align: center;
+    }
+
+    .compound .parts {
+      color: var(--muted);
+      font-weight: 750;
+    }
+
+    .compound .arrow {
+      margin: 8px 0;
+      color: var(--blue-500);
+      font-size: 1.35rem;
+    }
+
+    .compound .result {
+      color: var(--navy-900);
+      font-size: 1.25rem;
+      font-weight: 900;
+    }
+
+    .dialogue {
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: #f8fbff;
+    }
+
+    .dialogue-line {
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      gap: 10px;
+      padding: 11px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .dialogue-line:last-child {
+      border-bottom: 0;
+    }
+
+    .speaker {
+      display: grid;
+      width: 36px;
+      height: 36px;
+      place-items: center;
+      border-radius: 50%;
+      color: white;
+      background: var(--blue-600);
+      font-weight: 900;
+    }
+
+    .dialogue-line p {
+      margin: 0;
+    }
+
+    .dialogue-line .gavari {
+      display: block;
+      margin-bottom: 3px;
+    }
+
+    .footer-note {
+      padding: 18px 24px 23px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      background: #f7faff;
+      font-size: 0.84rem;
+      text-align: center;
+    }
+
+    @media (max-width: 760px) {
+      .page-shell {
+        width: min(100% - 18px, 1180px);
+        padding-top: 22px;
+      }
+
+      .toolbar {
+        padding: 17px;
+      }
+
+      .grammar-content {
+        max-height: 74vh;
+        padding: 8px 14px 26px;
+      }
+
+      .rule-grid,
+      .example-grid {
+        grid-template-columns: 1fr;
+      }
+
+      th,
+      td {
+        padding: 12px;
+      }
+
+      .table-card {
+        overflow-x: auto;
+      }
+    }
+  </style>
 </head>
 
 <body>
-  <main class="app">
-    <header class="app-header">
-      <h1>Elefen Translator</h1>
+  <main class="page-shell">
+    <header class="hero">
+      <div class="eyebrow">Republic of Gavári · Language Portal</div>
+      <h1>Gavári Grammar</h1>
+      <p>
+        Learn the core structure of Gavári through clear rules, compact tables,
+        and practical examples.
+      </p>
     </header>
 
-    <section class="translator" aria-label="Elefen Translator">
-      <div class="translation-grid">
-        <div class="field">
-          <div class="field-header">
-            <label for="inText">English</label>
-            <span>Input</span>
-          </div>
-
-          <textarea
-            id="inText"
-            placeholder="Enter English text..."
-            spellcheck="true"
-          >I think that if you had a blue car, I would be happy.</textarea>
-        </div>
-
-        <div class="field">
-          <div class="field-header">
-            <label for="outText">Elefen</label>
-            <span>Translation</span>
-          </div>
-
-          <textarea
-            id="outText"
-            readonly
-            placeholder="Your Elefen translation will appear here..."
-            aria-live="polite"
-          ></textarea>
-        </div>
+    <section class="grammar-app" aria-label="Gavári grammar guide">
+      <div class="toolbar">
+        <nav class="section-nav" id="sectionNav" aria-label="Grammar sections">
+          <button class="section-button" data-target="overview">Overview</button>
+          <button class="section-button" data-target="word-order">Word Order</button>
+          <button class="section-button" data-target="pronouns">Pronouns</button>
+          <button class="section-button" data-target="verbs">Verb Markers</button>
+          <button class="section-button" data-target="negation">Negation</button>
+          <button class="section-button" data-target="questions">Questions</button>
+          <button class="section-button" data-target="prepositions">Prepositions</button>
+          <button class="section-button" data-target="plural">Plural</button>
+          <button class="section-button" data-target="compounds">Compounds</button>
+          <button class="section-button" data-target="conversation">Conversation</button>
+        </nav>
       </div>
 
-      <div class="controls">
-        <button
-          type="button"
-          class="button button-primary"
-          id="btnTranslate"
-        >
-          Translate
-        </button>
+      <div class="grammar-content" id="grammarContent">
+        <section class="grammar-section" id="overview">
+          <h2 class="section-heading">Overview</h2>
 
-        <button
-          type="button"
-          class="button button-secondary"
-          id="btnCopy"
-        >
-          Copy Output
-        </button>
+          <div class="intro-card">
+            <p>
+              Gavári is designed to be direct and regular. Verbs do not change
+              according to the subject. Tense and mood are shown with separate
+              markers, plural nouns use a productive suffix, and meaning is
+              usually built through straightforward word order and compounds.
+            </p>
+          </div>
 
-        <button
-          type="button"
-          class="button button-quiet"
-          id="btnClear"
-        >
-          Clear
-        </button>
+          <div class="rule-grid" style="margin-top: 14px;">
+            <article class="rule-card">
+              <h3>No verb conjugation</h3>
+              <p>The main verb keeps the same form with every subject.</p>
+              <div class="formula">Mi kailo · Ti kailo · Lin kailo</div>
+            </article>
+
+            <article class="rule-card">
+              <h3>No required article</h3>
+              <p>
+                Gavári does not require a separate word for English
+                <em>a</em>, <em>an</em>, or <em>the</em>.
+              </p>
+              <div class="formula">fale = a house / the house</div>
+            </article>
+          </div>
+        </section>
+
+        <section class="grammar-section" id="word-order">
+          <h2 class="section-heading">Basic Word Order</h2>
+
+          <div class="rule-card">
+            <span class="mini-label">Core pattern</span>
+            <h3>Subject · Verb · Object</h3>
+            <p>
+              The normal sentence order is subject first, then the verb, then
+              the object or complement.
+            </p>
+            <div class="formula">Mi kailo fanu.</div>
+          </div>
+
+          <div class="example-grid" style="margin-top: 14px;">
+            <article class="example-card">
+              <p class="example-line">Mi kailo fanu.</p>
+              <p class="translation">I eat food.</p>
+            </article>
+
+            <article class="example-card">
+              <p class="example-line">Yona haluo hona.</p>
+              <p class="translation">She likes water.</p>
+            </article>
+
+            <article class="example-card">
+              <p class="example-line">Min tavo kala.</p>
+              <p class="translation">We have money.</p>
+            </article>
+
+            <article class="example-card">
+              <p class="example-line">Io wero carlan.</p>
+              <p class="translation">He sees the cars.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="grammar-section" id="pronouns">
+          <h2 class="section-heading">Pronouns</h2>
+
+          <div class="table-card">
+            <table>
+              <thead>
+                <tr>
+                  <th>Gavári</th>
+                  <th>English</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td class="gavari">mi</td><td>I; me; my; mine</td></tr>
+                <tr><td class="gavari">ti</td><td>you; your; yours</td></tr>
+                <tr><td class="gavari">io</td><td>he; him; his</td></tr>
+                <tr><td class="gavari">yona</td><td>she; her; hers</td></tr>
+                <tr><td class="gavari">lo</td><td>it; its</td></tr>
+                <tr><td class="gavari">min</td><td>we; us; our; ours</td></tr>
+                <tr><td class="gavari">tin</td><td>you all</td></tr>
+                <tr><td class="gavari">lin</td><td>they; them; their; theirs</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="grammar-section" id="verbs">
+          <h2 class="section-heading">Verb Markers</h2>
+
+          <div class="table-card">
+            <table>
+              <thead>
+                <tr>
+                  <th>Marker</th>
+                  <th>Function</th>
+                  <th>Example</th>
+                  <th>Meaning</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="gavari">—</td>
+                  <td>present / general</td>
+                  <td class="gavari">Mi kailo.</td>
+                  <td>I eat.</td>
+                </tr>
+                <tr>
+                  <td class="gavari">pa</td>
+                  <td>past</td>
+                  <td class="gavari">Mi pa kailo.</td>
+                  <td>I ate.</td>
+                </tr>
+                <tr>
+                  <td class="gavari">fa</td>
+                  <td>future</td>
+                  <td class="gavari">Mi fa kailo.</td>
+                  <td>I will eat.</td>
+                </tr>
+                <tr>
+                  <td class="gavari">wa</td>
+                  <td>conditional</td>
+                  <td class="gavari">Mi wa kailo.</td>
+                  <td>I would eat.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="note-card">
+            <h3>Placement</h3>
+            <p>
+              The marker comes directly before the main verb:
+              <span class="gavari">Mi pa gavo sap nuai.</span>
+            </p>
+          </div>
+        </section>
+
+        <section class="grammar-section" id="negation">
+          <h2 class="section-heading">Negation</h2>
+
+          <div class="rule-card">
+            <h3>Use <span class="gavari">noa</span> before the verb</h3>
+            <p>
+              The negative word <span class="gavari">noa</span> is placed before
+              the verb or verbal expression.
+            </p>
+            <div class="formula">Mi noa kailo.</div>
+          </div>
+
+          <div class="example-grid" style="margin-top: 14px;">
+            <article class="example-card">
+              <p class="example-line">Mi noa tavo kala.</p>
+              <p class="translation">I do not have money.</p>
+            </article>
+
+            <article class="example-card">
+              <p class="example-line">Mi noa polno gavo.</p>
+              <p class="translation">I cannot go.</p>
+            </article>
+
+            <article class="example-card">
+              <p class="example-line">Ti noa delo gavo.</p>
+              <p class="translation">You should not go.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="grammar-section" id="questions">
+          <h2 class="section-heading">Question Words</h2>
+
+          <div class="table-card">
+            <table>
+              <thead>
+                <tr>
+                  <th>Gavári</th>
+                  <th>English</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td class="gavari">wohanu</td><td>what</td></tr>
+                <tr><td class="gavari">wohu</td><td>which</td></tr>
+                <tr><td class="gavari">lam</td><td>where</td></tr>
+                <tr><td class="gavari">kalu</td><td>how</td></tr>
+                <tr><td class="gavari">kap</td><td>why</td></tr>
+                <tr><td class="gavari">nagu</td><td>when</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="grammar-section" id="prepositions">
+          <h2 class="section-heading">Prepositions</h2>
+
+          <div class="table-card">
+            <table>
+              <thead>
+                <tr>
+                  <th>Word</th>
+                  <th>Core meaning</th>
+                  <th>Typical use</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="gavari">sap</td>
+                  <td>to; toward</td>
+                  <td>Definite destination, recipient, or target</td>
+                </tr>
+                <tr>
+                  <td class="gavari">ke</td>
+                  <td>in; on; at</td>
+                  <td>General location; also introduces some subordinate clauses</td>
+                </tr>
+                <tr>
+                  <td class="gavari">hanu</td>
+                  <td>inside</td>
+                  <td>Physical location within something</td>
+                </tr>
+                <tr>
+                  <td class="gavari">lanu</td>
+                  <td>outside</td>
+                  <td>Location outside something</td>
+                </tr>
+                <tr>
+                  <td class="gavari">mo</td>
+                  <td>of; about; from</td>
+                  <td>Source, relation, or topic</td>
+                </tr>
+                <tr>
+                  <td class="gavari">talu</td>
+                  <td>with</td>
+                  <td>Accompaniment</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="example-grid" style="margin-top: 14px;">
+            <article class="example-card">
+              <p class="example-line">Mi pa gavo sap nuai.</p>
+              <p class="translation">I went to the store.</p>
+            </article>
+
+            <article class="example-card">
+              <p class="example-line">Mi navo hanu fale.</p>
+              <p class="translation">I am inside the house.</p>
+            </article>
+
+            <article class="example-card">
+              <p class="example-line">Mi muko sap mi amun.</p>
+              <p class="translation">I speak to my friend.</p>
+            </article>
+
+            <article class="example-card">
+              <p class="example-line">Mi kimo’a lo sap ti.</p>
+              <p class="translation">I give it to you.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="grammar-section" id="plural">
+          <h2 class="section-heading">Plural Nouns</h2>
+
+          <div class="rule-card">
+            <h3>Add <span class="gavari">-lan</span></h3>
+            <p>
+              The productive plural suffix is
+              <span class="gavari">-lan</span>.
+            </p>
+            <div class="formula">amun → amunlan</div>
+          </div>
+
+          <div class="table-card" style="margin-top: 14px;">
+            <table>
+              <thead>
+                <tr>
+                  <th>Singular</th>
+                  <th>Plural</th>
+                  <th>English</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td class="gavari">amun</td><td class="gavari">amunlan</td><td>friend / friends</td></tr>
+                <tr><td class="gavari">car</td><td class="gavari">carlan</td><td>car / cars</td></tr>
+                <tr><td class="gavari">conuah</td><td class="gavari">conuahlan</td><td>child / children</td></tr>
+                <tr><td class="gavari">skolu</td><td class="gavari">skolulan</td><td>school / schools</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="grammar-section" id="compounds">
+          <h2 class="section-heading">Compounds</h2>
+
+          <div class="intro-card">
+            <p>
+              Gavári frequently creates new meanings by combining existing
+              words. A hyphen keeps the parts easy to recognize.
+            </p>
+          </div>
+
+          <div class="example-grid" style="margin-top: 14px;">
+            <article class="example-card compound">
+              <div>
+                <div class="parts">fale + faru</div>
+                <div class="arrow">↓</div>
+                <div class="result">fale-faru</div>
+                <div class="translation">big house</div>
+              </div>
+            </article>
+
+            <article class="example-card compound">
+              <div>
+                <div class="parts">hona + muia</div>
+                <div class="arrow">↓</div>
+                <div class="result">hona-muia</div>
+                <div class="translation">lake</div>
+              </div>
+            </article>
+
+            <article class="example-card compound">
+              <div>
+                <div class="parts">pesta + fale</div>
+                <div class="arrow">↓</div>
+                <div class="result">pesta-fale</div>
+                <div class="translation">neighborhood</div>
+              </div>
+            </article>
+
+            <article class="example-card compound">
+              <div>
+                <div class="parts">verdag + hona</div>
+                <div class="arrow">↓</div>
+                <div class="result">verdag-hona</div>
+                <div class="translation">volcano</div>
+              </div>
+            </article>
+          </div>
+
+          <div class="note-card">
+            <h3>Condition adjective suffix</h3>
+            <p>
+              The productive suffix <span class="gavari">-wa</span> forms
+              weather or condition adjectives:
+              <span class="gavari">rualwa</span> “rainy,”
+              <span class="gavari">sneulwa</span> “snowy,” and
+              <span class="gavari">veruwa</span> “sunny.”
+            </p>
+          </div>
+        </section>
+
+        <section class="grammar-section" id="conversation">
+          <h2 class="section-heading">Mini Conversation</h2>
+
+          <div class="dialogue">
+            <div class="dialogue-line">
+              <div class="speaker">A</div>
+              <p>
+                <span class="gavari">Salo!</span>
+                <span class="muted">Hello!</span>
+              </p>
+            </div>
+
+            <div class="dialogue-line">
+              <div class="speaker">B</div>
+              <p>
+                <span class="gavari">Salo!</span>
+                <span class="muted">Hello!</span>
+              </p>
+            </div>
+
+            <div class="dialogue-line">
+              <div class="speaker">A</div>
+              <p>
+                <span class="gavari">Ti bilu?</span>
+                <span class="muted">Are you well?</span>
+              </p>
+            </div>
+
+            <div class="dialogue-line">
+              <div class="speaker">B</div>
+              <p>
+                <span class="gavari">Mi bilu.</span>
+                <span class="muted">I am well.</span>
+              </p>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div class="footer-note">
+        Gavári grammar is under active development. This page reflects the
+        current canonical system.
       </div>
     </section>
   </main>
 
-  <!-- Load order matters: vocabulary, rules, then translator engine. -->
-  <script src="vocab.js"></script>
-  <script src="rules.js"></script>
-  <script src="translator.js"></script>
+  <script>
+    const sectionButtons = document.querySelectorAll(".section-button");
+    const grammarContent = document.getElementById("grammarContent");
+    const sections = document.querySelectorAll(".grammar-section");
+
+    sectionButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const target = document.getElementById(button.dataset.target);
+
+        if (target) {
+          target.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+          });
+        }
+      });
+    });
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+
+        if (!visible) return;
+
+        sectionButtons.forEach((button) => {
+          button.classList.toggle(
+            "active",
+            button.dataset.target === visible.target.id
+          );
+        });
+      },
+      {
+        root: grammarContent,
+        threshold: [0.25, 0.5, 0.75],
+        rootMargin: "-10% 0px -65% 0px"
+      }
+    );
+
+    sections.forEach((section) => observer.observe(section));
+  </script>
 </body>
 </html>
