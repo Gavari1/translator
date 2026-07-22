@@ -1,1 +1,1383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Searchable Gavári–English dictionary." />
+  <title>Gavári Dictionary</title>
 
+  <style>
+    :root {
+      --navy-950: #050b24;
+      --navy-900: #08112f;
+      --navy-850: #0b173c;
+      --blue-700: #1456a0;
+      --blue-600: #1c6ac4;
+      --blue-500: #2e7bd0;
+      --blue-100: #eaf3ff;
+      --white: #ffffff;
+      --ink: #13203a;
+      --muted: #68748d;
+      --line: #d7e3f1;
+      --shadow: 0 18px 48px rgba(3, 11, 40, 0.16);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top right, rgba(46,123,208,.24), transparent 34rem),
+        linear-gradient(180deg, var(--navy-950) 0, var(--navy-900) 25rem, #edf4fc 25rem);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    button, input { font: inherit; }
+
+    .page-shell {
+      width: min(1180px, calc(100% - 30px));
+      margin: 0 auto;
+      padding: 34px 0 64px;
+    }
+
+    .hero {
+      color: white;
+      padding: 8px 4px 34px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+      color: #bdd8ff;
+      font-size: .78rem;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #ffd451;
+      content: "";
+      box-shadow: 0 0 0 5px rgba(255,212,81,.12);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2.3rem, 5vw, 4.6rem);
+      line-height: .98;
+      letter-spacing: -.05em;
+    }
+
+    .hero p {
+      max-width: 760px;
+      margin: 18px 0 0;
+      color: #d8e8ff;
+      font-size: clamp(1rem, 2vw, 1.15rem);
+      line-height: 1.7;
+    }
+
+    .dictionary-app {
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.72);
+      border-radius: 24px;
+      background: rgba(255,255,255,.98);
+      box-shadow: var(--shadow);
+    }
+
+    .toolbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      padding: 22px 24px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255,255,255,.96);
+      backdrop-filter: blur(14px);
+    }
+
+    .search-wrap {
+      position: relative;
+    }
+
+    .search-wrap svg {
+      position: absolute;
+      top: 50%;
+      left: 17px;
+      width: 21px;
+      height: 21px;
+      color: var(--blue-600);
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+
+    #searchInput {
+      width: 100%;
+      min-height: 54px;
+      padding: 0 50px;
+      border: 1px solid #bed1e8;
+      border-radius: 14px;
+      outline: none;
+      color: var(--ink);
+      background: #f8fbff;
+      transition: 160ms ease;
+    }
+
+    #searchInput:focus {
+      border-color: var(--blue-500);
+      background: white;
+      box-shadow: 0 0 0 4px rgba(46,123,208,.14);
+    }
+
+    #clearSearch {
+      position: absolute;
+      top: 50%;
+      right: 12px;
+      display: none;
+      width: 32px;
+      height: 32px;
+      border: 0;
+      border-radius: 50%;
+      color: #4c5e7b;
+      background: #e7f0fb;
+      cursor: pointer;
+      transform: translateY(-50%);
+    }
+
+    .alphabet {
+      display: flex;
+      gap: 7px;
+      overflow-x: auto;
+      margin-top: 17px;
+      padding: 2px 0 5px;
+      scrollbar-width: thin;
+    }
+
+    .letter-button {
+      flex: 0 0 auto;
+      min-width: 38px;
+      height: 38px;
+      border: 1px solid #ccd9e9;
+      border-radius: 10px;
+      color: #24426e;
+      background: white;
+      font-weight: 800;
+      cursor: pointer;
+      transition: 140ms ease;
+    }
+
+    .letter-button:hover,
+    .letter-button.active {
+      border-color: var(--blue-600);
+      color: white;
+      background: var(--blue-600);
+      transform: translateY(-1px);
+    }
+
+    .letter-button:disabled {
+      opacity: .28;
+      cursor: not-allowed;
+    }
+
+    .dictionary-content {
+      max-height: 70vh;
+      overflow-y: auto;
+      padding: 10px 24px 30px;
+    }
+
+    .letter-section { scroll-margin-top: 12px; }
+
+    .letter-heading {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin: 0;
+      padding: 20px 0 11px;
+      color: var(--blue-700);
+      background: linear-gradient(180deg, #fff 74%, rgba(255,255,255,0));
+      font-size: 1.55rem;
+    }
+
+    .letter-heading::after {
+      flex: 1;
+      height: 1px;
+      background: var(--line);
+      content: "";
+    }
+
+    .entry-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 12px;
+    }
+
+    .entry-card {
+      padding: 17px 18px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background:
+        linear-gradient(145deg, rgba(234,243,255,.72), transparent 48%),
+        white;
+      transition: 160ms ease;
+    }
+
+    .entry-card:hover {
+      border-color: #adc8e8;
+      box-shadow: 0 10px 26px rgba(8,37,83,.08);
+      transform: translateY(-1px);
+    }
+
+    .gavari-word {
+      margin: 0;
+      color: var(--navy-900);
+      font-size: 1.22rem;
+      letter-spacing: -.02em;
+    }
+
+    .meaning {
+      margin: 7px 0 0;
+      color: #42516d;
+      line-height: 1.45;
+    }
+
+    .affix-box {
+      margin: 25px 0 4px;
+      padding: 20px;
+      border: 1px solid #bed4ee;
+      border-radius: 18px;
+      background: linear-gradient(135deg, #edf5ff, #f9fcff);
+    }
+
+    .affix-box h2 {
+      margin: 0 0 12px;
+      color: var(--blue-700);
+      font-size: 1.2rem;
+    }
+
+    .affix-row {
+      display: grid;
+      grid-template-columns: 130px 1fr;
+      gap: 12px;
+      padding: 9px 0;
+      border-top: 1px solid #d9e7f5;
+    }
+
+    .affix-row:first-of-type { border-top: 0; }
+    .affix-row strong { color: var(--navy-900); }
+
+    .empty-state {
+      display: none;
+      padding: 68px 20px;
+      text-align: center;
+    }
+
+    .empty-state p { color: var(--muted); }
+
+    mark {
+      padding: 0 2px;
+      border-radius: 3px;
+      color: inherit;
+      background: #ffe8a1;
+    }
+
+    @media (max-width: 760px) {
+      .page-shell { width: min(100% - 18px, 1180px); padding-top: 22px; }
+      .toolbar { padding: 17px; }
+      .dictionary-content { max-height: 72vh; padding: 8px 14px 24px; }
+      .entry-grid { grid-template-columns: 1fr; }
+      .affix-row { grid-template-columns: 1fr; gap: 3px; }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page-shell">
+    <header class="hero">
+      <div class="eyebrow">Republic of Gavári · Language Portal</div>
+      <h1>Gavári Dictionary</h1>
+      <p>
+        Search Gavári words or English meanings, or use the alphabet bar to jump
+        directly to a letter.
+      </p>
+    </header>
+
+    <section class="dictionary-app" aria-label="Gavári dictionary">
+      <div class="toolbar">
+        <div class="search-wrap">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="m21 21-4.35-4.35m2.35-5.15A7.5 7.5 0 1 1 4 11.5a7.5 7.5 0 0 1 15 0Z"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+
+          <input id="searchInput" type="search"
+            placeholder="Search Gavári or English…"
+            autocomplete="off" spellcheck="false"
+            aria-label="Search the dictionary"/>
+
+          <button id="clearSearch" type="button" aria-label="Clear search">×</button>
+        </div>
+
+        <nav class="alphabet" id="alphabet" aria-label="Dictionary letters"></nav>
+      </div>
+
+      <div class="dictionary-content" id="dictionaryContent">
+        <div id="dictionary"></div>
+
+        <div class="empty-state" id="emptyState">
+          <h2>No matching words</h2>
+          <p>Try another Gavári word or English meaning.</p>
+        </div>
+
+        <section class="affix-box" id="affixBox">
+          <h2>Productive affixes</h2>
+          <div class="affix-row">
+            <strong>-lan</strong>
+            <span>plural suffix</span>
+          </div>
+          <div class="affix-row">
+            <strong>-wa</strong>
+            <span>forms weather or condition adjectives</span>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const dictionaryEntries = [
+  {
+    "word": "ajulo",
+    "meaning": "help"
+  },
+  {
+    "word": "alun",
+    "meaning": "above"
+  },
+  {
+    "word": "aluo",
+    "meaning": "love"
+  },
+  {
+    "word": "amun",
+    "meaning": "friend"
+  },
+  {
+    "word": "amunlan",
+    "meaning": "friends"
+  },
+  {
+    "word": "apono",
+    "meaning": "tomorrow"
+  },
+  {
+    "word": "baru",
+    "meaning": "before"
+  },
+  {
+    "word": "beli",
+    "meaning": "but"
+  },
+  {
+    "word": "belo",
+    "meaning": "beautiful; nice"
+  },
+  {
+    "word": "belun",
+    "meaning": "below"
+  },
+  {
+    "word": "bilu",
+    "meaning": "good"
+  },
+  {
+    "word": "bonu",
+    "meaning": "brother"
+  },
+  {
+    "word": "car",
+    "meaning": "car"
+  },
+  {
+    "word": "carlan",
+    "meaning": "cars"
+  },
+  {
+    "word": "cewua",
+    "meaning": "beer"
+  },
+  {
+    "word": "conuah",
+    "meaning": "child"
+  },
+  {
+    "word": "conuahlan",
+    "meaning": "children"
+  },
+  {
+    "word": "conuahyalu",
+    "meaning": "grandchild"
+  },
+  {
+    "word": "daran",
+    "meaning": "this afternoon"
+  },
+  {
+    "word": "daru",
+    "meaning": "afternoon"
+  },
+  {
+    "word": "delo",
+    "meaning": "should"
+  },
+  {
+    "word": "duku",
+    "meaning": "ash"
+  },
+  {
+    "word": "eroa",
+    "meaning": "right"
+  },
+  {
+    "word": "fa",
+    "meaning": "future marker; will; going to"
+  },
+  {
+    "word": "fa'lo-hanu",
+    "meaning": "cubicle; work area"
+  },
+  {
+    "word": "fale",
+    "meaning": "house; home"
+  },
+  {
+    "word": "fale-fanu",
+    "meaning": "pantry"
+  },
+  {
+    "word": "fale-faru",
+    "meaning": "big house"
+  },
+  {
+    "word": "fale-kani",
+    "meaning": "small house"
+  },
+  {
+    "word": "fale-pesta",
+    "meaning": "village road"
+  },
+  {
+    "word": "fale-tana",
+    "meaning": "family unit"
+  },
+  {
+    "word": "falelan",
+    "meaning": "houses; homes"
+  },
+  {
+    "word": "famua",
+    "meaning": "family"
+  },
+  {
+    "word": "famua-fale",
+    "meaning": "living room"
+  },
+  {
+    "word": "fanu",
+    "meaning": "food"
+  },
+  {
+    "word": "faru",
+    "meaning": "big"
+  },
+  {
+    "word": "felin",
+    "meaning": "happy"
+  },
+  {
+    "word": "fenai",
+    "meaning": "roof"
+  },
+  {
+    "word": "fonuah",
+    "meaning": "father"
+  },
+  {
+    "word": "fonuahbaru",
+    "meaning": "grandfather"
+  },
+  {
+    "word": "galua",
+    "meaning": "again"
+  },
+  {
+    "word": "gava-muia",
+    "meaning": "journey"
+  },
+  {
+    "word": "gavo",
+    "meaning": "go"
+  },
+  {
+    "word": "gavo sap",
+    "meaning": "go to; go toward"
+  },
+  {
+    "word": "gavo-poa",
+    "meaning": "slow-moving"
+  },
+  {
+    "word": "gavoa",
+    "meaning": "dessert"
+  },
+  {
+    "word": "gavári-pesta",
+    "meaning": "Gavári culture"
+  },
+  {
+    "word": "gavári-veru",
+    "meaning": "homeland"
+  },
+  {
+    "word": "geli",
+    "meaning": "cold"
+  },
+  {
+    "word": "halu",
+    "meaning": "teacher"
+  },
+  {
+    "word": "haluno",
+    "meaning": "study"
+  },
+  {
+    "word": "haluo",
+    "meaning": "like"
+  },
+  {
+    "word": "haluola",
+    "meaning": "student"
+  },
+  {
+    "word": "hanu",
+    "meaning": "inside"
+  },
+  {
+    "word": "heni",
+    "meaning": "hot"
+  },
+  {
+    "word": "heni-tana",
+    "meaning": "angry person"
+  },
+  {
+    "word": "henira",
+    "meaning": "angry"
+  },
+  {
+    "word": "hona",
+    "meaning": "water"
+  },
+  {
+    "word": "hona-muia",
+    "meaning": "lake"
+  },
+  {
+    "word": "hona-noku",
+    "meaning": "calm; chill"
+  },
+  {
+    "word": "hona-poa",
+    "meaning": "glass of water"
+  },
+  {
+    "word": "hona-tana",
+    "meaning": "fisherman"
+  },
+  {
+    "word": "honalan",
+    "meaning": "waters"
+  },
+  {
+    "word": "inua",
+    "meaning": "drink"
+  },
+  {
+    "word": "io",
+    "meaning": "he; him; his"
+  },
+  {
+    "word": "ka'no-pesta",
+    "meaning": "parking lot"
+  },
+  {
+    "word": "ka'nu",
+    "meaning": "task"
+  },
+  {
+    "word": "kailo",
+    "meaning": "eat"
+  },
+  {
+    "word": "kala",
+    "meaning": "money"
+  },
+  {
+    "word": "kalu",
+    "meaning": "how"
+  },
+  {
+    "word": "kani",
+    "meaning": "small"
+  },
+  {
+    "word": "kani-famua",
+    "meaning": "timid"
+  },
+  {
+    "word": "kap",
+    "meaning": "why"
+  },
+  {
+    "word": "karol",
+    "meaning": "thing"
+  },
+  {
+    "word": "karollan",
+    "meaning": "things"
+  },
+  {
+    "word": "ke",
+    "meaning": "in; on; at; that, in subordinate clauses"
+  },
+  {
+    "word": "keheo",
+    "meaning": "drive"
+  },
+  {
+    "word": "keia",
+    "meaning": "now"
+  },
+  {
+    "word": "kela",
+    "meaning": "sand"
+  },
+  {
+    "word": "kimo’a",
+    "meaning": "give"
+  },
+  {
+    "word": "kisan",
+    "meaning": "cold wind"
+  },
+  {
+    "word": "kiso",
+    "meaning": "bowl"
+  },
+  {
+    "word": "kisun",
+    "meaning": "door"
+  },
+  {
+    "word": "la'po",
+    "meaning": "desk"
+  },
+  {
+    "word": "lam",
+    "meaning": "where"
+  },
+  {
+    "word": "lango",
+    "meaning": "need"
+  },
+  {
+    "word": "lanu",
+    "meaning": "outside"
+  },
+  {
+    "word": "larug",
+    "meaning": "later"
+  },
+  {
+    "word": "lena",
+    "meaning": "tired"
+  },
+  {
+    "word": "leroa",
+    "meaning": "left"
+  },
+  {
+    "word": "lin",
+    "meaning": "they; them; their; theirs"
+  },
+  {
+    "word": "lo",
+    "meaning": "it; its"
+  },
+  {
+    "word": "ma'la",
+    "meaning": "bored"
+  },
+  {
+    "word": "maguo",
+    "meaning": "get"
+  },
+  {
+    "word": "manu",
+    "meaning": "boss"
+  },
+  {
+    "word": "maron",
+    "meaning": "pot"
+  },
+  {
+    "word": "mi",
+    "meaning": "I; me; my; mine"
+  },
+  {
+    "word": "min",
+    "meaning": "we; us; our; ours"
+  },
+  {
+    "word": "mo",
+    "meaning": "of; about; from"
+  },
+  {
+    "word": "monuah",
+    "meaning": "mother"
+  },
+  {
+    "word": "monuahbaru",
+    "meaning": "grandmother"
+  },
+  {
+    "word": "moro",
+    "meaning": "ocean"
+  },
+  {
+    "word": "moroha",
+    "meaning": "storm surge"
+  },
+  {
+    "word": "muia",
+    "meaning": "many; much; a lot"
+  },
+  {
+    "word": "muko",
+    "meaning": "talk; speak"
+  },
+  {
+    "word": "muko sap",
+    "meaning": "talk to"
+  },
+  {
+    "word": "mura",
+    "meaning": "fog"
+  },
+  {
+    "word": "murawa",
+    "meaning": "foggy"
+  },
+  {
+    "word": "na",
+    "meaning": "that"
+  },
+  {
+    "word": "naas",
+    "meaning": "those"
+  },
+  {
+    "word": "nagu",
+    "meaning": "when"
+  },
+  {
+    "word": "napao",
+    "meaning": "sleep"
+  },
+  {
+    "word": "nara",
+    "meaning": "forest"
+  },
+  {
+    "word": "navo",
+    "meaning": "be"
+  },
+  {
+    "word": "nayboa",
+    "meaning": "neighbor"
+  },
+  {
+    "word": "nehine",
+    "meaning": "yesterday"
+  },
+  {
+    "word": "nelu",
+    "meaning": "bad"
+  },
+  {
+    "word": "ni",
+    "meaning": "this"
+  },
+  {
+    "word": "nia",
+    "meaning": "here"
+  },
+  {
+    "word": "niis",
+    "meaning": "these"
+  },
+  {
+    "word": "ninu",
+    "meaning": "new"
+  },
+  {
+    "word": "noa",
+    "meaning": "no; not"
+  },
+  {
+    "word": "noa delo",
+    "meaning": "should not"
+  },
+  {
+    "word": "noa polno",
+    "meaning": "cannot; be unable to"
+  },
+  {
+    "word": "noku",
+    "meaning": "because"
+  },
+  {
+    "word": "noran",
+    "meaning": "this evening; tonight"
+  },
+  {
+    "word": "noru",
+    "meaning": "evening; night"
+  },
+  {
+    "word": "noru-fanu",
+    "meaning": "dinner"
+  },
+  {
+    "word": "noru-geli",
+    "meaning": "cold night"
+  },
+  {
+    "word": "noru-heni",
+    "meaning": "warm night"
+  },
+  {
+    "word": "noru-poa",
+    "meaning": "dusk"
+  },
+  {
+    "word": "noru-tana",
+    "meaning": "shy person"
+  },
+  {
+    "word": "nua",
+    "meaning": "there"
+  },
+  {
+    "word": "nuai",
+    "meaning": "store"
+  },
+  {
+    "word": "nuailan",
+    "meaning": "stores"
+  },
+  {
+    "word": "nuaio",
+    "meaning": "buy"
+  },
+  {
+    "word": "oal",
+    "meaning": "cloud; clouds"
+  },
+  {
+    "word": "oal-hona",
+    "meaning": "rainclouds"
+  },
+  {
+    "word": "oalwa",
+    "meaning": "cloudy"
+  },
+  {
+    "word": "oina",
+    "meaning": "old"
+  },
+  {
+    "word": "onu",
+    "meaning": "and"
+  },
+  {
+    "word": "pa",
+    "meaning": "past-tense marker"
+  },
+  {
+    "word": "paluo",
+    "meaning": "hurt; destroy; ruin"
+  },
+  {
+    "word": "paluona",
+    "meaning": "hurt; injured"
+  },
+  {
+    "word": "panu",
+    "meaning": "hill"
+  },
+  {
+    "word": "pavo",
+    "meaning": "do; make"
+  },
+  {
+    "word": "pesta",
+    "meaning": "street"
+  },
+  {
+    "word": "pesta-fale",
+    "meaning": "neighborhood"
+  },
+  {
+    "word": "pesta-fanu",
+    "meaning": "street food"
+  },
+  {
+    "word": "pestalan",
+    "meaning": "streets"
+  },
+  {
+    "word": "poa",
+    "meaning": "few; a little"
+  },
+  {
+    "word": "polno",
+    "meaning": "can; be able to"
+  },
+  {
+    "word": "ra'no",
+    "meaning": "break; on break; taking a break"
+  },
+  {
+    "word": "ramu",
+    "meaning": "today"
+  },
+  {
+    "word": "ramu-fanu",
+    "meaning": "breakfast"
+  },
+  {
+    "word": "ramu-muia",
+    "meaning": "long day"
+  },
+  {
+    "word": "ramua",
+    "meaning": "day"
+  },
+  {
+    "word": "ramua-fanu",
+    "meaning": "lunch"
+  },
+  {
+    "word": "rimo",
+    "meaning": "deep water"
+  },
+  {
+    "word": "rual",
+    "meaning": "rain"
+  },
+  {
+    "word": "rual-poa",
+    "meaning": "drizzle; light rain"
+  },
+  {
+    "word": "rualwa",
+    "meaning": "rainy"
+  },
+  {
+    "word": "sa'no",
+    "meaning": "meeting; work meeting"
+  },
+  {
+    "word": "saku",
+    "meaning": "backpack"
+  },
+  {
+    "word": "sakulan",
+    "meaning": "backpacks"
+  },
+  {
+    "word": "sali",
+    "meaning": "fruit"
+  },
+  {
+    "word": "salo",
+    "meaning": "hello; hey"
+  },
+  {
+    "word": "sap",
+    "meaning": "to; toward"
+  },
+  {
+    "word": "saru",
+    "meaning": "always"
+  },
+  {
+    "word": "sasu",
+    "meaning": "sad"
+  },
+  {
+    "word": "savo",
+    "meaning": "say"
+  },
+  {
+    "word": "savo sap",
+    "meaning": "tell"
+  },
+  {
+    "word": "se'lo",
+    "meaning": "chair"
+  },
+  {
+    "word": "skolu",
+    "meaning": "school"
+  },
+  {
+    "word": "skolulan",
+    "meaning": "schools"
+  },
+  {
+    "word": "sneul",
+    "meaning": "snow"
+  },
+  {
+    "word": "sneulwa",
+    "meaning": "snowy"
+  },
+  {
+    "word": "sonu",
+    "meaning": "sister"
+  },
+  {
+    "word": "stara",
+    "meaning": "storm; storms"
+  },
+  {
+    "word": "stara-poa",
+    "meaning": "rainstorm"
+  },
+  {
+    "word": "starawa",
+    "meaning": "stormy"
+  },
+  {
+    "word": "sunua",
+    "meaning": "son"
+  },
+  {
+    "word": "sunualan",
+    "meaning": "sons"
+  },
+  {
+    "word": "talu",
+    "meaning": "with"
+  },
+  {
+    "word": "tambu",
+    "meaning": "also; too"
+  },
+  {
+    "word": "tana",
+    "meaning": "person"
+  },
+  {
+    "word": "tanalan",
+    "meaning": "people"
+  },
+  {
+    "word": "tanlu",
+    "meaning": "package; mail; supplies"
+  },
+  {
+    "word": "tanluo",
+    "meaning": "bring; take"
+  },
+  {
+    "word": "tavin",
+    "meaning": "lunchbox"
+  },
+  {
+    "word": "tavo",
+    "meaning": "have"
+  },
+  {
+    "word": "ti",
+    "meaning": "you; your; yours"
+  },
+  {
+    "word": "tin",
+    "meaning": "you all"
+  },
+  {
+    "word": "torai",
+    "meaning": "warm night air"
+  },
+  {
+    "word": "torun",
+    "meaning": "window"
+  },
+  {
+    "word": "vahri",
+    "meaning": "job"
+  },
+  {
+    "word": "vahrilan",
+    "meaning": "jobs"
+  },
+  {
+    "word": "vahro",
+    "meaning": "work"
+  },
+  {
+    "word": "velan",
+    "meaning": "table"
+  },
+  {
+    "word": "velu",
+    "meaning": "mist"
+  },
+  {
+    "word": "veran",
+    "meaning": "this morning"
+  },
+  {
+    "word": "verdag",
+    "meaning": "weekend"
+  },
+  {
+    "word": "verdag-hona",
+    "meaning": "volcano"
+  },
+  {
+    "word": "veru",
+    "meaning": "morning; sun"
+  },
+  {
+    "word": "veru-muia",
+    "meaning": "strong sun; hot sun"
+  },
+  {
+    "word": "veru-poa",
+    "meaning": "hazy"
+  },
+  {
+    "word": "veru-tana",
+    "meaning": "happy person"
+  },
+  {
+    "word": "veruwa",
+    "meaning": "sunny"
+  },
+  {
+    "word": "vuia",
+    "meaning": "very"
+  },
+  {
+    "word": "vuia muia",
+    "meaning": "too many; too much"
+  },
+  {
+    "word": "wa",
+    "meaning": "conditional marker; would"
+  },
+  {
+    "word": "wero",
+    "meaning": "see; watch"
+  },
+  {
+    "word": "wivo",
+    "meaning": "want"
+  },
+  {
+    "word": "wohanu",
+    "meaning": "what"
+  },
+  {
+    "word": "wohu",
+    "meaning": "which"
+  },
+  {
+    "word": "wonu",
+    "meaning": "wind"
+  },
+  {
+    "word": "wonu-muia",
+    "meaning": "strong wind"
+  },
+  {
+    "word": "wonu-noku",
+    "meaning": "anxious; scatterbrained"
+  },
+  {
+    "word": "wonuwa",
+    "meaning": "windy"
+  },
+  {
+    "word": "yalu",
+    "meaning": "after"
+  },
+  {
+    "word": "yona",
+    "meaning": "she; her; hers"
+  }
+];
+
+    const alphabetElement = document.getElementById("alphabet");
+    const dictionaryElement = document.getElementById("dictionary");
+    const dictionaryContent = document.getElementById("dictionaryContent");
+    const searchInput = document.getElementById("searchInput");
+    const clearSearch = document.getElementById("clearSearch");
+    const emptyState = document.getElementById("emptyState");
+    const affixBox = document.getElementById("affixBox");
+
+    const normalizeText = (text) =>
+      String(text)
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[’‘]/g, "'")
+        .toLowerCase()
+        .trim();
+
+    const escapeHtml = (value) =>
+      String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+
+    const highlight = (text, query) => {
+      if (!query) return escapeHtml(text);
+      const safeText = escapeHtml(text);
+      const escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      return safeText.replace(new RegExp(`(${escapedQuery})`, "gi"), "<mark>$1</mark>");
+    };
+
+    const sortedEntries = [...dictionaryEntries].sort((a, b) =>
+      a.word.localeCompare(b.word, "en", { sensitivity: "base" })
+    );
+
+    const availableLetters = [...new Set(
+      sortedEntries.map(entry => normalizeText(entry.word).charAt(0).toUpperCase())
+    )];
+
+    function buildAlphabet() {
+      alphabetElement.innerHTML = "";
+
+      availableLetters.forEach(letter => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "letter-button";
+        button.textContent = letter;
+        button.dataset.letter = letter;
+        button.setAttribute("aria-label", `Jump to letter ${letter}`);
+
+        button.addEventListener("click", () => {
+          searchInput.value = "";
+          clearSearch.style.display = "none";
+          renderDictionary("");
+
+          requestAnimationFrame(() => {
+            const target = document.getElementById(`letter-${letter}`);
+            if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+          });
+        });
+
+        alphabetElement.appendChild(button);
+      });
+    }
+
+    function createEntryCard(entry, query) {
+      const card = document.createElement("article");
+      card.className = "entry-card";
+      card.innerHTML = `
+        <h3 class="gavari-word">${highlight(entry.word, query)}</h3>
+        <p class="meaning">${highlight(entry.meaning, query)}</p>
+      `;
+      return card;
+    }
+
+    function renderDictionary(rawQuery = "") {
+      const query = normalizeText(rawQuery);
+
+      const filteredEntries = sortedEntries.filter(entry =>
+        normalizeText(`${entry.word} ${entry.meaning}`).includes(query)
+      );
+
+      const groupedEntries = filteredEntries.reduce((groups, entry) => {
+        const letter = normalizeText(entry.word).charAt(0).toUpperCase();
+        if (!groups[letter]) groups[letter] = [];
+        groups[letter].push(entry);
+        return groups;
+      }, {});
+
+      dictionaryElement.innerHTML = "";
+
+      Object.entries(groupedEntries).forEach(([letter, entries]) => {
+        const section = document.createElement("section");
+        section.className = "letter-section";
+        section.id = `letter-${letter}`;
+
+        const heading = document.createElement("h2");
+        heading.className = "letter-heading";
+        heading.textContent = letter;
+
+        const grid = document.createElement("div");
+        grid.className = "entry-grid";
+
+        entries.forEach(entry => grid.appendChild(createEntryCard(entry, query)));
+
+        section.appendChild(heading);
+        section.appendChild(grid);
+        dictionaryElement.appendChild(section);
+      });
+
+      const hasResults = filteredEntries.length > 0;
+      dictionaryElement.style.display = hasResults ? "block" : "none";
+      emptyState.style.display = hasResults ? "none" : "block";
+      affixBox.style.display = query ? "none" : "block";
+
+      document.querySelectorAll(".letter-button").forEach(button => {
+        const exists = Boolean(groupedEntries[button.dataset.letter]);
+        button.disabled = query.length > 0 && !exists;
+      });
+
+      dictionaryContent.scrollTop = 0;
+    }
+
+    searchInput.addEventListener("input", event => {
+      const value = event.target.value;
+      clearSearch.style.display = value ? "block" : "none";
+      renderDictionary(value);
+    });
+
+    clearSearch.addEventListener("click", () => {
+      searchInput.value = "";
+      clearSearch.style.display = "none";
+      renderDictionary("");
+      searchInput.focus();
+    });
+
+    buildAlphabet();
+    renderDictionary("");
+  </script>
+</body>
+</html>
