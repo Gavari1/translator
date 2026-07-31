@@ -72,14 +72,17 @@ function isRegularVowel(letter) {
 
 function findFirstVowel(word) {
     const lower = word.toLowerCase();
-    const hasRegularVowel = /[aeiou]/.test(lower);
+
+    // Apostrophes do not count when checking for vowels.
+    const lettersOnly = lower.replace(/['’]/g, "");
+    const hasRegularVowel = /[aeiou]/.test(lettersOnly);
 
     let i = 0;
 
     while (i < lower.length) {
         const letter = lower[i];
 
-        // Keep QU together inside the opening cluster.
+        // Keep QU together in the opening cluster.
         if (
             letter === "q" &&
             lower[i + 1] === "u"
@@ -92,7 +95,7 @@ function findFirstVowel(word) {
             return i;
         }
 
-        // Y is a vowel only when no A, E, I, O, or U exists.
+        // Y is a vowel only if the word contains no A, E, I, O, or U.
         if (letter === "y" && !hasRegularVowel) {
             return i;
         }
@@ -103,18 +106,17 @@ function findFirstVowel(word) {
     return -1;
 }
 
-function matchCapitalization(original, translated) {
-    // ALL CAPS
-    if (original === original.toUpperCase()) {
-        return translated.toUpperCase();
-    }
+function applyCapitalization(original, translated) {
+    const firstLetterWasCapital =
+        original[0] === original[0].toUpperCase();
 
-    // First letter capitalized
-    if (
-        original[0] === original[0].toUpperCase()
-    ) {
+    // Always lowercase everything first.
+    translated = translated.toLowerCase();
+
+    // Capitalize only the first letter when the original began uppercase.
+    if (firstLetterWasCapital) {
         return (
-            translated[0].toUpperCase() +
+            translated.charAt(0).toUpperCase() +
             translated.slice(1)
         );
     }
@@ -127,9 +129,16 @@ function translateWord(word) {
         return word;
     }
 
-    // Separate punctuation from the word.
+    /*
+        Keep apostrophes inside words.
+
+        Examples:
+        how's  → ow'shay
+        don't  → on'tday
+        we’re  → e’reway
+    */
     const match = word.match(
-        /^([^A-Za-z]*)([A-Za-z]+)([^A-Za-z]*)$/
+        /^([^A-Za-z]*)([A-Za-z][A-Za-z'’]*)([^A-Za-z]*)$/
     );
 
     if (!match) {
@@ -145,19 +154,17 @@ function translateWord(word) {
 
     let translated;
 
-    // Vowel-starting word: apple → appleyay
+    // Vowel-starting words receive -yay.
     if (firstVowel === 0) {
         translated = lower + "yay";
     }
 
-    // No vowel found: shh → shhay
+    // Words with no recognizable vowel receive -ay.
     else if (firstVowel === -1) {
         translated = lower + "ay";
     }
 
-    // Consonant-starting word:
-    // crap → apcray
-    // string → ingstray
+    // Move the complete opening consonant cluster.
     else {
         const cluster = lower.slice(0, firstVowel);
         const rest = lower.slice(firstVowel);
@@ -165,7 +172,7 @@ function translateWord(word) {
         translated = rest + cluster + "ay";
     }
 
-    translated = matchCapitalization(
+    translated = applyCapitalization(
         originalWord,
         translated
     );
