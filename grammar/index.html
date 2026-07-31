@@ -73,7 +73,6 @@ function isRegularVowel(letter) {
 function findFirstVowel(word) {
     const lower = word.toLowerCase();
 
-    // Apostrophes do not count when checking for vowels.
     const lettersOnly = lower.replace(/['’]/g, "");
     const hasRegularVowel = /[aeiou]/.test(lettersOnly);
 
@@ -110,10 +109,8 @@ function applyCapitalization(original, translated) {
     const firstLetterWasCapital =
         original[0] === original[0].toUpperCase();
 
-    // Always lowercase everything first.
     translated = translated.toLowerCase();
 
-    // Capitalize only the first letter when the original began uppercase.
     if (firstLetterWasCapital) {
         return (
             translated.charAt(0).toUpperCase() +
@@ -129,14 +126,6 @@ function translateWord(word) {
         return word;
     }
 
-    /*
-        Keep apostrophes inside words.
-
-        Examples:
-        how's  → ow'shay
-        don't  → on'tday
-        we’re  → e’reway
-    */
     const match = word.match(
         /^([^A-Za-z]*)([A-Za-z][A-Za-z'’]*)([^A-Za-z]*)$/
     );
@@ -154,22 +143,23 @@ function translateWord(word) {
 
     let translated;
 
-    // Vowel-starting words receive -yay.
+    // Vowel-starting words simply receive -ā.
     if (firstVowel === 0) {
-        translated = lower + "yay";
+        translated = lower + "ā";
     }
 
-    // Words with no recognizable vowel receive -ay.
+    // Words with no recognizable vowel receive -ā.
     else if (firstVowel === -1) {
-        translated = lower + "ay";
+        translated = lower + "ā";
     }
 
-    // Move the complete opening consonant cluster.
+    // Move the complete opening consonant cluster,
+    // then add -ā.
     else {
         const cluster = lower.slice(0, firstVowel);
         const rest = lower.slice(firstVowel);
 
-        translated = rest + cluster + "ay";
+        translated = rest + cluster + "ā";
     }
 
     translated = applyCapitalization(
