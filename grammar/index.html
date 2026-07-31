@@ -3,201 +3,203 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>En-i Translator</title>
+
+<title>Pig Latin Translator</title>
 
 <style>
-body{
-    font-family:Arial,sans-serif;
-    background:#1b1b1b;
-    color:white;
-    max-width:900px;
-    margin:auto;
-    padding:30px;
+body {
+    font-family: Arial, sans-serif;
+    background: #1b1b1b;
+    color: white;
+    max-width: 900px;
+    margin: auto;
+    padding: 30px;
 }
 
-h1{
-    text-align:center;
+h1 {
+    text-align: center;
 }
 
-textarea{
-    width:100%;
-    height:180px;
-    font-size:18px;
-    padding:12px;
-    margin-top:10px;
-    margin-bottom:20px;
-    box-sizing:border-box;
-    background:#2b2b2b;
-    color:white;
-    border:1px solid #555;
+textarea {
+    width: 100%;
+    height: 180px;
+    font-size: 18px;
+    padding: 12px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+    background: #2b2b2b;
+    color: white;
+    border: 1px solid #555;
 }
 
-button{
-    padding:12px 24px;
-    font-size:18px;
-    cursor:pointer;
-    margin-right:10px;
+button {
+    padding: 12px 24px;
+    font-size: 18px;
+    cursor: pointer;
+    margin-right: 10px;
 }
 
-#output{
-    background:#111;
+#output {
+    background: #111;
 }
 </style>
 </head>
 
 <body>
 
-<h1>En-i Translator</h1>
+<h1>Pig Latin Translator</h1>
 
-<textarea id="input" placeholder="Type English here..."></textarea>
+<textarea
+    id="input"
+    placeholder="Type English here..."
+></textarea>
 
 <button onclick="translateText()">Translate</button>
 <button onclick="clearBoxes()">Clear</button>
 
-<textarea id="output" placeholder="Translation..." readonly></textarea>
+<textarea
+    id="output"
+    placeholder="Translation..."
+    readonly
+></textarea>
 
 <script>
 
-function isVowel(ch){
-    return "aeiou".includes(ch);
+function isRegularVowel(letter) {
+    return "aeiou".includes(letter);
 }
 
-function firstVowel(word){
+function findFirstVowel(word) {
+    const lower = word.toLowerCase();
+    const hasRegularVowel = /[aeiou]/.test(lower);
 
-    let lower = word.toLowerCase();
+    let i = 0;
 
-    // Does the word have a normal vowel?
-    let hasRegularVowel = /[aeiou]/.test(lower);
+    while (i < lower.length) {
+        const letter = lower[i];
 
-    let start = 0;
+        // Keep QU together inside the opening cluster.
+        if (
+            letter === "q" &&
+            lower[i + 1] === "u"
+        ) {
+            i += 2;
+            continue;
+        }
 
-    // qu always stays together
-    if(lower.startsWith("qu")){
-        start = 2;
-    }
-
-    for(let i=start;i<lower.length;i++){
-
-        let c = lower[i];
-
-        if(isVowel(c))
+        if (isRegularVowel(letter)) {
             return i;
+        }
 
-        if(c==="y" && !hasRegularVowel)
+        // Y is a vowel only when no A, E, I, O, or U exists.
+        if (letter === "y" && !hasRegularVowel) {
             return i;
+        }
+
+        i++;
     }
 
     return -1;
 }
 
-function translateWord(word){
-
-    if(word.length===0)
-        return word;
-
-    let punctuation="";
-
-    while(word.length>0 &&
-        /[^A-Za-z]/.test(word[word.length-1])){
-
-        punctuation =
-            word[word.length-1] + punctuation;
-
-        word =
-            word.slice(0,-1);
+function matchCapitalization(original, translated) {
+    // ALL CAPS
+    if (original === original.toUpperCase()) {
+        return translated.toUpperCase();
     }
 
-    if(word==="")
-        return punctuation;
-
-    let capital =
-        word[0]===word[0].toUpperCase();
-
-    let lower =
-        word.toLowerCase();
-
-    let v =
-        firstVowel(lower);
-
-    let result;
-
-    // vowel-starting words
-    if(v===0){
-
-        result =
-            "en"+lower+"i";
-
+    // First letter capitalized
+    if (
+        original[0] === original[0].toUpperCase()
+    ) {
+        return (
+            translated[0].toUpperCase() +
+            translated.slice(1)
+        );
     }
 
-    // no vowels at all
-    else if(v===-1){
-
-        result =
-            "en"+lower+"i";
-
-    }
-
-    else{
-
-        let cluster =
-            lower.substring(0,v);
-
-        let rest =
-            lower.substring(v);
-
-        result =
-            cluster+"en"+rest+"i";
-
-    }
-
-    if(capital){
-
-        result =
-            result.charAt(0).toUpperCase()+
-            result.slice(1);
-
-    }
-
-    return result+punctuation;
+    return translated;
 }
 
-function translateText(){
+function translateWord(word) {
+    if (!word) {
+        return word;
+    }
 
-    let text =
+    // Separate punctuation from the word.
+    const match = word.match(
+        /^([^A-Za-z]*)([A-Za-z]+)([^A-Za-z]*)$/
+    );
+
+    if (!match) {
+        return word;
+    }
+
+    const beginningPunctuation = match[1];
+    const originalWord = match[2];
+    const endingPunctuation = match[3];
+
+    const lower = originalWord.toLowerCase();
+    const firstVowel = findFirstVowel(lower);
+
+    let translated;
+
+    // Vowel-starting word: apple → appleyay
+    if (firstVowel === 0) {
+        translated = lower + "yay";
+    }
+
+    // No vowel found: shh → shhay
+    else if (firstVowel === -1) {
+        translated = lower + "ay";
+    }
+
+    // Consonant-starting word:
+    // crap → apcray
+    // string → ingstray
+    else {
+        const cluster = lower.slice(0, firstVowel);
+        const rest = lower.slice(firstVowel);
+
+        translated = rest + cluster + "ay";
+    }
+
+    translated = matchCapitalization(
+        originalWord,
+        translated
+    );
+
+    return (
+        beginningPunctuation +
+        translated +
+        endingPunctuation
+    );
+}
+
+function translateText() {
+    const text =
         document.getElementById("input").value;
 
-    let words =
-        text.split(/(\s+)/);
+    const parts = text.split(/(\s+)/);
 
-    let output =
-        "";
+    const translation = parts
+        .map(part => {
+            if (part.trim() === "") {
+                return part;
+            }
 
-    for(let part of words){
-
-        if(part.trim()===""){
-
-            output += part;
-
-        }
-        else{
-
-            output +=
-                translateWord(part);
-
-        }
-
-    }
+            return translateWord(part);
+        })
+        .join("");
 
     document.getElementById("output").value =
-        output;
-
+        translation;
 }
 
-function clearBoxes(){
-
-    document.getElementById("input").value="";
-    document.getElementById("output").value="";
-
+function clearBoxes() {
+    document.getElementById("input").value = "";
+    document.getElementById("output").value = "";
 }
 
 </script>
