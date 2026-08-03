@@ -43,6 +43,7 @@
     body {
       margin: 0;
       min-height: 100vh;
+
       font-family:
         Inter,
         ui-sans-serif,
@@ -51,6 +52,7 @@
         BlinkMacSystemFont,
         "Segoe UI",
         sans-serif;
+
       color: var(--text);
 
       background:
@@ -234,6 +236,7 @@
       gap: 24px;
       padding: 32px 38px 27px;
       color: white;
+
       background:
         linear-gradient(
           120deg,
@@ -583,9 +586,12 @@
 
     .map-image {
       width: 100%;
-      min-height: 520px;
+      aspect-ratio: 16 / 9;
+
       background:
-        url("../images/weather1.jpg") center / cover no-repeat;
+        url("../images/weather1.jpg") center / contain no-repeat;
+
+      background-color: var(--navy-900);
     }
 
     .map-caption {
@@ -723,8 +729,9 @@
       }
 
       .map-image {
-        min-height: 350px;
-        background-size: cover;
+        min-height: 0;
+        aspect-ratio: 16 / 9;
+        background-size: contain;
       }
 
       .footer-inner {
