@@ -1,0 +1,1467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#071a2f">
+
+  <title>Sportes · Republica de Gavári</title>
+
+  <style>
+    :root {
+      --navy-950: #03101d;
+      --navy-900: #071a2f;
+      --navy-800: #0c2946;
+      --blue-700: #10547e;
+      --blue-600: #176b9d;
+      --blue-500: #2188bd;
+      --teal-500: #2a9d8f;
+      --gold-500: #d8ad52;
+      --red-500: #d94f4f;
+      --green-500: #2e8b57;
+      --white: #ffffff;
+      --off-white: #f5f7fa;
+      --surface-blue: #edf5fa;
+      --text: #122033;
+      --muted: #607085;
+      --line: #dce4eb;
+      --shadow: 0 22px 60px rgba(0, 17, 35, 0.22);
+      --shadow-soft: 0 13px 34px rgba(0, 20, 40, 0.13);
+      --radius-xl: 24px;
+      --radius-lg: 17px;
+      --radius-md: 12px;
+      --max: 1180px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+      color: var(--text);
+      background:
+        linear-gradient(
+          rgba(3, 16, 29, 0.76),
+          rgba(3, 16, 29, 0.96)
+        ),
+        url("../images/island.jpg") center top / cover fixed no-repeat;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    .utility-bar {
+      background: rgba(1, 9, 18, 0.96);
+      color: #d7e4ef;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+    }
+
+    .utility-inner,
+    .shell {
+      width: min(100%, var(--max));
+      margin: 0 auto;
+      padding-left: 18px;
+      padding-right: 18px;
+    }
+
+    .utility-inner {
+      min-height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      font-size: 0.76rem;
+    }
+
+    .official-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      letter-spacing: 0.025em;
+    }
+
+    .official-label::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--gold-500);
+      box-shadow: 0 0 0 4px rgba(216, 173, 82, 0.14);
+    }
+
+    .utility-links {
+      display: flex;
+      gap: 18px;
+      color: #acbdcc;
+    }
+
+    .utility-links a:hover {
+      color: white;
+    }
+
+    .shell {
+      padding-bottom: 46px;
+    }
+
+    .brand-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 26px;
+      padding: 24px 3px 22px;
+      color: white;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      min-width: 0;
+    }
+
+    .seal {
+      width: 82px;
+      height: 82px;
+      flex: 0 0 82px;
+      padding: 4px;
+      border-radius: 50%;
+      background: white;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+    }
+
+    .seal img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+
+    .brand-copy h1 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(1.75rem, 4vw, 2.55rem);
+      line-height: 1.02;
+      letter-spacing: 0.01em;
+    }
+
+    .brand-copy p {
+      margin: 7px 0 0;
+      max-width: 720px;
+      color: #d5e1eb;
+      font-size: 0.92rem;
+      line-height: 1.48;
+    }
+
+    .domain {
+      flex: 0 0 auto;
+      padding: 10px 14px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      font-size: 0.77rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      backdrop-filter: blur(10px);
+    }
+
+    .main-nav {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 6px;
+      overflow-x: auto;
+      border-radius: 15px 15px 0 0;
+      background: rgba(255, 255, 255, 0.98);
+      box-shadow: 0 12px 34px rgba(0, 0, 0, 0.16);
+    }
+
+    .main-nav a {
+      min-width: 108px;
+      padding: 13px 17px;
+      border-radius: 10px;
+      color: #35475a;
+      text-align: center;
+      font-size: 0.86rem;
+      font-weight: 800;
+      transition: 0.16s ease;
+    }
+
+    .main-nav a:hover {
+      color: var(--blue-600);
+      background: #edf5fa;
+      transform: translateY(-1px);
+    }
+
+    .main-nav .active {
+      color: white;
+      background: var(--navy-800);
+    }
+
+    .sports-shell {
+      overflow: hidden;
+      border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+      background: white;
+      box-shadow: var(--shadow);
+    }
+
+    .sports-masthead {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 34px 38px 28px;
+      color: white;
+      background:
+        linear-gradient(
+          120deg,
+          var(--navy-900),
+          var(--blue-700)
+        );
+    }
+
+    .sports-masthead p {
+      margin: 0 0 8px;
+      color: #91c7e1;
+      font-size: 0.73rem;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .sports-masthead h2 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.5rem, 7vw, 5rem);
+      line-height: 0.96;
+      letter-spacing: -0.035em;
+    }
+
+    .league-mark {
+      padding: 10px 15px;
+      border: 1px solid rgba(255, 255, 255, 0.24);
+      border-radius: 999px;
+      color: white;
+      background: rgba(255, 255, 255, 0.09);
+      font-size: 0.78rem;
+      font-weight: 850;
+      white-space: nowrap;
+    }
+
+    .sports-nav {
+      display: flex;
+      gap: 6px;
+      padding: 10px 18px;
+      overflow-x: auto;
+      border-bottom: 1px solid var(--line);
+      background: white;
+    }
+
+    .sports-nav a {
+      flex: 0 0 auto;
+      padding: 9px 13px;
+      border-radius: 999px;
+      color: #4a5b6d;
+      font-size: 0.76rem;
+      font-weight: 800;
+    }
+
+    .sports-nav a:hover,
+    .sports-nav .selected {
+      color: white;
+      background: var(--blue-600);
+    }
+
+    .hero-result {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(320px, 0.75fr);
+      min-height: 520px;
+    }
+
+    .result-visual {
+      position: relative;
+      min-height: 520px;
+      display: flex;
+      align-items: end;
+      overflow: hidden;
+      color: white;
+      background:
+        linear-gradient(
+          to top,
+          rgba(3, 16, 29, 0.98) 0%,
+          rgba(3, 16, 29, 0.76) 34%,
+          rgba(3, 16, 29, 0.13) 72%
+        ),
+        url("../images/island.jpg") center / cover no-repeat;
+    }
+
+    .result-copy {
+      width: 100%;
+      padding: clamp(28px, 5vw, 54px);
+    }
+
+    .match-tag {
+      display: inline-flex;
+      align-items: center;
+      margin-bottom: 16px;
+      padding: 7px 11px;
+      border-radius: 999px;
+      background: var(--red-500);
+      color: white;
+      font-size: 0.7rem;
+      font-weight: 900;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .result-scoreboard {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+      gap: 24px;
+      align-items: center;
+    }
+
+    .hero-team {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(1.5rem, 3vw, 2.55rem);
+      font-weight: 700;
+      line-height: 1.08;
+    }
+
+    .hero-team:last-child {
+      text-align: right;
+    }
+
+    .hero-score {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(3rem, 8vw, 6rem);
+      font-weight: 700;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .result-summary {
+      max-width: 760px;
+      margin: 22px 0 0;
+      color: #dfe9ef;
+      font-size: 0.97rem;
+      line-height: 1.65;
+    }
+
+    .result-link {
+      display: inline-flex;
+      margin-top: 18px;
+      padding: 11px 15px;
+      border: 1px solid rgba(255, 255, 255, 0.24);
+      border-radius: 9px;
+      color: white;
+      background: rgba(255, 255, 255, 0.09);
+      font-size: 0.78rem;
+      font-weight: 850;
+    }
+
+    .result-link:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .match-details {
+      padding: 30px;
+      background: #f7f9fb;
+    }
+
+    .match-details h3 {
+      margin: 0 0 18px;
+      color: var(--navy-900);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.42rem;
+    }
+
+    .goal-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .goal {
+      display: grid;
+      grid-template-columns: 48px 1fr auto;
+      gap: 12px;
+      align-items: center;
+      padding: 13px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: white;
+    }
+
+    .goal-minute {
+      color: var(--blue-600);
+      text-align: center;
+      font-size: 0.82rem;
+      font-weight: 900;
+    }
+
+    .goal-player {
+      font-size: 0.88rem;
+      font-weight: 850;
+    }
+
+    .goal-team {
+      color: var(--muted);
+      font-size: 0.72rem;
+      font-weight: 750;
+      text-align: right;
+    }
+
+    .next-match {
+      margin-top: 22px;
+      padding: 18px;
+      border-left: 4px solid var(--gold-500);
+      color: white;
+      background: var(--navy-800);
+    }
+
+    .next-match p {
+      margin: 0 0 7px;
+      color: #a9c7d9;
+      font-size: 0.7rem;
+      font-weight: 900;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .next-match strong {
+      display: block;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.2rem;
+    }
+
+    .next-match span {
+      display: block;
+      margin-top: 6px;
+      color: #d5e4ed;
+      font-size: 0.76rem;
+    }
+
+    .page-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(300px, 0.6fr);
+      gap: 22px;
+      margin-top: 24px;
+    }
+
+    .panel {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: rgba(255, 255, 255, 0.985);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 21px 22px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .panel-header p {
+      margin: 0 0 4px;
+      color: var(--blue-600);
+      font-size: 0.69rem;
+      font-weight: 900;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+    }
+
+    .panel-header h3 {
+      margin: 0;
+      color: var(--navy-900);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.42rem;
+    }
+
+    .panel-link {
+      color: var(--blue-600);
+      font-size: 0.78rem;
+      font-weight: 850;
+      white-space: nowrap;
+    }
+
+    .panel-link:hover {
+      text-decoration: underline;
+    }
+
+    .fixture-list {
+      display: grid;
+      gap: 12px;
+      padding: 22px;
+    }
+
+    .fixture {
+      display: grid;
+      grid-template-columns: 62px minmax(0, 1fr) auto;
+      gap: 14px;
+      align-items: center;
+      padding: 15px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--off-white);
+    }
+
+    .fixture-date {
+      color: var(--blue-600);
+      text-align: center;
+      font-size: 0.76rem;
+      font-weight: 900;
+    }
+
+    .fixture-match {
+      color: #34475b;
+      font-size: 0.87rem;
+      font-weight: 850;
+    }
+
+    .fixture-status {
+      padding: 6px 9px;
+      border-radius: 999px;
+      color: #506071;
+      background: #e7edf2;
+      font-size: 0.68rem;
+      font-weight: 850;
+      white-space: nowrap;
+    }
+
+    .sidebar {
+      display: grid;
+      gap: 22px;
+      align-content: start;
+    }
+
+    .top-scorers {
+      padding: 4px 22px 12px;
+    }
+
+    .scorer {
+      display: grid;
+      grid-template-columns: 34px minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+      padding: 15px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .scorer:last-child {
+      border-bottom: 0;
+    }
+
+    .scorer-rank {
+      width: 30px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: white;
+      background: var(--navy-800);
+      font-size: 0.75rem;
+      font-weight: 900;
+    }
+
+    .scorer strong {
+      display: block;
+      font-size: 0.88rem;
+    }
+
+    .scorer span {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 0.7rem;
+    }
+
+    .scorer-goals {
+      color: var(--blue-600);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.35rem;
+      font-weight: 700;
+    }
+
+    .league-note {
+      padding: 24px;
+      color: white;
+      background: linear-gradient(145deg, var(--navy-900), var(--blue-700));
+    }
+
+    .league-note p {
+      margin: 0 0 8px;
+      color: #9fc8de;
+      font-size: 0.7rem;
+      font-weight: 900;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+    }
+
+    .league-note h3 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.45rem;
+    }
+
+    .league-note span {
+      display: block;
+      margin-top: 12px;
+      color: #d4e3ec;
+      font-size: 0.84rem;
+      line-height: 1.58;
+    }
+
+    .standings-section {
+      margin-top: 24px;
+    }
+
+    .standings-panel {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: rgba(255, 255, 255, 0.99);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .standings-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 23px 24px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .standings-header p {
+      margin: 0 0 4px;
+      color: var(--blue-600);
+      font-size: 0.69rem;
+      font-weight: 900;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+    }
+
+    .standings-header h3 {
+      margin: 0;
+      color: var(--navy-900);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.55rem;
+    }
+
+    .table-groups {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .division {
+      min-width: 0;
+    }
+
+    .division:first-child {
+      border-right: 1px solid var(--line);
+    }
+
+    .division-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      color: white;
+      background: var(--navy-800);
+    }
+
+    .division:nth-child(2) .division-title {
+      background: var(--blue-600);
+    }
+
+    .division-title h4 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.15rem;
+    }
+
+    .division-title span {
+      color: #d9e8f1;
+      font-size: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      min-width: 610px;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 13px 10px;
+      border-bottom: 1px solid var(--line);
+      text-align: center;
+      font-size: 0.76rem;
+    }
+
+    th {
+      color: #526276;
+      background: #f3f6f8;
+      font-size: 0.67rem;
+      font-weight: 900;
+      letter-spacing: 0.045em;
+      text-transform: uppercase;
+    }
+
+    td {
+      color: #33465a;
+      font-weight: 700;
+    }
+
+    th:nth-child(2),
+    td:nth-child(2) {
+      text-align: left;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: 0;
+    }
+
+    tbody tr:hover td {
+      background: #f8fbfd;
+    }
+
+    .position {
+      color: var(--blue-600);
+      font-weight: 900;
+    }
+
+    .team-name {
+      color: var(--text);
+      font-weight: 900;
+    }
+
+    .leader td {
+      background: rgba(42, 157, 143, 0.08);
+    }
+
+    .leader .position {
+      color: var(--green-500);
+    }
+
+    .loss td {
+      background: rgba(217, 79, 79, 0.045);
+    }
+
+    .points {
+      color: var(--navy-900);
+      font-weight: 950;
+    }
+
+    .sports-news {
+      margin-top: 24px;
+    }
+
+    .article-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .article-card {
+      padding: 22px;
+      border-right: 1px solid var(--line);
+    }
+
+    .article-card:last-child {
+      border-right: 0;
+    }
+
+    .article-image {
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      border-radius: 11px;
+      background: #eef2f5;
+    }
+
+    .article-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .article-category {
+      margin: 15px 0 6px;
+      color: var(--red-500);
+      font-size: 0.68rem;
+      font-weight: 900;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .article-card h4 {
+      margin: 0;
+      color: var(--text);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.16rem;
+      line-height: 1.27;
+    }
+
+    .article-card p {
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.55;
+    }
+
+    .footer {
+      margin-top: 27px;
+      padding: 22px 3px 0;
+      color: #bdcbd7;
+      font-size: 0.74rem;
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      padding-top: 19px;
+      border-top: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .footer a:hover {
+      color: white;
+      text-decoration: underline;
+    }
+
+    @media (max-width: 1000px) {
+      .hero-result,
+      .page-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .table-groups {
+        grid-template-columns: 1fr;
+      }
+
+      .division:first-child {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .article-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .article-card,
+      .article-card:last-child {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .article-card:last-child {
+        border-bottom: 0;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .utility-links,
+      .domain {
+        display: none;
+      }
+
+      .brand-row {
+        align-items: flex-start;
+      }
+
+      .seal {
+        width: 66px;
+        height: 66px;
+        flex-basis: 66px;
+      }
+
+      .sports-masthead {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 28px 23px 23px;
+      }
+
+      .main-nav a {
+        min-width: 98px;
+      }
+
+      .result-visual {
+        min-height: 480px;
+      }
+
+      .result-copy {
+        padding: 30px 22px;
+      }
+
+      .result-scoreboard {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+
+      .hero-team:last-child {
+        text-align: center;
+      }
+
+      .fixture {
+        grid-template-columns: 54px 1fr;
+      }
+
+      .fixture-status {
+        grid-column: 2;
+        width: fit-content;
+      }
+
+      .footer-inner {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="utility-bar">
+    <div class="utility-inner">
+      <span class="official-label">
+        Loca ueb ofisial de la Republica de Gavári
+      </span>
+
+      <nav class="utility-links" aria-label="Utility navigation">
+        <a href="../#about">Sur Gavári</a>
+        <a href="../news/">Novas</a>
+        <a href="./">Sportes</a>
+      </nav>
+    </div>
+  </div>
+
+  <div class="shell">
+    <header>
+      <div class="brand-row">
+        <div class="brand">
+          <div class="seal">
+            <img
+              src="../images/seal.png"
+              alt="Sela ofisial de Gavári"
+            >
+          </div>
+
+          <div class="brand-copy">
+            <h1>Republica de Gavári</h1>
+            <p>La loca ueb ofisial de la nasion de Gavári.</p>
+          </div>
+        </div>
+
+        <span class="domain">GAVARI.ORG</span>
+      </div>
+
+      <nav class="main-nav" aria-label="Main navigation">
+        <a href="../">Home</a>
+        <a href="../news/">Novas</a>
+        <a class="active" href="./">Sportes</a>
+        <a href="../weather/">Clima</a>
+        <a href="../#about">Sur Gavári</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="sports-shell">
+        <div class="sports-masthead">
+          <div>
+            <p>Nova Sportal · La Liga Elefen</p>
+            <h2>Sportes</h2>
+          </div>
+
+          <span class="league-mark">
+            Un liga · Oto ecipos · Un campion
+          </span>
+        </div>
+
+        <nav class="sports-nav" aria-label="Sports navigation">
+          <a class="selected" href="#resultas">Resultas</a>
+          <a href="#juas">Juas</a>
+          <a href="#clasi">Clasi</a>
+          <a href="#goliadores">Goliadores</a>
+          <a href="#novas">Novas</a>
+        </nav>
+
+        <div id="resultas" class="hero-result">
+          <article class="result-visual">
+            <div class="result-copy">
+              <span class="match-tag">Puntos final</span>
+
+              <div class="result-scoreboard">
+                <span class="hero-team">Porto de Elefen</span>
+
+                <strong class="hero-score">3–1</strong>
+
+                <span class="hero-team">Site Nova</span>
+              </div>
+
+              <p class="result-summary">
+                Porto de Elefen comensa la seson con un vitoria forte.
+                Andre Bosal ia fa du goles, e Cruz ia fa la otra.
+              </p>
+
+              <a class="result-link" href="../news/">
+                Leje la resoma de la jua
+              </a>
+            </div>
+          </article>
+
+          <aside class="match-details">
+            <h3>Goles fada</h3>
+
+            <div class="goal-list">
+              <div class="goal">
+                <span class="goal-minute">26’</span>
+                <span class="goal-player">Andre Bosal</span>
+                <span class="goal-team">Porto de Elefen</span>
+              </div>
+
+              <div class="goal">
+                <span class="goal-minute">56’</span>
+                <span class="goal-player">Cruz</span>
+                <span class="goal-team">Porto de Elefen</span>
+              </div>
+
+              <div class="goal">
+                <span class="goal-minute">68’</span>
+                <span class="goal-player">Mario Gerard</span>
+                <span class="goal-team">Site Nova</span>
+              </div>
+
+              <div class="goal">
+                <span class="goal-minute">83’</span>
+                <span class="goal-player">Andre Bosal</span>
+                <span class="goal-team">Porto de Elefen</span>
+              </div>
+            </div>
+
+            <div class="next-match">
+              <p>Jua seguente</p>
+              <strong>Monte Roja vs Porto de Elefen</strong>
+              <span>Sabado 8 de agosto</span>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="page-grid">
+        <div id="juas" class="panel">
+          <div class="panel-header">
+            <div>
+              <p>La Liga Elefen</p>
+              <h3>La juas de esta semana</h3>
+            </div>
+
+            <a class="panel-link" href="#clasi">
+              Vide la clasi →
+            </a>
+          </div>
+
+          <div class="fixture-list">
+            <div class="fixture">
+              <span class="fixture-date">8/2</span>
+              <span class="fixture-match">
+                Porto de Elefen 3–1 Site Nova
+              </span>
+              <span class="fixture-status">Completida</span>
+            </div>
+
+            <div class="fixture">
+              <span class="fixture-date">8/4</span>
+              <span class="fixture-match">
+                Pinos Alta vs Lago Serena
+              </span>
+              <span class="fixture-status">Veni</span>
+            </div>
+
+            <div class="fixture">
+              <span class="fixture-date">8/6</span>
+              <span class="fixture-match">
+                Vale Verde vs Rio Clara
+              </span>
+              <span class="fixture-status">Veni</span>
+            </div>
+
+            <div class="fixture">
+              <span class="fixture-date">8/8</span>
+              <span class="fixture-match">
+                Monte Roja vs Porto de Elefen
+              </span>
+              <span class="fixture-status">Veni</span>
+            </div>
+
+            <div class="fixture">
+              <span class="fixture-date">8/9</span>
+              <span class="fixture-match">
+                Site Nova vs Costa Orin
+              </span>
+              <span class="fixture-status">Veni</span>
+            </div>
+          </div>
+        </div>
+
+        <aside class="sidebar">
+          <section id="goliadores" class="panel">
+            <div class="panel-header">
+              <div>
+                <p>La Liga Elefen</p>
+                <h3>Goliadores</h3>
+              </div>
+            </div>
+
+            <div class="top-scorers">
+              <div class="scorer">
+                <span class="scorer-rank">1</span>
+
+                <div>
+                  <strong>Andre Bosal</strong>
+                  <span>Porto de Elefen</span>
+                </div>
+
+                <span class="scorer-goals">2</span>
+              </div>
+
+              <div class="scorer">
+                <span class="scorer-rank">2</span>
+
+                <div>
+                  <strong>Cruz</strong>
+                  <span>Porto de Elefen</span>
+                </div>
+
+                <span class="scorer-goals">1</span>
+              </div>
+
+              <div class="scorer">
+                <span class="scorer-rank">3</span>
+
+                <div>
+                  <strong>Mario Gerard</strong>
+                  <span>Site Nova</span>
+                </div>
+
+                <span class="scorer-goals">1</span>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel league-note">
+            <p>La seson 2026</p>
+
+            <h3>Oto ecipos en du partes</h3>
+
+            <span>
+              Cada parte ave cuatro ecipos. La ecipos va jua per
+              deveni la campion de La Liga Elefen.
+            </span>
+          </section>
+        </aside>
+      </section>
+
+      <section id="clasi" class="standings-section">
+        <div class="standings-panel">
+          <div class="standings-header">
+            <div>
+              <p>La Liga Elefen</p>
+              <h3>Clasi</h3>
+            </div>
+          </div>
+
+          <div class="table-groups">
+            <section class="division">
+              <div class="division-title">
+                <h4>Parte A</h4>
+                <span>Cuatro ecipos</span>
+              </div>
+
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Pos</th>
+                      <th>Ecipo</th>
+                      <th>J</th>
+                      <th>V</th>
+                      <th>E</th>
+                      <th>P</th>
+                      <th>GF</th>
+                      <th>GC</th>
+                      <th>DG</th>
+                      <th>PTS</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    <tr class="leader">
+                      <td class="position">1</td>
+                      <td class="team-name">Porto de Elefen</td>
+                      <td>1</td>
+                      <td>1</td>
+                      <td>0</td>
+                      <td>0</td>
+                      <td>3</td>
+                      <td>1</td>
+                      <td>+2</td>
+                      <td class="points">3</td>
+                    </tr>
+
+                    <tr>
+                      <td class="position">2</td>
+                      <td class="team-name">Costa Orin</td>
+                      <td>0</td>
+                      <td>0</td>
+                      <td>0</td>
+                      <td>0</td>
+                      <td>0</td>
+                      <td>0</td>
+                      <td>0</td>
+                      <td class="points">0</td>
+                    </tr>
+
+                    <tr>
+                      <td class="position">3</td>
+                      <td class="team-name">Lago Serena</td>
+                      <td>0</td>
+                      <td>0</td>
+                      <td>0</td>
+                      <td>0</td>
+                      <td>0</td>
+                      <td>0</td>
+                      <td>0</td>
+                      <td class="points">0</td>
+                    </tr>
+
+                    <tr class="loss">
+                      <td class="position">4</td>
+                      <td class="team-name">Site Nova</td>
+                      <td>1</td>
+                      <td>0</td>
+                      <td>0</td>
+                      <td>1</td>
+                      <td>1</td>
+                      <td>3</td>
+                      <td>−2</td>
+                      <td class="points">0</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </section>
+
+            <section class="division">
+              <div class="division-title">
+                <h4>Parte B</h4>
+                <span>Cuatro ecipos</span>
+              </div>
+
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Pos</th>
+                      <th>Ecipo</th>
+                      <th>J</th>
+                      <th>V</th>
+                      <th>E</th>
+                      <th>P</th>
+                      <th>GF</th>
+                      <th>GC</th>
+                      <th>DG</th>
+                      <th>PTS</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    <tr>
+                      <td class="position">1</td>
+                      <td class="team-name">Monte Roja</td>
+                      <td>0</td>
+                      <td>0</td>
+                      <td>0</td>
+                      <td>0</td>
+                      <td>0</td>
+                      <td>0</td>
+                      <td>0</td>
+                      <td class="points">0</td>
+                    </tr>
+
+                    <tr>
+                      <td class="position">2</td>
+                      <td class="team-name">Vale Verde</td>
+                      <td>0</td>
+                      <td>0</td>
+                      <td>0</td>
+                      <td>0</td>
+                      <td>0</td>
+                      <td>0</td>
+                      <td>0</td>
+                      <td class="points">0</td>
+                    </tr>
+
+                    <tr>
+                      <td class="position">3</td>
+                      <td class="team-name">Pinos Alta</td>
+                      <td>0</td>
+                      <td>0</td>
+                      <td>0</td>
+                      <td>0</td>
+                      <td>0</td>
+                      <td>0</td>
+                      <td>0</td>
+                      <td class="points">0</td>
+                    </tr>
+
+                    <tr>
+                      <td class="position">4</td>
+                      <td class="team-name">Rio Clara</td>
+                      <td>0</td>
+                      <td>0</td>
+                      <td>0</td>
+                      <td>0</td>
+                      <td>0</td>
+                      <td>0</td>
+                      <td>0</td>
+                      <td class="points">0</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <section id="novas" class="sports-news">
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <p>Nova Sportal</p>
+              <h3>Novas de sportes</h3>
+            </div>
+
+            <a class="panel-link" href="../news/">
+              Vide tota →
+            </a>
+          </div>
+
+          <div class="article-grid">
+            <article class="article-card">
+              <div class="article-image">
+                <img
+                  src="../images/island.jpg"
+                  alt="Porto de Elefen"
+                >
+              </div>
+
+              <p class="article-category">Porto de Elefen</p>
+
+              <h4>
+                Bosal fa du goles en la vitoria prima.
+              </h4>
+
+              <p>
+                La atacante ia es la jugador la plu importante de la jua.
+              </p>
+            </article>
+
+            <article class="article-card">
+              <div class="article-image">
+                <img
+                  src="../images/island.jpg"
+                  alt="Monte Roja"
+                >
+              </div>
+
+              <p class="article-category">Monte Roja</p>
+
+              <h4>
+                Monte Roja prepara per resivi Porto.
+              </h4>
+
+              <p>
+                La ecipo va jua sua prima jua de la seson sabado.
+              </p>
+            </article>
+
+            <article class="article-card">
+              <div class="article-image">
+                <img
+                  src="../images/island.jpg"
+                  alt="La Liga Elefen"
+                >
+              </div>
+
+              <p class="article-category">La Liga Elefen</p>
+
+              <h4>
+                Cuatro juas resta en la semana prima.
+              </h4>
+
+              <p>
+                La partes A e B va ave sua prima clasi completa pos domingo.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        <span>
+          © 2026 Republica de Gavári · Gavari.org
+        </span>
+
+        <nav class="footer-links">
+          <a href="../">Home</a>
+          <a href="../news/">Novas</a>
+          <a href="./">Sportes</a>
+          <a href="../weather/">Clima</a>
+        </nav>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>
