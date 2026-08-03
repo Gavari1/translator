@@ -1,0 +1,1565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#071a2f">
+
+  <title>Clima · Republica de Gavári</title>
+
+  <style>
+    :root {
+      --navy-950: #03101d;
+      --navy-900: #071a2f;
+      --navy-800: #0c2946;
+      --blue-700: #105b87;
+      --blue-600: #1779ad;
+      --blue-500: #2497c8;
+      --sky-300: #96d6e8;
+      --sky-100: #e8f7fb;
+      --teal-500: #2a9d8f;
+      --gold-500: #d8ad52;
+      --red-500: #d94f4f;
+      --orange-500: #e48c3a;
+
+      --white: #ffffff;
+      --off-white: #f5f8fa;
+      --text: #122033;
+      --muted: #607085;
+      --line: #dce4eb;
+
+      --shadow: 0 22px 60px rgba(0, 17, 35, 0.22);
+      --shadow-soft: 0 13px 34px rgba(0, 20, 40, 0.13);
+
+      --radius-xl: 24px;
+      --radius-lg: 17px;
+      --radius-md: 12px;
+
+      --max: 1180px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+
+      font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+      color: var(--text);
+
+      background:
+        linear-gradient(
+          rgba(3, 16, 29, 0.76),
+          rgba(3, 16, 29, 0.96)
+        ),
+        url("../images/island.jpg") center top / cover fixed no-repeat;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    /* =========================
+       TOP UTILITY BAR
+    ========================== */
+
+    .utility-bar {
+      background: rgba(1, 9, 18, 0.96);
+      color: #d7e4ef;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+    }
+
+    .utility-inner,
+    .shell {
+      width: min(100%, var(--max));
+      margin: 0 auto;
+      padding-left: 18px;
+      padding-right: 18px;
+    }
+
+    .utility-inner {
+      min-height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      font-size: 0.76rem;
+    }
+
+    .official-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      letter-spacing: 0.025em;
+    }
+
+    .official-label::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--gold-500);
+      box-shadow: 0 0 0 4px rgba(216, 173, 82, 0.14);
+    }
+
+    .utility-links {
+      display: flex;
+      gap: 18px;
+      color: #acbdcc;
+    }
+
+    .utility-links a:hover {
+      color: white;
+    }
+
+    .shell {
+      padding-bottom: 46px;
+    }
+
+    /* =========================
+       HEADER
+    ========================== */
+
+    .brand-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 26px;
+      padding: 24px 3px 22px;
+      color: white;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      min-width: 0;
+    }
+
+    .seal {
+      width: 82px;
+      height: 82px;
+      flex: 0 0 82px;
+      padding: 4px;
+      border-radius: 50%;
+      background: white;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+    }
+
+    .seal img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+
+    .brand-copy h1 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(1.75rem, 4vw, 2.55rem);
+      line-height: 1.02;
+      letter-spacing: 0.01em;
+    }
+
+    .brand-copy p {
+      margin: 7px 0 0;
+      max-width: 720px;
+      color: #d5e1eb;
+      font-size: 0.92rem;
+      line-height: 1.48;
+    }
+
+    .domain {
+      flex: 0 0 auto;
+      padding: 10px 14px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      font-size: 0.77rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      backdrop-filter: blur(10px);
+    }
+
+    .main-nav {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 6px;
+      overflow-x: auto;
+      border-radius: 15px 15px 0 0;
+      background: rgba(255, 255, 255, 0.98);
+      box-shadow: 0 12px 34px rgba(0, 0, 0, 0.16);
+    }
+
+    .main-nav a {
+      min-width: 108px;
+      padding: 13px 17px;
+      border-radius: 10px;
+      color: #35475a;
+      text-align: center;
+      font-size: 0.86rem;
+      font-weight: 800;
+      transition: 0.16s ease;
+    }
+
+    .main-nav a:hover {
+      color: var(--blue-600);
+      background: #edf7fb;
+      transform: translateY(-1px);
+    }
+
+    .main-nav .active {
+      color: white;
+      background: var(--navy-800);
+    }
+
+    /* =========================
+       WEATHER MASTHEAD
+    ========================== */
+
+    .weather-shell {
+      overflow: hidden;
+      border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+      background: white;
+      box-shadow: var(--shadow);
+    }
+
+    .weather-masthead {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 34px 38px 28px;
+      color: white;
+
+      background:
+        linear-gradient(
+          120deg,
+          var(--navy-900),
+          var(--blue-600)
+        );
+    }
+
+    .weather-masthead p {
+      margin: 0 0 8px;
+      color: #a8d9eb;
+      font-size: 0.73rem;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .weather-masthead h2 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.5rem, 7vw, 5rem);
+      line-height: 0.96;
+      letter-spacing: -0.035em;
+    }
+
+    .weather-update {
+      padding: 10px 15px;
+      border: 1px solid rgba(255, 255, 255, 0.24);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.09);
+      font-size: 0.76rem;
+      font-weight: 850;
+      white-space: nowrap;
+    }
+
+    .weather-nav {
+      display: flex;
+      gap: 6px;
+      padding: 10px 18px;
+      overflow-x: auto;
+      border-bottom: 1px solid var(--line);
+      background: white;
+    }
+
+    .weather-nav a {
+      flex: 0 0 auto;
+      padding: 9px 13px;
+      border-radius: 999px;
+      color: #4a5b6d;
+      font-size: 0.76rem;
+      font-weight: 800;
+    }
+
+    .weather-nav a:hover,
+    .weather-nav .selected {
+      color: white;
+      background: var(--blue-600);
+    }
+
+    /* =========================
+       ALERT
+    ========================== */
+
+    .alert {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 15px 24px;
+      color: #684a14;
+      background: #fff5da;
+      border-bottom: 1px solid #ead49a;
+    }
+
+    .alert-copy {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .alert-icon {
+      width: 34px;
+      height: 34px;
+      flex: 0 0 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: white;
+      background: var(--gold-500);
+      font-weight: 900;
+    }
+
+    .alert strong {
+      display: block;
+      font-size: 0.84rem;
+    }
+
+    .alert span {
+      display: block;
+      margin-top: 3px;
+      font-size: 0.75rem;
+      line-height: 1.4;
+    }
+
+    .alert-status {
+      flex: 0 0 auto;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(216, 173, 82, 0.18);
+      font-size: 0.7rem;
+      font-weight: 850;
+    }
+
+    /* =========================
+       CURRENT WEATHER
+    ========================== */
+
+    .current-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.22fr) minmax(330px, 0.78fr);
+      min-height: 485px;
+    }
+
+    .current-visual {
+      position: relative;
+      display: flex;
+      align-items: end;
+      min-height: 485px;
+      overflow: hidden;
+      color: white;
+
+      background:
+        linear-gradient(
+          to top,
+          rgba(3, 16, 29, 0.96) 0%,
+          rgba(3, 16, 29, 0.57) 42%,
+          rgba(3, 16, 29, 0.05) 78%
+        ),
+        url("../images/island.jpg") center / cover no-repeat;
+    }
+
+    .current-copy {
+      width: 100%;
+      padding: clamp(28px, 5vw, 52px);
+    }
+
+    .location-tag {
+      display: inline-flex;
+      align-items: center;
+      margin-bottom: 16px;
+      padding: 7px 11px;
+      border-radius: 999px;
+      color: white;
+      background: var(--teal-500);
+      font-size: 0.7rem;
+      font-weight: 900;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .current-main {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .weather-symbol {
+      width: 92px;
+      height: 92px;
+      flex: 0 0 92px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.13);
+      backdrop-filter: blur(7px);
+      font-size: 3.5rem;
+    }
+
+    .temperature {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(4rem, 10vw, 7.5rem);
+      line-height: 0.88;
+      letter-spacing: -0.05em;
+    }
+
+    .condition {
+      margin: 15px 0 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(1.5rem, 3vw, 2.25rem);
+    }
+
+    .current-summary {
+      max-width: 690px;
+      margin: 14px 0 0;
+      color: #dbe7ee;
+      font-size: 0.92rem;
+      line-height: 1.62;
+    }
+
+    .current-details {
+      padding: 30px;
+      background: #f7f9fb;
+    }
+
+    .current-details h3 {
+      margin: 0 0 19px;
+      color: var(--navy-900);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.42rem;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .metric {
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: white;
+    }
+
+    .metric-label {
+      display: block;
+      color: var(--muted);
+      font-size: 0.67rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .metric-value {
+      display: block;
+      margin-top: 7px;
+      color: var(--navy-900);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.38rem;
+      font-weight: 700;
+    }
+
+    .today-note {
+      margin-top: 17px;
+      padding: 16px;
+      border-left: 4px solid var(--blue-600);
+      color: #dceaf1;
+      background: var(--navy-800);
+      font-size: 0.8rem;
+      line-height: 1.56;
+    }
+
+    /* =========================
+       PANELS
+    ========================== */
+
+    .panel {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: rgba(255, 255, 255, 0.985);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 21px 22px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .panel-header p {
+      margin: 0 0 4px;
+      color: var(--blue-600);
+      font-size: 0.69rem;
+      font-weight: 900;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+    }
+
+    .panel-header h3 {
+      margin: 0;
+      color: var(--navy-900);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.42rem;
+    }
+
+    .panel-note {
+      color: var(--muted);
+      font-size: 0.72rem;
+      font-weight: 750;
+    }
+
+    /* =========================
+       CITIES
+    ========================== */
+
+    .cities-section {
+      margin-top: 24px;
+    }
+
+    .city-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .city-card {
+      padding: 21px;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      background: white;
+    }
+
+    .city-card:nth-child(4n) {
+      border-right: 0;
+    }
+
+    .city-card:nth-last-child(-n + 4) {
+      border-bottom: 0;
+    }
+
+    .city-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .city-card h4 {
+      margin: 0;
+      font-size: 0.92rem;
+      line-height: 1.3;
+    }
+
+    .city-icon {
+      font-size: 1.7rem;
+    }
+
+    .city-temp {
+      margin: 17px 0 3px;
+      color: var(--navy-900);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 2.25rem;
+      font-weight: 700;
+    }
+
+    .city-condition {
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 750;
+    }
+
+    .city-range {
+      margin-top: 11px;
+      color: #3f5265;
+      font-size: 0.72rem;
+      font-weight: 800;
+    }
+
+    /* =========================
+       SEVEN DAY FORECAST
+    ========================== */
+
+    .forecast-section {
+      margin-top: 24px;
+    }
+
+    .forecast-wrap {
+      overflow-x: auto;
+    }
+
+    .forecast-table {
+      width: 100%;
+      min-width: 820px;
+      border-collapse: collapse;
+    }
+
+    .forecast-table th,
+    .forecast-table td {
+      padding: 16px 14px;
+      border-bottom: 1px solid var(--line);
+      text-align: center;
+      font-size: 0.79rem;
+    }
+
+    .forecast-table th {
+      color: #536477;
+      background: #f2f6f8;
+      font-size: 0.68rem;
+      font-weight: 900;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .forecast-table th:first-child,
+    .forecast-table td:first-child {
+      text-align: left;
+    }
+
+    .forecast-table tbody tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .forecast-table tbody tr:hover td {
+      background: #f8fbfd;
+    }
+
+    .day-name {
+      color: var(--navy-900);
+      font-weight: 900;
+    }
+
+    .forecast-icon {
+      font-size: 1.45rem;
+    }
+
+    .high {
+      color: var(--red-500);
+      font-weight: 900;
+    }
+
+    .low {
+      color: var(--blue-600);
+      font-weight: 900;
+    }
+
+    .rain {
+      color: var(--teal-500);
+      font-weight: 900;
+    }
+
+    /* =========================
+       MARINE + BEACH
+    ========================== */
+
+    .lower-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+      margin-top: 24px;
+    }
+
+    .marine-body,
+    .beach-body {
+      padding: 22px;
+    }
+
+    .marine-summary {
+      padding: 18px;
+      border-radius: 12px;
+      color: white;
+      background:
+        linear-gradient(
+          135deg,
+          var(--navy-800),
+          var(--blue-600)
+        );
+    }
+
+    .marine-summary p {
+      margin: 0 0 8px;
+      color: #b9dbe9;
+      font-size: 0.69rem;
+      font-weight: 900;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .marine-summary h4 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.4rem;
+    }
+
+    .marine-summary span {
+      display: block;
+      margin-top: 9px;
+      color: #d9e8ef;
+      font-size: 0.8rem;
+      line-height: 1.5;
+    }
+
+    .marine-list,
+    .beach-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .info-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 15px;
+      padding: 13px 14px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--off-white);
+    }
+
+    .info-row span {
+      color: var(--muted);
+      font-size: 0.75rem;
+      font-weight: 800;
+    }
+
+    .info-row strong {
+      color: var(--navy-900);
+      font-size: 0.79rem;
+      text-align: right;
+    }
+
+    .beach-status {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      padding: 18px;
+      border-radius: 12px;
+      color: #165b4e;
+      background: #e6f7f2;
+      border: 1px solid #bde5da;
+    }
+
+    .beach-status-icon {
+      width: 42px;
+      height: 42px;
+      flex: 0 0 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: white;
+      background: var(--teal-500);
+      font-size: 1.35rem;
+    }
+
+    .beach-status strong {
+      display: block;
+      font-size: 0.88rem;
+    }
+
+    .beach-status span {
+      display: block;
+      margin-top: 4px;
+      font-size: 0.75rem;
+      line-height: 1.45;
+    }
+
+    /* =========================
+       MAP
+    ========================== */
+
+    .map-section {
+      margin-top: 24px;
+    }
+
+    .map-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) minmax(270px, 0.7fr);
+    }
+
+    .map-image {
+      position: relative;
+      min-height: 390px;
+      overflow: hidden;
+      background:
+        linear-gradient(
+          rgba(4, 31, 52, 0.18),
+          rgba(4, 31, 52, 0.38)
+        ),
+        url("../images/island.jpg") center / cover no-repeat;
+    }
+
+    .map-label {
+      position: absolute;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 9px;
+      border-radius: 999px;
+      color: var(--navy-900);
+      background: rgba(255, 255, 255, 0.91);
+      box-shadow: 0 5px 14px rgba(0, 0, 0, 0.18);
+      font-size: 0.68rem;
+      font-weight: 850;
+      backdrop-filter: blur(6px);
+    }
+
+    .label-one {
+      top: 22%;
+      left: 17%;
+    }
+
+    .label-two {
+      top: 36%;
+      right: 17%;
+    }
+
+    .label-three {
+      bottom: 25%;
+      left: 34%;
+    }
+
+    .label-four {
+      bottom: 15%;
+      right: 16%;
+    }
+
+    .map-info {
+      padding: 27px;
+      background: #f7f9fb;
+    }
+
+    .map-info h4 {
+      margin: 0 0 14px;
+      color: var(--navy-900);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.35rem;
+    }
+
+    .map-info p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.65;
+    }
+
+    .map-key {
+      display: grid;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .key-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #405165;
+      font-size: 0.76rem;
+      font-weight: 750;
+    }
+
+    .key-symbol {
+      width: 30px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: white;
+      border: 1px solid var(--line);
+    }
+
+    /* =========================
+       FOOTER
+    ========================== */
+
+    .footer {
+      margin-top: 27px;
+      padding: 22px 3px 0;
+      color: #bdcbd7;
+      font-size: 0.74rem;
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      padding-top: 19px;
+      border-top: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .footer a:hover {
+      color: white;
+      text-decoration: underline;
+    }
+
+    /* =========================
+       RESPONSIVE
+    ========================== */
+
+    @media (max-width: 1000px) {
+      .current-layout,
+      .map-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .city-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .city-card:nth-child(4n) {
+        border-right: 1px solid var(--line);
+      }
+
+      .city-card:nth-child(2n) {
+        border-right: 0;
+      }
+
+      .city-card:nth-last-child(-n + 4) {
+        border-bottom: 1px solid var(--line);
+      }
+
+      .city-card:nth-last-child(-n + 2) {
+        border-bottom: 0;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .utility-links,
+      .domain {
+        display: none;
+      }
+
+      .brand-row {
+        align-items: flex-start;
+      }
+
+      .seal {
+        width: 66px;
+        height: 66px;
+        flex-basis: 66px;
+      }
+
+      .weather-masthead {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 28px 23px 23px;
+      }
+
+      .main-nav a {
+        min-width: 98px;
+      }
+
+      .alert {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .current-visual {
+        min-height: 430px;
+      }
+
+      .current-copy {
+        padding: 30px 22px;
+      }
+
+      .current-main {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .weather-symbol {
+        width: 72px;
+        height: 72px;
+        flex-basis: 72px;
+        font-size: 2.7rem;
+      }
+
+      .metric-grid,
+      .lower-grid,
+      .city-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .city-card,
+      .city-card:nth-child(2n),
+      .city-card:nth-child(4n),
+      .city-card:nth-last-child(-n + 4),
+      .city-card:nth-last-child(-n + 2) {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .city-card:last-child {
+        border-bottom: 0;
+      }
+
+      .footer-inner {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="utility-bar">
+    <div class="utility-inner">
+      <span class="official-label">
+        Loca ueb ofisial de la Republica de Gavári
+      </span>
+
+      <nav class="utility-links" aria-label="Utility navigation">
+        <a href="../#about">Sur Gavári</a>
+        <a href="../news/">Novas</a>
+        <a href="../sports/">Sportes</a>
+      </nav>
+    </div>
+  </div>
+
+  <div class="shell">
+    <header>
+      <div class="brand-row">
+        <div class="brand">
+          <div class="seal">
+            <img
+              src="../images/seal.png"
+              alt="Sela ofisial de Gavári"
+            >
+          </div>
+
+          <div class="brand-copy">
+            <h1>Republica de Gavári</h1>
+            <p>La loca ueb ofisial de la nasion de Gavári.</p>
+          </div>
+        </div>
+
+        <span class="domain">GAVARI.ORG</span>
+      </div>
+
+      <nav class="main-nav" aria-label="Main navigation">
+        <a href="../">Home</a>
+        <a href="../news/">Novas</a>
+        <a href="../sports/">Sportes</a>
+        <a class="active" href="./">Clima</a>
+        <a href="../#about">Sur Gavári</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="weather-shell">
+        <div class="weather-masthead">
+          <div>
+            <p>Servisio nasional de clima</p>
+            <h2>Clima</h2>
+          </div>
+
+          <span class="weather-update">
+            Actualisada · 3 agosto 2026 · 08:00
+          </span>
+        </div>
+
+        <nav class="weather-nav" aria-label="Weather navigation">
+          <a class="selected" href="#aora">Aora</a>
+          <a href="#sites">Sites</a>
+          <a href="#sete-dias">Sete dias</a>
+          <a href="#mar">Mar</a>
+          <a href="#plaias">Plaias</a>
+          <a href="#mapa">Mapa</a>
+        </nav>
+
+        <div class="alert">
+          <div class="alert-copy">
+            <span class="alert-icon">!</span>
+
+            <div>
+              <strong>On ave no avisas ativa.</strong>
+              <span>
+                La clima es calma en la plu de Gavári.
+              </span>
+            </div>
+          </div>
+
+          <span class="alert-status">Normal</span>
+        </div>
+
+        <div id="aora" class="current-layout">
+          <article class="current-visual">
+            <div class="current-copy">
+              <span class="location-tag">Site de Gavári</span>
+
+              <div class="current-main">
+                <span class="weather-symbol">☀️</span>
+
+                <div>
+                  <p class="temperature">28°</p>
+                  <h3 class="condition">Solosa e calda</h3>
+                </div>
+              </div>
+
+              <p class="current-summary">
+                La dia va resta xef solosa, con alga nubes en la tarda.
+                On ave un probablia peti de pluve a la sera.
+              </p>
+            </div>
+          </article>
+
+          <aside class="current-details">
+            <h3>Clima aora</h3>
+
+            <div class="metric-grid">
+              <div class="metric">
+                <span class="metric-label">Temperatur</span>
+                <strong class="metric-value">28°C</strong>
+              </div>
+
+              <div class="metric">
+                <span class="metric-label">Umidia</span>
+                <strong class="metric-value">74%</strong>
+              </div>
+
+              <div class="metric">
+                <span class="metric-label">Vento</span>
+                <strong class="metric-value">18 km/h</strong>
+              </div>
+
+              <div class="metric">
+                <span class="metric-label">Pluve</span>
+                <strong class="metric-value">15%</strong>
+              </div>
+
+              <div class="metric">
+                <span class="metric-label">Alta oji</span>
+                <strong class="metric-value">30°C</strong>
+              </div>
+
+              <div class="metric">
+                <span class="metric-label">Basa oji</span>
+                <strong class="metric-value">23°C</strong>
+              </div>
+            </div>
+
+            <p class="today-note">
+              La vento veni de este. La mar es calma prosima a la costa.
+            </p>
+          </aside>
+        </div>
+      </section>
+
+      <section id="sites" class="cities-section">
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <p>Tra la nasion</p>
+              <h3>Clima en la sites de Gavári</h3>
+            </div>
+
+            <span class="panel-note">Temperaturs en °C</span>
+          </div>
+
+          <div class="city-grid">
+            <article class="city-card">
+              <div class="city-top">
+                <h4>Site de Gavári</h4>
+                <span class="city-icon">☀️</span>
+              </div>
+
+              <p class="city-temp">28°</p>
+              <span class="city-condition">Solosa</span>
+              <p class="city-range">Alta 30° · Basa 23°</p>
+            </article>
+
+            <article class="city-card">
+              <div class="city-top">
+                <h4>Porto de Elefen</h4>
+                <span class="city-icon">🌤️</span>
+              </div>
+
+              <p class="city-temp">27°</p>
+              <span class="city-condition">Sol e alga nubes</span>
+              <p class="city-range">Alta 29° · Basa 22°</p>
+            </article>
+
+            <article class="city-card">
+              <div class="city-top">
+                <h4>Rio Clara</h4>
+                <span class="city-icon">🌦️</span>
+              </div>
+
+              <p class="city-temp">26°</p>
+              <span class="city-condition">Pluve leve</span>
+              <p class="city-range">Alta 28° · Basa 21°</p>
+            </article>
+
+            <article class="city-card">
+              <div class="city-top">
+                <h4>Vale Verde</h4>
+                <span class="city-icon">☁️</span>
+              </div>
+
+              <p class="city-temp">24°</p>
+              <span class="city-condition">Multe nubes</span>
+              <p class="city-range">Alta 26° · Basa 20°</p>
+            </article>
+
+            <article class="city-card">
+              <div class="city-top">
+                <h4>Monte Roja</h4>
+                <span class="city-icon">🌫️</span>
+              </div>
+
+              <p class="city-temp">21°</p>
+              <span class="city-condition">Nebla</span>
+              <p class="city-range">Alta 24° · Basa 17°</p>
+            </article>
+
+            <article class="city-card">
+              <div class="city-top">
+                <h4>Costa Orin</h4>
+                <span class="city-icon">🌤️</span>
+              </div>
+
+              <p class="city-temp">29°</p>
+              <span class="city-condition">Solosa e ventosa</span>
+              <p class="city-range">Alta 31° · Basa 24°</p>
+            </article>
+
+            <article class="city-card">
+              <div class="city-top">
+                <h4>Lago Serena</h4>
+                <span class="city-icon">🌦️</span>
+              </div>
+
+              <p class="city-temp">25°</p>
+              <span class="city-condition">Nubes e pluve</span>
+              <p class="city-range">Alta 27° · Basa 20°</p>
+            </article>
+
+            <article class="city-card">
+              <div class="city-top">
+                <h4>Pinos Alta</h4>
+                <span class="city-icon">☁️</span>
+              </div>
+
+              <p class="city-temp">22°</p>
+              <span class="city-condition">Nubosa e fria</span>
+              <p class="city-range">Alta 25° · Basa 18°</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="sete-dias" class="forecast-section">
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <p>Site de Gavári</p>
+              <h3>Clima de sete dias</h3>
+            </div>
+
+            <span class="panel-note">3–9 agosto 2026</span>
+          </div>
+
+          <div class="forecast-wrap">
+            <table class="forecast-table">
+              <thead>
+                <tr>
+                  <th>Dia</th>
+                  <th>Clima</th>
+                  <th>Alta</th>
+                  <th>Basa</th>
+                  <th>Pluve</th>
+                  <th>Vento</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr>
+                  <td class="day-name">Lundi</td>
+                  <td><span class="forecast-icon">☀️</span> Solosa</td>
+                  <td class="high">30°</td>
+                  <td class="low">23°</td>
+                  <td class="rain">15%</td>
+                  <td>18 km/h</td>
+                </tr>
+
+                <tr>
+                  <td class="day-name">Martedi</td>
+                  <td><span class="forecast-icon">🌤️</span> Alga nubes</td>
+                  <td class="high">29°</td>
+                  <td class="low">23°</td>
+                  <td class="rain">20%</td>
+                  <td>16 km/h</td>
+                </tr>
+
+                <tr>
+                  <td class="day-name">Mercurdi</td>
+                  <td><span class="forecast-icon">🌦️</span> Pluve leve</td>
+                  <td class="high">28°</td>
+                  <td class="low">22°</td>
+                  <td class="rain">55%</td>
+                  <td>20 km/h</td>
+                </tr>
+
+                <tr>
+                  <td class="day-name">Jovedi</td>
+                  <td><span class="forecast-icon">🌧️</span> Pluve</td>
+                  <td class="high">27°</td>
+                  <td class="low">22°</td>
+                  <td class="rain">70%</td>
+                  <td>24 km/h</td>
+                </tr>
+
+                <tr>
+                  <td class="day-name">Venerdi</td>
+                  <td><span class="forecast-icon">🌤️</span> Sol e nubes</td>
+                  <td class="high">29°</td>
+                  <td class="low">22°</td>
+                  <td class="rain">25%</td>
+                  <td>17 km/h</td>
+                </tr>
+
+                <tr>
+                  <td class="day-name">Saturdi</td>
+                  <td><span class="forecast-icon">☀️</span> Solosa</td>
+                  <td class="high">31°</td>
+                  <td class="low">24°</td>
+                  <td class="rain">10%</td>
+                  <td>14 km/h</td>
+                </tr>
+
+                <tr>
+                  <td class="day-name">Soldi</td>
+                  <td><span class="forecast-icon">🌤️</span> Alga nubes</td>
+                  <td class="high">30°</td>
+                  <td class="low">24°</td>
+                  <td class="rain">20%</td>
+                  <td>16 km/h</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="lower-grid">
+        <article id="mar" class="panel">
+          <div class="panel-header">
+            <div>
+              <p>Costa de Gavári</p>
+              <h3>Clima maral</h3>
+            </div>
+          </div>
+
+          <div class="marine-body">
+            <div class="marine-summary">
+              <p>Condisiones de mar</p>
+              <h4>Mar calma con ondas peti</h4>
+              <span>
+                La vento de este va resta moderada tra la dia.
+              </span>
+            </div>
+
+            <div class="marine-list">
+              <div class="info-row">
+                <span>Temperatur de acua</span>
+                <strong>26°C</strong>
+              </div>
+
+              <div class="info-row">
+                <span>Altia de ondas</span>
+                <strong>0.8–1.2 m</strong>
+              </div>
+
+              <div class="info-row">
+                <span>Vento</span>
+                <strong>18 km/h de este</strong>
+              </div>
+
+              <div class="info-row">
+                <span>Vide</span>
+                <strong>Bon</strong>
+              </div>
+
+              <div class="info-row">
+                <span>Avisas maral</span>
+                <strong>Nun</strong>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article id="plaias" class="panel">
+          <div class="panel-header">
+            <div>
+              <p>Informa per visitores</p>
+              <h3>Condisiones de plaia</h3>
+            </div>
+          </div>
+
+          <div class="beach-body">
+            <div class="beach-status">
+              <span class="beach-status-icon">✓</span>
+
+              <div>
+                <strong>Condisiones bon per nada</strong>
+                <span>
+                  La mar es calma, ma enfantes debe es oservada sempre.
+                </span>
+              </div>
+            </div>
+
+            <div class="beach-list">
+              <div class="info-row">
+                <span>Temperatur de acua</span>
+                <strong>26°C</strong>
+              </div>
+
+              <div class="info-row">
+                <span>Ondas</span>
+                <strong>Peti</strong>
+              </div>
+
+              <div class="info-row">
+                <span>Vento</span>
+                <strong>Moderada</strong>
+              </div>
+
+              <div class="info-row">
+                <span>Sol</span>
+                <strong>Forte</strong>
+              </div>
+
+              <div class="info-row">
+                <span>Pluve</span>
+                <strong>Poca probable</strong>
+              </div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section id="mapa" class="map-section">
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <p>Tra Gavári</p>
+              <h3>Mapa de clima</h3>
+            </div>
+
+            <span class="panel-note">Condisiones aora</span>
+          </div>
+
+          <div class="map-layout">
+            <div class="map-image">
+              <span class="map-label label-one">
+                ☀️ Site de Gavári · 28°
+              </span>
+
+              <span class="map-label label-two">
+                🌤️ Porto de Elefen · 27°
+              </span>
+
+              <span class="map-label label-three">
+                🌦️ Rio Clara · 26°
+              </span>
+
+              <span class="map-label label-four">
+                🌫️ Monte Roja · 21°
+              </span>
+            </div>
+
+            <aside class="map-info">
+              <h4>Resoma nasional</h4>
+
+              <p>
+                La costa este es xef solosa. Alga pluve es posible en la
+                sentro de la isola, e nebla continua prosima a Monte Roja.
+              </p>
+
+              <div class="map-key">
+                <div class="key-item">
+                  <span class="key-symbol">☀️</span>
+                  <span>Solosa</span>
+                </div>
+
+                <div class="key-item">
+                  <span class="key-symbol">🌤️</span>
+                  <span>Sol e alga nubes</span>
+                </div>
+
+                <div class="key-item">
+                  <span class="key-symbol">🌦️</span>
+                  <span>Pluve leve</span>
+                </div>
+
+                <div class="key-item">
+                  <span class="key-symbol">🌫️</span>
+                  <span>Nebla</span>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        <span>
+          © 2026 Republica de Gavári · Gavari.org
+        </span>
+
+        <nav class="footer-links">
+          <a href="../">Home</a>
+          <a href="../news/">Novas</a>
+          <a href="../sports/">Sportes</a>
+          <a href="./">Clima</a>
+        </nav>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>
