@@ -1,205 +1,494 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Pig Latin Translator</title>
+  <title>Roman Grid Cipher</title>
 
-<style>
-body {
-    font-family: Arial, sans-serif;
-    background: #1b1b1b;
-    color: white;
-    max-width: 900px;
-    margin: auto;
-    padding: 30px;
-}
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-h1 {
-    text-align: center;
-}
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding: 24px;
+      background: #111;
+      color: #f5f5f5;
+      font-family: Arial, Helvetica, sans-serif;
 
-textarea {
-    width: 100%;
-    height: 180px;
-    font-size: 18px;
-    padding: 12px;
-    margin-top: 10px;
-    margin-bottom: 20px;
-    box-sizing: border-box;
-    background: #2b2b2b;
-    color: white;
-    border: 1px solid #555;
-}
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
 
-button {
-    padding: 12px 24px;
-    font-size: 18px;
-    cursor: pointer;
-    margin-right: 10px;
-}
+    .app {
+      width: 100%;
+      max-width: 760px;
+    }
 
-#output {
-    background: #111;
-}
-</style>
+    h1 {
+      margin-bottom: 6px;
+      text-align: center;
+      font-size: 32px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #aaa;
+      margin-bottom: 28px;
+    }
+
+    .card {
+      background: #1b1b1b;
+      border: 1px solid #333;
+      border-radius: 18px;
+      padding: 22px;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 130px;
+      resize: vertical;
+
+      background: #0d0d0d;
+      color: white;
+
+      border: 1px solid #444;
+      border-radius: 12px;
+
+      padding: 15px;
+      font-size: 18px;
+      line-height: 1.5;
+
+      outline: none;
+    }
+
+    textarea:focus {
+      border-color: #888;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    button {
+      flex: 1;
+
+      border: none;
+      border-radius: 10px;
+
+      padding: 13px 16px;
+
+      font-size: 16px;
+      font-weight: bold;
+
+      cursor: pointer;
+    }
+
+    .translate {
+      background: white;
+      color: black;
+    }
+
+    .clear {
+      background: #333;
+      color: white;
+    }
+
+    .output-title {
+      margin-bottom: 14px;
+      font-weight: bold;
+    }
+
+    #output {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .word-row {
+      background: #0d0d0d;
+      border: 1px solid #333;
+
+      border-radius: 10px;
+      padding: 13px 15px;
+
+      font-family: "Courier New", monospace;
+      font-size: 17px;
+
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+
+    .empty {
+      color: #777;
+      font-style: italic;
+    }
+
+    .grid-card {
+      text-align: center;
+    }
+
+    .grid {
+      display: inline-grid;
+      grid-template-columns: 45px repeat(4, 55px);
+      gap: 6px;
+
+      margin-top: 10px;
+      font-family: "Courier New", monospace;
+    }
+
+    .grid div {
+      padding: 8px 4px;
+      border-radius: 6px;
+      background: #252525;
+    }
+
+    .grid .number {
+      color: #999;
+    }
+
+    .grid .blank {
+      background: transparent;
+    }
+
+    .example {
+      margin-top: 18px;
+      color: #aaa;
+      line-height: 1.7;
+      font-size: 14px;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 14px;
+      }
+
+      h1 {
+        font-size: 26px;
+      }
+
+      .card {
+        padding: 16px;
+      }
+
+      .word-row {
+        font-size: 15px;
+      }
+
+      .grid {
+        grid-template-columns: 35px repeat(4, 45px);
+        gap: 4px;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-<h1>Pig Latin Translator</h1>
+  <div class="app">
 
-<textarea
-    id="input"
-    placeholder="Type English here..."
-></textarea>
+    <h1>Roman Grid Cipher</h1>
 
-<button onclick="translateText()">Translate</button>
-<button onclick="clearBoxes()">Clear</button>
+    <div class="subtitle">
+      BARK • DOVE • FISH • JUMP • LYNX
+    </div>
 
-<textarea
-    id="output"
-    placeholder="Translation..."
-    readonly
-></textarea>
 
-<script>
+    <!-- INPUT -->
+    <div class="card">
 
-function isRegularVowel(letter) {
-    return "aeiou".includes(letter);
-}
+      <label for="input">
+        Enter English
+      </label>
 
-function findFirstVowel(word) {
-    const lower = word.toLowerCase();
+      <textarea
+        id="input"
+        placeholder="Example: You are dumb"
+      ></textarea>
 
-    const lettersOnly = lower.replace(/['’]/g, "");
-    const hasRegularVowel = /[aeiou]/.test(lettersOnly);
+      <div class="buttons">
 
-    let i = 0;
+        <button
+          class="translate"
+          onclick="translateText()"
+        >
+          Translate
+        </button>
 
-    while (i < lower.length) {
-        const letter = lower[i];
+        <button
+          class="clear"
+          onclick="clearAll()"
+        >
+          Clear
+        </button>
 
-        // Keep QU together in the opening cluster.
-        if (
-            letter === "q" &&
-            lower[i + 1] === "u"
-        ) {
-            i += 2;
-            continue;
+      </div>
+
+    </div>
+
+
+    <!-- OUTPUT -->
+    <div class="card">
+
+      <div class="output-title">
+        Cipher
+      </div>
+
+      <div id="output">
+        <div class="empty">
+          Your translation will appear here.
+        </div>
+      </div>
+
+    </div>
+
+
+    <!-- GRID -->
+    <div class="card grid-card">
+
+      <strong>Cipher Grid</strong>
+
+      <div class="grid">
+
+        <div class="blank"></div>
+        <div>I</div>
+        <div>II</div>
+        <div>III</div>
+        <div>IV</div>
+
+        <div class="number">I</div>
+        <div>B</div>
+        <div>A</div>
+        <div>R</div>
+        <div>K</div>
+
+        <div class="number">II</div>
+        <div>D</div>
+        <div>O</div>
+        <div>V</div>
+        <div>E</div>
+
+        <div class="number">III</div>
+        <div>F</div>
+        <div>I</div>
+        <div>S</div>
+        <div>H</div>
+
+        <div class="number">IV</div>
+        <div>J</div>
+        <div>U</div>
+        <div>M</div>
+        <div>P</div>
+
+        <div class="number">V</div>
+        <div>L</div>
+        <div>Y</div>
+        <div>N</div>
+        <div>X</div>
+
+        <div class="number">VI</div>
+        <div>C</div>
+        <div>G</div>
+        <div>Q</div>
+        <div>T</div>
+
+        <div class="number">VII</div>
+        <div>W</div>
+        <div>Z</div>
+        <div>—</div>
+        <div>—</div>
+
+      </div>
+
+      <div class="example">
+        <strong>Example:</strong><br>
+        YOU → V.II^II.II^IV.II<br>
+        ARE → I.II^I.III^II.IV<br>
+        DUMB → II.I^IV.II^IV.III^I.I
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <script>
+
+    /*
+      GRID
+
+      1  B A R K
+      2  D O V E
+      3  F I S H
+      4  J U M P
+      5  L Y N X
+      6  C G Q T
+      7  W Z
+
+      Coordinates are:
+      ROW.COLUMN
+
+      Both are written as Roman numerals.
+    */
+
+    const grid = [
+      ["B", "A", "R", "K"],
+      ["D", "O", "V", "E"],
+      ["F", "I", "S", "H"],
+      ["J", "U", "M", "P"],
+      ["L", "Y", "N", "X"],
+      ["C", "G", "Q", "T"],
+      ["W", "Z"]
+    ];
+
+
+    const roman = {
+      1: "I",
+      2: "II",
+      3: "III",
+      4: "IV",
+      5: "V",
+      6: "VI",
+      7: "VII"
+    };
+
+
+    /*
+      Build the letter → coordinate map automatically.
+    */
+
+    const cipher = {};
+
+    grid.forEach((row, rowIndex) => {
+
+      row.forEach((letter, columnIndex) => {
+
+        const rowNumber = rowIndex + 1;
+        const columnNumber = columnIndex + 1;
+
+        cipher[letter] =
+          roman[rowNumber] +
+          "." +
+          roman[columnNumber];
+
+      });
+
+    });
+
+
+    function encodeWord(word) {
+
+      const encodedLetters = [];
+
+      for (const character of word.toUpperCase()) {
+
+        if (cipher[character]) {
+
+          encodedLetters.push(cipher[character]);
+
         }
 
-        if (isRegularVowel(letter)) {
-            return i;
-        }
+      }
 
-        // Y is a vowel only if the word contains no A, E, I, O, or U.
-        if (letter === "y" && !hasRegularVowel) {
-            return i;
-        }
+      return encodedLetters.join("^");
 
-        i++;
     }
 
-    return -1;
-}
 
-function applyCapitalization(original, translated) {
-    const firstLetterWasCapital =
-        original[0] === original[0].toUpperCase();
+    function translateText() {
 
-    translated = translated.toLowerCase();
+      const input =
+        document
+          .getElementById("input")
+          .value
+          .trim();
 
-    if (firstLetterWasCapital) {
-        return (
-            translated.charAt(0).toUpperCase() +
-            translated.slice(1)
-        );
+      const output =
+        document.getElementById("output");
+
+      output.innerHTML = "";
+
+
+      if (!input) {
+
+        output.innerHTML =
+          '<div class="empty">' +
+          'Enter something above.' +
+          '</div>';
+
+        return;
+
+      }
+
+
+      /*
+        Split input into words.
+
+        Every word becomes its OWN row.
+      */
+
+      const words =
+        input.match(/[A-Za-z]+/g) || [];
+
+
+      words.forEach(word => {
+
+        const row =
+          document.createElement("div");
+
+        row.className = "word-row";
+
+        row.textContent =
+          encodeWord(word);
+
+        output.appendChild(row);
+
+      });
+
     }
 
-    return translated;
-}
 
-function translateWord(word) {
-    if (!word) {
-        return word;
+    function clearAll() {
+
+      document
+        .getElementById("input")
+        .value = "";
+
+      document
+        .getElementById("output")
+        .innerHTML =
+          '<div class="empty">' +
+          'Your translation will appear here.' +
+          '</div>';
+
     }
 
-    const match = word.match(
-        /^([^A-Za-z]*)([A-Za-z][A-Za-z'’]*)([^A-Za-z]*)$/
-    );
 
-    if (!match) {
-        return word;
-    }
+    /*
+      Translate live while typing.
+    */
 
-    const beginningPunctuation = match[1];
-    const originalWord = match[2];
-    const endingPunctuation = match[3];
+    document
+      .getElementById("input")
+      .addEventListener(
+        "input",
+        translateText
+      );
 
-    const lower = originalWord.toLowerCase();
-    const firstVowel = findFirstVowel(lower);
-
-    let translated;
-
-    // Vowel-starting words receive -yay.
-    if (firstVowel === 0) {
-        translated = lower + "yay";
-    }
-
-    // Words with no recognizable vowel receive -ā.
-    else if (firstVowel === -1) {
-        translated = lower + "ā";
-    }
-
-    // Move the complete opening consonant cluster,
-    // then add -ā.
-    else {
-        const cluster = lower.slice(0, firstVowel);
-        const rest = lower.slice(firstVowel);
-
-        translated = rest + cluster + "ā";
-    }
-
-    translated = applyCapitalization(
-        originalWord,
-        translated
-    );
-
-    return (
-        beginningPunctuation +
-        translated +
-        endingPunctuation
-    );
-}
-
-function translateText() {
-    const text =
-        document.getElementById("input").value;
-
-    const parts = text.split(/(\s+)/);
-
-    const translation = parts
-        .map(part => {
-            if (part.trim() === "") {
-                return part;
-            }
-
-            return translateWord(part);
-        })
-        .join("");
-
-    document.getElementById("output").value =
-        translation;
-}
-
-function clearBoxes() {
-    document.getElementById("input").value = "";
-    document.getElementById("output").value = "";
-}
-
-</script>
+  </script>
 
 </body>
 </html>
