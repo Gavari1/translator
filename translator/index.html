@@ -1,482 +1,1153 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Word Relay</title>
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
+>
+
+<meta name="theme-color" content="#1976d2">
+
+<meta
+  name="apple-mobile-web-app-capable"
+  content="yes"
+>
+
+<meta
+  name="apple-mobile-web-app-status-bar-style"
+  content="default"
+>
+
+<meta
+  name="apple-mobile-web-app-title"
+  content="Word Relay"
+>
+
+<title>Word Relay Beta</title>
 
 <style>
+
+:root {
+    --blue: #1976d2;
+    --blue-dark: #0d47a1;
+    --blue-light: #72baff;
+
+    --yellow: #ffd400;
+    --black: #111111;
+
+    --green: #1fa957;
+    --red: #df4141;
+
+    --page: #f4f5f7;
+    --card: #ffffff;
+    --soft: #f1f3f5;
+    --text: #171717;
+    --muted: #666666;
+    --border: #d5d5d5;
+}
 
 * {
     box-sizing: border-box;
 }
 
+html {
+    -webkit-text-size-adjust: 100%;
+}
+
 body {
     margin: 0;
-    min-height: 100vh;
-    padding: 28px 14px 45px;
 
-    font-family: Arial, Helvetica, sans-serif;
+    padding:
+        22px
+        12px
+        42px;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
 
     background:
-        radial-gradient(circle at top left, #69b7ff 0%, transparent 32%),
-        radial-gradient(circle at bottom right, #ffd84d 0%, transparent 25%),
-        linear-gradient(145deg, #1976d2, #0d47a1);
+        radial-gradient(
+            circle at top left,
+            rgba(105,183,255,.65) 0%,
+            transparent 28%
+        ),
+        radial-gradient(
+            circle at bottom right,
+            rgba(255,212,0,.38) 0%,
+            transparent 24%
+        ),
+        #f4f5f7;
 
-    color: #111;
+    color: var(--text);
 }
 
-.game {
-    width: min(760px, 100%);
+
+/* ======================================================
+   APP
+====================================================== */
+
+.app {
+    width: min(520px, 100%);
     margin: 0 auto;
+
+    touch-action: manipulation;
 }
 
-/* HEADER */
+button {
+    font-family: inherit;
+    font-size: 16px;
 
-.header {
-    background: #ffffff;
-    border: 4px solid #111;
-    border-radius: 22px;
+    touch-action: manipulation;
+
+    -webkit-tap-highlight-color: transparent;
+}
+
+.screen {
+    display: none;
+}
+
+.screen.active {
+    display: block;
+}
+
+
+/* ======================================================
+   HOME HEADER
+====================================================== */
+
+.hero {
     overflow: hidden;
-    margin-bottom: 18px;
-    box-shadow: 0 8px 0 rgba(0,0,0,.18);
+
+    border: 3px solid var(--black);
+    border-radius: 23px;
+
+    background: var(--card);
 }
 
-.yellow-bar {
-    height: 12px;
-    background: #ffd400;
+.hero-stripe {
+    height: 11px;
+
+    background: var(--yellow);
 }
 
-.header-content {
-    padding: 22px;
+.hero-body {
+    padding: 23px;
+
+    background:
+        linear-gradient(
+            145deg,
+            var(--blue),
+            var(--blue-dark)
+        );
+
+    color: white;
 }
 
-.kicker {
-    display: inline-block;
+.brand {
+    font-size: 38px;
+    font-weight: 950;
 
-    background: #ffd400;
+    line-height: 1;
+
+    letter-spacing: -1px;
+}
+
+.tag {
+    margin-top: 8px;
+
+    font-size: 14px;
+    line-height: 1.45;
+
+    opacity: .94;
+}
+
+
+/* ======================================================
+   RESUME
+====================================================== */
+
+.resume-button {
+    display: none;
+
+    width: 100%;
+    min-height: 54px;
+
+    margin-top: 12px;
+
+    border: 3px solid var(--black);
+    border-radius: 14px;
+
+    background: var(--blue-light);
     color: #111;
 
-    font-size: 12px;
-    font-weight: 900;
-    letter-spacing: 2px;
+    font-weight: 950;
 
-    padding: 7px 10px;
-    border: 2px solid #111;
-    border-radius: 8px;
+    box-shadow: 0 4px 0 var(--black);
+
+    cursor: pointer;
+}
+
+.resume-button.show {
+    display: block;
+}
+
+
+/* ======================================================
+   DAILY
+====================================================== */
+
+.daily-card {
+    margin-top: 16px;
+
+    padding: 16px;
+
+    border: 3px solid var(--black);
+    border-radius: 18px;
+
+    background: var(--yellow);
+    color: #111;
+
+    box-shadow: 0 4px 0 var(--black);
+}
+
+.daily-eyebrow {
+    font-size: 11px;
+    font-weight: 950;
+
+    letter-spacing: .14em;
 
     text-transform: uppercase;
 }
 
-h1 {
-    margin: 12px 0 4px;
-    font-size: 42px;
-    line-height: 1;
+.daily-title {
+    margin-top: 3px;
+
+    font-size: 27px;
+    font-weight: 950;
 }
 
-.subtitle {
-    color: #555;
+.daily-details {
+    margin-top: 5px;
+
+    font-size: 13px;
     line-height: 1.5;
+
+    font-weight: 750;
+}
+
+.daily-status {
     margin-top: 10px;
+
+    padding: 8px 10px;
+
+    border: 2px solid #111;
+    border-radius: 10px;
+
+    background:
+        rgba(255,255,255,.55);
+
+    font-size: 12px;
+    font-weight: 900;
 }
 
-/* MAIN CARD */
+.daily-play {
+    width: 100%;
+    min-height: 55px;
 
-.card {
-    background: #fff;
-    border: 4px solid #111;
-    border-radius: 22px;
-    padding: 20px;
+    margin-top: 11px;
 
-    box-shadow: 0 8px 0 rgba(0,0,0,.18);
+    border: 3px solid #111;
+    border-radius: 13px;
+
+    background: #111;
+    color: white;
+
+    font-weight: 950;
+
+    box-shadow: 0 3px 0 #555;
+
+    cursor: pointer;
 }
 
-.topbar {
+
+/* ======================================================
+   LIBRARY
+====================================================== */
+
+.section-title {
+    margin:
+        22px
+        2px
+        9px;
+
+    font-size: 12px;
+    font-weight: 950;
+
+    letter-spacing: .14em;
+
+    text-transform: uppercase;
+
+    color: var(--muted);
+}
+
+.relay-list {
+    display: grid;
+
+    gap: 9px;
+}
+
+.relay {
+    width: 100%;
+    min-height: 62px;
+
+    padding: 9px 13px;
+
     display: flex;
     align-items: center;
     justify-content: space-between;
 
-    gap: 15px;
-
-    margin-bottom: 18px;
-}
-
-.puzzle-number {
-    display: inline-block;
-
-    background: #ffd400;
-    border: 2px solid #111;
-
-    padding: 8px 12px;
-    border-radius: 10px;
-
-    font-weight: 900;
-}
-
-.status {
-    font-size: 14px;
-    font-weight: 700;
-    color: #555;
-    text-align: right;
-}
-
-/* START WORD MESSAGE */
-
-.start-message {
-    margin-bottom: 14px;
-
-    background: #e5f2ff;
-    border-left: 6px solid #1479d4;
-
-    padding: 12px 14px;
-    border-radius: 10px;
-
-    font-size: 14px;
-    font-weight: 700;
-}
-
-/* WORD CHAIN */
-
-.chain {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-
-    gap: 9px;
-
-    min-height: 100px;
-
-    background: #eef6ff;
+    gap: 12px;
 
     border: 3px solid #111;
-    border-radius: 16px;
+    border-radius: 15px;
 
-    padding: 15px;
+    background: white;
+    color: var(--text);
+
+    box-shadow: 0 4px 0 #111;
+
+    cursor: pointer;
+
+    text-align: left;
 }
 
-/* WORD TILES */
+.relay-left {
+    display: flex;
+    align-items: center;
 
-.word {
-    min-height: 48px;
+    gap: 11px;
+
+    min-width: 0;
+}
+
+.relay-number {
+    width: 43px;
+    height: 39px;
 
     display: flex;
     align-items: center;
     justify-content: center;
 
-    padding: 11px 15px;
+    flex: 0 0 auto;
+
+    border: 2px solid #111;
+    border-radius: 9px;
+
+    background: var(--yellow);
+    color: #111;
+
+    font-size: 13px;
+    font-weight: 950;
+}
+
+.relay-name {
+    font-size: 21px;
+    font-weight: 950;
+
+    letter-spacing: .02em;
+}
+
+.relay-subtitle {
+    display: block;
+
+    margin-top: 1px;
+
+    font-size: 11px;
+    font-weight: 750;
+
+    color: var(--muted);
+}
+
+.relay-arrow {
+    font-size: 23px;
+    font-weight: 950;
+
+    color: var(--blue);
+}
+
+.relay-done {
+    font-size: 22px;
+    font-weight: 950;
+
+    color: var(--green);
+}
+
+
+/* ======================================================
+   HOME NAV
+====================================================== */
+
+.home-nav {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    gap: 9px;
+
+    margin-top: 14px;
+}
+
+.nav-button {
+    min-height: 50px;
+
+    border: 2px solid #111;
+    border-radius: 13px;
 
     background: white;
+    color: var(--text);
+
+    font-weight: 900;
+
+    cursor: pointer;
+}
+
+
+/* ======================================================
+   GAME CARD
+====================================================== */
+
+.game-card,
+.panel {
+    padding: 16px;
+
+    border: 3px solid #111;
+    border-radius: 21px;
+
+    background: white;
+}
+
+.game-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+}
+
+.back-button {
+    min-height: 44px;
+
+    padding: 0 13px;
 
     border: 2px solid #111;
     border-radius: 11px;
 
-    font-size: 16px;
+    background: white;
+    color: #111;
+
     font-weight: 900;
-    letter-spacing: .5px;
 
     cursor: pointer;
+}
+
+.relay-badge {
+    padding: 8px 10px;
+
+    border: 2px solid #111;
+    border-radius: 9px;
+
+    background: var(--yellow);
+    color: #111;
+
+    font-size: 13px;
+    font-weight: 950;
+
+    letter-spacing: .04em;
+}
+
+.relay-badge.daily {
+    background: #111;
+    color: var(--yellow);
+
+    border-color: var(--yellow);
+}
+
+.game-title {
+    margin:
+        15px
+        0
+        3px;
+
+    font-size: 28px;
+    font-weight: 950;
+}
+
+
+/* ======================================================
+   DAILY TIMER
+====================================================== */
+
+.timer-row {
+    display: none;
+
+    grid-template-columns:
+        1.2fr
+        .8fr;
+
+    gap: 8px;
+
+    margin-top: 11px;
+}
+
+.timer-row.show {
+    display: grid;
+}
+
+.metric {
+    padding: 10px;
+
+    border: 2px solid #111;
+    border-radius: 11px;
+
+    background: var(--soft);
+
+    text-align: center;
+}
+
+.metric-label {
+    font-size: 10px;
+    font-weight: 950;
+
+    letter-spacing: .1em;
+
+    text-transform: uppercase;
+
+    color: var(--muted);
+}
+
+.metric-value {
+    margin-top: 2px;
+
+    font-size: 24px;
+    font-weight: 950;
+
+    font-variant-numeric:
+        tabular-nums;
+}
+
+.penalty {
+    color: var(--red);
+}
+
+
+/* ======================================================
+   STATUS
+====================================================== */
+
+.status-row {
+    min-height: 32px;
+
+    margin-top: 8px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 8px;
+}
+
+.status {
+    min-width: 0;
+
+    font-size: 13px;
+    font-weight: 750;
+
+    color: var(--muted);
+}
+
+.score {
+    display: none;
+
+    flex: 0 0 auto;
+
+    padding: 5px 8px;
+
+    border: 2px solid var(--yellow);
+    border-radius: 999px;
+
+    background: #111;
+    color: white;
+
+    font-size: 11px;
+    font-weight: 950;
+
+    white-space: nowrap;
+}
+
+.score.show {
+    display: block;
+}
+
+
+/* ======================================================
+   START WORD MESSAGE
+====================================================== */
+
+.start-note {
+    margin-top: 9px;
+
+    padding: 11px 13px;
+
+    border-left:
+        6px solid var(--blue);
+
+    border-radius: 11px;
+
+    background: #e8f3ff;
+
+    color: #111;
+
+    font-size: 14px;
+    font-weight: 800;
+
+    line-height: 1.45;
+}
+
+.start-word {
+    color: var(--blue);
+
+    font-weight: 950;
+}
+
+
+/* ======================================================
+   WORD CHAIN
+====================================================== */
+
+.chain {
+    min-height: 125px;
+
+    margin-top: 11px;
+
+    padding: 11px;
+
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+
+    gap: 7px;
+
+    border: 3px solid #111;
+    border-radius: 15px;
+
+    background: #eef6ff;
+
+    touch-action: manipulation;
+}
+
+.word-tile {
+    position: relative;
+
+    min-height: 46px;
+
+    padding: 0 11px;
+
+    border: 2px solid #111;
+    border-radius: 10px;
+
+    background: white;
+    color: #111;
+
+    font-size: 14px;
+    font-weight: 950;
+
+    box-shadow:
+        0 3px 0 #111;
+
+    cursor: pointer;
+
     user-select: none;
 
-    box-shadow: 0 3px 0 #111;
+    touch-action: manipulation;
 
-    transition:
-        transform .1s,
-        background .15s,
-        color .15s,
-        border-color .15s;
+    -webkit-tap-highlight-color:
+        transparent;
 }
 
-.word:active {
-    transform: translateY(2px);
-    box-shadow: 0 1px 0 #111;
-}
+.word-tile.locked {
+    padding-right: 43px;
 
-/* LOCKED START */
-
-.word.locked {
     background: #111;
-    color: #ffd400;
+    color: var(--yellow);
 
     cursor: default;
 }
 
-.word.locked::after {
-    content: " START";
+.word-tile.locked::after {
+    content: "START";
+
+    position: absolute;
+
+    right: 7px;
+    top: 50%;
+
+    transform:
+        translateY(-50%);
 
     font-size: 8px;
-    margin-left: 6px;
+
+    letter-spacing: .08em;
 
     color: white;
-    opacity: .7;
+
+    opacity: .74;
 }
 
-/* SELECTED */
+.word-tile.selected {
+    background: var(--yellow);
 
-.word.selected {
-    background: #ffd400;
-    color: #111;
+    outline:
+        4px solid var(--blue);
 
-    outline: 4px solid #1479d4;
     outline-offset: 2px;
 }
 
-/* CHECK COLORS */
-
-.word.correct {
-    background: #1fab54;
+.word-tile.correct {
+    background: var(--green);
     color: white;
-    border-color: #0c6d30;
-    box-shadow: 0 3px 0 #0c6d30;
+
+    border-color: #0b7032;
+
+    box-shadow:
+        0 3px 0 #0b7032;
 }
 
-.word.incorrect {
-    background: #e43d3d;
+.word-tile.wrong {
+    background: var(--red);
     color: white;
-    border-color: #981d1d;
-    box-shadow: 0 3px 0 #981d1d;
+
+    border-color: #982121;
+
+    box-shadow:
+        0 3px 0 #982121;
 }
 
-.word.locked.correct {
-    background: #1fab54;
+.word-tile.locked.correct {
+    background: var(--green);
     color: white;
 }
-
-/* ARROWS */
 
 .arrow {
-    font-size: 22px;
-    font-weight: 900;
-    color: #1479d4;
+    font-size: 18px;
+    font-weight: 950;
+
+    color: var(--blue);
 }
 
-/* LEGEND */
+
+/* ======================================================
+   LEGEND
+====================================================== */
 
 .legend {
     display: none;
 
-    gap: 18px;
+    gap: 16px;
+
     flex-wrap: wrap;
 
-    margin-top: 16px;
+    margin-top: 12px;
 
-    font-size: 13px;
-    font-weight: 800;
+    font-size: 12px;
+    font-weight: 850;
 }
 
 .legend.show {
     display: flex;
 }
 
-.legend-item {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-}
+.legend-dot {
+    display: inline-block;
 
-.dot {
-    width: 13px;
-    height: 13px;
+    width: 11px;
+    height: 11px;
 
+    margin-right: 5px;
+
+    border: 1px solid #111;
     border-radius: 50%;
-    border: 2px solid #111;
+
+    vertical-align: -1px;
 }
 
-.green-dot {
-    background: #1fab54;
-}
 
-.red-dot {
-    background: #e43d3d;
-}
-
-/* CONTROLS */
+/* ======================================================
+   CONTROLS
+====================================================== */
 
 .controls {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
 
-    gap: 10px;
+    grid-template-columns:
+        1fr
+        1fr;
 
-    margin-top: 18px;
+    gap: 9px;
+
+    margin-top: 14px;
 }
 
-button {
-    min-height: 50px;
+.move-button,
+.check-button {
+    border:
+        3px solid #111;
 
-    padding: 0 20px;
-
-    border: 3px solid #111;
     border-radius: 12px;
-
-    background: #fff;
 
     color: #111;
 
-    font-size: 15px;
-    font-weight: 900;
+    font-size: 16px;
+    font-weight: 950;
+
+    box-shadow:
+        0 4px 0 #111;
 
     cursor: pointer;
 
-    box-shadow: 0 4px 0 #111;
+    touch-action: manipulation;
 
-    transition:
-        transform .08s,
-        background .12s;
+    -webkit-tap-highlight-color:
+        transparent;
+}
+
+.move-button {
+    min-height: 53px;
+
+    background:
+        var(--blue-light);
+}
+
+.check-button {
+    grid-column:
+        1 / -1;
+
+    min-height: 55px;
+
+    background:
+        var(--yellow);
 }
 
 button:active:not(:disabled) {
-    transform: translateY(3px);
-    box-shadow: 0 1px 0 #111;
+    transform:
+        translateY(2px);
+
+    box-shadow:
+        0 2px 0 #111;
 }
 
 button:disabled {
     opacity: .35;
+
     cursor: default;
 }
 
-.move-button {
-    background: #69b7ff;
-}
 
-#checkButton {
-    background: #ffd400;
-    color: #111;
-}
+/* ======================================================
+   RESULT
+====================================================== */
 
-/* COMPLETION */
-
-.complete {
+.result {
     display: none;
 
-    margin-top: 20px;
-    padding: 22px;
+    margin-top: 15px;
 
-    text-align: center;
+    padding: 19px;
+
+    border:
+        3px solid var(--yellow);
+
+    border-radius: 15px;
 
     background: #111;
     color: white;
 
-    border-radius: 16px;
-    border: 4px solid #ffd400;
+    text-align: center;
 }
 
-.complete.show {
+.result.show {
     display: block;
 }
 
-.complete-title {
-    font-size: 27px;
-    font-weight: 900;
+.result-title {
+    font-size: 22px;
+    font-weight: 950;
 
-    color: #ffd400;
+    color: var(--yellow);
 }
 
-.complete-subtitle {
+.final-time {
     margin-top: 7px;
-    opacity: .9;
+
+    font-size: 35px;
+    font-weight: 950;
+
+    font-variant-numeric:
+        tabular-nums;
 }
 
-.next-button {
+.result-detail {
+    margin-top: 4px;
+
+    font-size: 13px;
+    font-weight: 800;
+
+    color: #dddddd;
+}
+
+.result-buttons {
     display: none;
 
-    width: 100%;
+    grid-template-columns:
+        1fr
+        1fr;
 
-    margin-top: 16px;
+    gap: 9px;
 
-    background: #ffd400;
-    color: #111;
-
-    font-size: 17px;
+    margin-top: 11px;
 }
 
-.next-button.show {
+.result-buttons.show {
+    display: grid;
+}
+
+.result-button {
+    min-height: 51px;
+
+    border: 3px solid #111;
+    border-radius: 12px;
+
+    font-size: 16px;
+    font-weight: 950;
+
+    cursor: pointer;
+}
+
+.share-button {
+    background:
+        var(--blue-light);
+
+    color: #111;
+}
+
+.home-result-button {
+    background: white;
+
+    color: #111;
+}
+
+
+/* ======================================================
+   SHARE PREVIEW
+====================================================== */
+
+.share-preview {
+    display: none;
+
+    margin-top: 11px;
+
+    padding: 13px;
+
+    border:
+        2px dashed var(--border);
+
+    border-radius: 11px;
+
+    background: var(--soft);
+
+    white-space: pre-line;
+
+    font-family: monospace;
+
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.share-preview.show {
     display: block;
 }
 
-/* RULES */
 
-.rules {
-    margin-top: 18px;
+/* ======================================================
+   INFO / STATS
+====================================================== */
 
-    padding: 20px;
+.panel h2 {
+    margin:
+        13px
+        0
+        10px;
 
-    background: #fff;
-
-    border: 4px solid #111;
-    border-radius: 22px;
-
-    box-shadow: 0 8px 0 rgba(0,0,0,.18);
+    font-size: 28px;
+    font-weight: 950;
 }
 
-.rules h2 {
-    margin: 0 0 8px;
+.panel p {
+    font-size: 14px;
+    line-height: 1.55;
 
-    font-size: 19px;
+    color: var(--muted);
 }
 
-.rules p {
-    margin: 0;
+.how-list {
+    display: grid;
 
-    color: #555;
+    gap: 10px;
 
-    line-height: 1.6;
+    margin-top: 13px;
 }
 
-/* MOBILE */
+.how-item {
+    display: flex;
 
-@media (max-width: 520px) {
+    gap: 11px;
 
-    body {
-        padding: 18px 10px 35px;
+    padding: 11px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 12px;
+
+    background: var(--soft);
+}
+
+.how-number {
+    width: 29px;
+    height: 29px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex: 0 0 auto;
+
+    border:
+        2px solid #111;
+
+    border-radius: 50%;
+
+    background: var(--yellow);
+    color: #111;
+
+    font-weight: 950;
+}
+
+.stats-grid {
+    display: grid;
+
+    grid-template-columns:
+        1fr
+        1fr;
+
+    gap: 9px;
+
+    margin-top: 12px;
+}
+
+.stat {
+    padding: 15px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 13px;
+
+    background: var(--soft);
+
+    text-align: center;
+}
+
+.stat-value {
+    font-size: 27px;
+    font-weight: 950;
+}
+
+.stat-label {
+    font-size: 10px;
+    font-weight: 900;
+
+    letter-spacing: .09em;
+
+    text-transform: uppercase;
+
+    color: var(--muted);
+}
+
+.best-box {
+    margin-top: 10px;
+
+    padding: 14px;
+
+    border: 2px solid #111;
+    border-radius: 13px;
+
+    background: var(--yellow);
+    color: #111;
+
+    text-align: center;
+}
+
+.best-time {
+    font-size: 28px;
+    font-weight: 950;
+}
+
+
+/* ======================================================
+   MOBILE
+====================================================== */
+
+@media (max-width: 380px) {
+
+    .brand {
+        font-size: 33px;
     }
 
-    .header-content {
-        padding: 18px;
+    .word-tile {
+        padding:
+            0
+            9px;
+
+        font-size: 13px;
     }
 
-    h1 {
-        font-size: 35px;
-    }
-
-    .card {
-        padding: 13px;
-    }
-
-    .topbar {
-        align-items: flex-start;
+    .word-tile.locked {
+        padding-right: 41px;
     }
 
     .chain {
-        gap: 7px;
-        padding: 11px;
+        gap: 6px;
+        padding: 9px;
     }
 
-    .word {
-        min-height: 44px;
-
-        padding: 9px 11px;
-
-        font-size: 14px;
+    .relay-name {
+        font-size: 19px;
     }
 
-    .arrow {
-        font-size: 17px;
-    }
+}
 
-    .controls {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-    }
 
-    #checkButton {
-        grid-column: 1 / -1;
-    }
+/* ======================================================
+   REDUCED MOTION
+====================================================== */
+
+@media (prefers-reduced-motion: reduce) {
 
     button {
-        width: 100%;
-        padding: 0 10px;
+        transition: none;
     }
 
 }
@@ -487,26 +1158,32 @@ button:disabled {
 
 <body>
 
-<div class="game">
+<div class="app">
 
-    <div class="header">
 
-        <div class="yellow-bar"></div>
+<!-- ====================================================
+     HOME
+===================================================== -->
 
-        <div class="header-content">
+<section
+    id="homeScreen"
+    class="screen active"
+>
 
-            <div class="kicker">
-                Solo Word Puzzle
+    <div class="hero">
+
+        <div class="hero-stripe"></div>
+
+        <div class="hero-body">
+
+            <div class="brand">
+                WORD RELAY
             </div>
 
-            <h1>
-                WORD RELAY
-            </h1>
-
-            <div class="subtitle">
-                Build one continuous chain.
-                Every two neighboring words must form
-                a familiar phrase or compound word.
+            <div class="tag">
+                Build the chain.
+                Beat the clock.
+                Challenge your friends.
             </div>
 
         </div>
@@ -514,56 +1191,230 @@ button:disabled {
     </div>
 
 
-    <div class="card">
+    <button
+        id="resumeButton"
+        class="resume-button"
+        type="button"
+    >
+        ↩ Resume Current Relay
+    </button>
 
-        <div class="topbar">
+
+    <div class="daily-card">
+
+        <div class="daily-eyebrow">
+            ☀️ BETA DAILY · #001
+        </div>
+
+        <div class="daily-title">
+            Daily Relay
+        </div>
+
+        <div class="daily-details">
+
+            Same Relay for everyone · Timed · +5 sec per Check
+
+            <br>
+
+            New challenge every day at
+            <strong>9:00 AM ET</strong>
+
+        </div>
+
+        <div
+            id="dailyStatus"
+            class="daily-status"
+        >
+            Today's Relay: Not played
+        </div>
+
+        <button
+            id="dailyPlay"
+            class="daily-play"
+            type="button"
+        >
+            PLAY TODAY'S RELAY →
+        </button>
+
+    </div>
+
+
+    <div class="section-title">
+        Relay Library · Untimed
+    </div>
+
+
+    <div
+        id="relayList"
+        class="relay-list"
+    ></div>
+
+
+    <div class="home-nav">
+
+        <button
+            id="howButton"
+            class="nav-button"
+            type="button"
+        >
+            How to Play
+        </button>
+
+        <button
+            id="statsButton"
+            class="nav-button"
+            type="button"
+        >
+            Stats
+        </button>
+
+    </div>
+
+</section>
+
+
+
+<!-- ====================================================
+     GAME
+===================================================== -->
+
+<section
+    id="gameScreen"
+    class="screen"
+>
+
+    <div class="game-card">
+
+
+        <div class="game-top">
+
+            <button
+                id="gameBackButton"
+                class="back-button"
+                type="button"
+            >
+                ← Home
+            </button>
+
 
             <div
-                class="puzzle-number"
-                id="puzzleNumber">
-                Puzzle 1 of 2
+                id="relayBadge"
+                class="relay-badge"
+            >
+                RELAY 01
             </div>
 
+        </div>
+
+
+        <div
+            id="gameTitle"
+            class="game-title"
+        >
+            Build the Relay
+        </div>
+
+
+        <div
+            id="timerRow"
+            class="timer-row"
+        >
+
+            <div class="metric">
+
+                <div class="metric-label">
+                    Time
+                </div>
+
+                <div
+                    id="timer"
+                    class="metric-value"
+                >
+                    0:00.0
+                </div>
+
+            </div>
+
+
+            <div class="metric">
+
+                <div class="metric-label">
+                    Check Penalty
+                </div>
+
+                <div
+                    id="penalty"
+                    class="metric-value penalty"
+                >
+                    +0 sec
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="status-row">
+
             <div
+                id="status"
                 class="status"
-                id="status">
+                aria-live="polite"
+            >
                 Select a word to begin.
             </div>
 
-        </div>
 
-
-        <div
-            class="start-message"
-            id="startMessage">
-        </div>
-
-
-        <div
-            class="chain"
-            id="chain">
-        </div>
-
-
-        <div
-            class="legend"
-            id="legend">
-
-            <div class="legend-item">
-
-                <span class="dot green-dot"></span>
-
-                Correct position
-
+            <div
+                id="score"
+                class="score"
+            >
+                0 / 11
             </div>
 
-            <div class="legend-item">
+        </div>
 
-                <span class="dot red-dot"></span>
+
+        <div
+            id="startNote"
+            class="start-note"
+        ></div>
+
+
+        <div
+            id="wordChain"
+            class="chain"
+            aria-label="Word Relay tiles"
+        ></div>
+
+
+        <div
+            id="legend"
+            class="legend"
+        >
+
+            <span>
+
+                <span
+                    class="legend-dot"
+                    style="background:#1fa957"
+                ></span>
+
+                Correct
+
+            </span>
+
+
+            <span>
+
+                <span
+                    class="legend-dot"
+                    style="background:#df4141"
+                ></span>
 
                 Wrong position
 
-            </div>
+            </span>
 
         </div>
 
@@ -571,103 +1422,387 @@ button:disabled {
         <div class="controls">
 
             <button
-                class="move-button"
                 id="moveLeft"
-                disabled>
+                class="move-button"
+                type="button"
+                disabled
+            >
                 ← Move
             </button>
 
+
             <button
-                class="move-button"
                 id="moveRight"
-                disabled>
+                class="move-button"
+                type="button"
+                disabled
+            >
                 Move →
             </button>
 
+
             <button
-                id="checkButton">
-                ✓ Check
+                id="checkButton"
+                class="check-button"
+                type="button"
+            >
+                ✓ Check Progress
             </button>
 
         </div>
 
 
         <div
-            class="complete"
-            id="complete">
+            id="result"
+            class="result"
+        >
 
-            <div
-                class="complete-title"
-                id="completeTitle">
-                🎉 SOLVED!
+            <div class="result-title">
+                🔗 RELAY COMPLETE
             </div>
 
+
             <div
-                class="complete-subtitle"
-                id="completeSubtitle">
+                id="finalTime"
+                class="final-time"
+            ></div>
+
+
+            <div
+                id="resultDetail"
+                class="result-detail"
+            ></div>
+
+        </div>
+
+
+        <div
+            id="resultButtons"
+            class="result-buttons"
+        >
+
+            <button
+                id="shareButton"
+                class="result-button share-button"
+                type="button"
+            >
+                Share Result
+            </button>
+
+
+            <button
+                id="resultHomeButton"
+                class="result-button home-result-button"
+                type="button"
+            >
+                Home
+            </button>
+
+        </div>
+
+
+        <div
+            id="sharePreview"
+            class="share-preview"
+        ></div>
+
+
+    </div>
+
+</section>
+
+
+
+<!-- ====================================================
+     HOW TO PLAY
+===================================================== -->
+
+<section
+    id="howScreen"
+    class="screen"
+>
+
+    <div class="panel">
+
+        <button
+            id="howBackButton"
+            class="back-button"
+            type="button"
+        >
+            ← Home
+        </button>
+
+
+        <h2>
+            How to Play
+        </h2>
+
+
+        <div class="how-list">
+
+
+            <div class="how-item">
+
+                <div class="how-number">
+                    1
+                </div>
+
+                <div>
+
+                    <strong>
+                        Start with the locked word.
+                    </strong>
+
+                    <br>
+
+                    It never moves.
+
+                </div>
+
+            </div>
+
+
+            <div class="how-item">
+
+                <div class="how-number">
+                    2
+                </div>
+
+                <div>
+
+                    <strong>
+                        Build one continuous chain.
+                    </strong>
+
+                    <br>
+
+                    Every neighboring pair forms
+                    a familiar phrase or compound word.
+
+                </div>
+
+            </div>
+
+
+            <div class="how-item">
+
+                <div class="how-number">
+                    3
+                </div>
+
+                <div>
+
+                    <strong>
+                        Tap and move.
+                    </strong>
+
+                    <br>
+
+                    Select a word, then move it
+                    left or right.
+
+                </div>
+
+            </div>
+
+
+            <div class="how-item">
+
+                <div class="how-number">
+                    4
+                </div>
+
+                <div>
+
+                    <strong>
+                        Check your work.
+                    </strong>
+
+                    <br>
+
+                    Green words are correct.
+                    Red words are misplaced.
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <p>
+
+            <strong>Daily Relay</strong>
+            is timed.
+
+            Every Check adds five seconds
+            to your final score.
+
+            Library Relays are completely untimed.
+
+        </p>
+
+    </div>
+
+</section>
+
+
+
+<!-- ====================================================
+     STATS
+===================================================== -->
+
+<section
+    id="statsScreen"
+    class="screen"
+>
+
+    <div class="panel">
+
+        <button
+            id="statsBackButton"
+            class="back-button"
+            type="button"
+        >
+            ← Home
+        </button>
+
+
+        <h2>
+            Your Stats
+        </h2>
+
+
+        <div class="stats-grid">
+
+
+            <div class="stat">
+
+                <div
+                    id="librarySolvedStat"
+                    class="stat-value"
+                >
+                    0
+                </div>
+
+                <div class="stat-label">
+                    Library Solved
+                </div>
+
+            </div>
+
+
+            <div class="stat">
+
+                <div
+                    id="totalChecksStat"
+                    class="stat-value"
+                >
+                    0
+                </div>
+
+                <div class="stat-label">
+                    Total Checks
+                </div>
+
+            </div>
+
+
+            <div class="stat">
+
+                <div
+                    id="dailySolvedStat"
+                    class="stat-value"
+                >
+                    0
+                </div>
+
+                <div class="stat-label">
+                    Daily Solved
+                </div>
+
+            </div>
+
+
+            <div class="stat">
+
+                <div
+                    id="oneCheckStat"
+                    class="stat-value"
+                >
+                    0
+                </div>
+
+                <div class="stat-label">
+                    One-Check Solves
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <div class="best-box">
+
+            <div class="stat-label"
+                 style="color:#222">
+
+                Daily #001 Best
+
+            </div>
+
+
+            <div
+                id="bestTime"
+                class="best-time"
+            >
+                —
             </div>
 
         </div>
 
 
-        <button
-            class="next-button"
-            id="nextButton">
-            Next Puzzle →
-        </button>
-
-    </div>
-
-
-    <div class="rules">
-
-        <h2>
-            How to play
-        </h2>
-
         <p>
-            The first word is already given to you.
-            Tap another word to select it, then use
-            the Move buttons to change its position.
-            Press Check at any time.
-            Green words are in the correct position.
-            Red words need to move.
+
+            Beta note:
+            stats are currently kept
+            for this browser session.
+
         </p>
 
     </div>
+
+</section>
+
 
 </div>
 
 
 <script>
 
-/*
-================================================
-PUZZLES
-================================================
-*/
 
-const puzzles = [
+/* ======================================================
+   PUZZLES
+====================================================== */
 
-    /*
-        PUZZLE 1
 
-        COAT CHECK
-        CHECK BOX
-        BOX OFFICE
-        OFFICE SPACE
-        SPACE BAR
-        BAR CODE
-        CODE WORD
-        WORD PLAY
-        PLAY GROUND
-        GROUND BEEF
-    */
+const library = [
+
+
+    /* ==================================================
+       RELAY 01
+       COAT → CHECK → BOX → OFFICE → SPACE →
+       BAR → CODE → WORD → PLAY → GROUND → BEEF
+    ================================================== */
 
     {
-        start: "COAT",
+
+        name: "COAT",
 
         solution: [
+
             "COAT",
             "CHECK",
             "BOX",
@@ -679,29 +1814,25 @@ const puzzles = [
             "PLAY",
             "GROUND",
             "BEEF"
+
         ]
+
     },
 
 
-    /*
-        PUZZLE 2
-
-        RAIN BOW
-        BOW TIE
-        TIE BREAKER
-        BREAKER BOX
-        BOX SPRING
-        SPRING BREAK
-        BREAK ROOM
-        ROOM SERVICE
-        SERVICE DOG
-        DOG HOUSE
-    */
+    /* ==================================================
+       RELAY 02
+       RAIN → BOW → TIE → BREAKER → BOX →
+       SPRING → BREAK → ROOM → SERVICE →
+       DOG → HOUSE
+    ================================================== */
 
     {
-        start: "RAIN",
+
+        name: "RAIN",
 
         solution: [
+
             "RAIN",
             "BOW",
             "TIE",
@@ -713,19 +1844,363 @@ const puzzles = [
             "SERVICE",
             "DOG",
             "HOUSE"
+
         ]
+
+    },
+
+
+    /* ==================================================
+       RELAY 03
+       FIRE → TRUCK → STOP → WATCH → DOG →
+       HOUSE → PARTY → LINE → DANCE →
+       FLOOR → PLAN
+    ================================================== */
+
+    {
+
+        name: "FIRE",
+
+        solution: [
+
+            "FIRE",
+            "TRUCK",
+            "STOP",
+            "WATCH",
+            "DOG",
+            "HOUSE",
+            "PARTY",
+            "LINE",
+            "DANCE",
+            "FLOOR",
+            "PLAN"
+
+        ]
+
+    },
+
+
+    /* ==================================================
+       RELAY 04
+       SUN → FLOWER → BED → ROCK → GARDEN →
+       PARTY → ANIMAL → KINGDOM → COME →
+       BACK → YARD
+    ================================================== */
+
+    {
+
+        name: "SUN",
+
+        solution: [
+
+            "SUN",
+            "FLOWER",
+            "BED",
+            "ROCK",
+            "GARDEN",
+            "PARTY",
+            "ANIMAL",
+            "KINGDOM",
+            "COME",
+            "BACK",
+            "YARD"
+
+        ]
+
+    },
+
+
+    /* ==================================================
+       RELAY 05
+       TREE → TOP → HAT → TRICK → QUESTION →
+       MARK → DOWN → TOWN → HALL →
+       PASS → WORD
+    ================================================== */
+
+    {
+
+        name: "TREE",
+
+        solution: [
+
+            "TREE",
+            "TOP",
+            "HAT",
+            "TRICK",
+            "QUESTION",
+            "MARK",
+            "DOWN",
+            "TOWN",
+            "HALL",
+            "PASS",
+            "WORD"
+
+        ]
+
     }
 
 ];
 
 
-/*
-================================================
-GAME STATE
-================================================
-*/
 
-let currentPuzzle = 0;
+/* ======================================================
+   DAILY RELAY #001
+====================================================== */
+
+
+const dailyRelay = {
+
+    name: "SCHOOL",
+
+    number: 1,
+
+
+    /*
+        SCHOOL → BUS → STOP → SIGN →
+        LANGUAGE → ARTS → CENTER →
+        FIELD → GOAL → LINE → DRIVE
+    */
+
+    solution: [
+
+        "SCHOOL",
+        "BUS",
+        "STOP",
+        "SIGN",
+        "LANGUAGE",
+        "ARTS",
+        "CENTER",
+        "FIELD",
+        "GOAL",
+        "LINE",
+        "DRIVE"
+
+    ],
+
+
+    /*
+        IMPORTANT:
+
+        Everyone gets the SAME scramble.
+
+        This makes Daily Relay times
+        comparable between players.
+    */
+
+    scramble: [
+
+        "SCHOOL",
+        "FIELD",
+        "BUS",
+        "LANGUAGE",
+        "DRIVE",
+        "STOP",
+        "CENTER",
+        "SIGN",
+        "GOAL",
+        "ARTS",
+        "LINE"
+
+    ]
+
+};
+
+
+
+/* ======================================================
+   ELEMENTS
+====================================================== */
+
+
+const homeScreen =
+    document.getElementById(
+        "homeScreen"
+    );
+
+
+const gameScreen =
+    document.getElementById(
+        "gameScreen"
+    );
+
+
+const howScreen =
+    document.getElementById(
+        "howScreen"
+    );
+
+
+const statsScreen =
+    document.getElementById(
+        "statsScreen"
+    );
+
+
+const allScreens = [
+
+    homeScreen,
+    gameScreen,
+    howScreen,
+    statsScreen
+
+];
+
+
+const resumeButton =
+    document.getElementById(
+        "resumeButton"
+    );
+
+
+const dailyStatus =
+    document.getElementById(
+        "dailyStatus"
+    );
+
+
+const dailyPlay =
+    document.getElementById(
+        "dailyPlay"
+    );
+
+
+const relayList =
+    document.getElementById(
+        "relayList"
+    );
+
+
+const relayBadge =
+    document.getElementById(
+        "relayBadge"
+    );
+
+
+const gameTitle =
+    document.getElementById(
+        "gameTitle"
+    );
+
+
+const timerRow =
+    document.getElementById(
+        "timerRow"
+    );
+
+
+const timerElement =
+    document.getElementById(
+        "timer"
+    );
+
+
+const penaltyElement =
+    document.getElementById(
+        "penalty"
+    );
+
+
+const statusElement =
+    document.getElementById(
+        "status"
+    );
+
+
+const scoreElement =
+    document.getElementById(
+        "score"
+    );
+
+
+const startNote =
+    document.getElementById(
+        "startNote"
+    );
+
+
+const wordChain =
+    document.getElementById(
+        "wordChain"
+    );
+
+
+const legend =
+    document.getElementById(
+        "legend"
+    );
+
+
+const moveLeft =
+    document.getElementById(
+        "moveLeft"
+    );
+
+
+const moveRight =
+    document.getElementById(
+        "moveRight"
+    );
+
+
+const checkButton =
+    document.getElementById(
+        "checkButton"
+    );
+
+
+const result =
+    document.getElementById(
+        "result"
+    );
+
+
+const finalTime =
+    document.getElementById(
+        "finalTime"
+    );
+
+
+const resultDetail =
+    document.getElementById(
+        "resultDetail"
+    );
+
+
+const resultButtons =
+    document.getElementById(
+        "resultButtons"
+    );
+
+
+const shareButton =
+    document.getElementById(
+        "shareButton"
+    );
+
+
+const resultHomeButton =
+    document.getElementById(
+        "resultHomeButton"
+    );
+
+
+const sharePreview =
+    document.getElementById(
+        "sharePreview"
+    );
+
+
+
+/* ======================================================
+   GAME STATE
+====================================================== */
+
+
+let currentPuzzle = null;
+
+let currentIndex = -1;
+
+let dailyMode = false;
 
 let order = [];
 
@@ -733,230 +2208,1138 @@ let selectedIndex = -1;
 
 let checked = false;
 
+let checks = 0;
 
-/*
-================================================
-ELEMENTS
-================================================
-*/
-
-const chain =
-    document.getElementById("chain");
-
-const status =
-    document.getElementById("status");
-
-const puzzleNumber =
-    document.getElementById("puzzleNumber");
-
-const startMessage =
-    document.getElementById("startMessage");
-
-const moveLeft =
-    document.getElementById("moveLeft");
-
-const moveRight =
-    document.getElementById("moveRight");
-
-const checkButton =
-    document.getElementById("checkButton");
-
-const legend =
-    document.getElementById("legend");
-
-const complete =
-    document.getElementById("complete");
-
-const completeTitle =
-    document.getElementById("completeTitle");
-
-const completeSubtitle =
-    document.getElementById("completeSubtitle");
-
-const nextButton =
-    document.getElementById("nextButton");
+let completed = false;
 
 
-/*
-================================================
-SHUFFLE
-================================================
-*/
+/* Timer */
 
-function shufflePuzzle() {
+let timerStart = null;
 
-    const solution =
-        puzzles[currentPuzzle].solution;
+let elapsedMilliseconds = 0;
 
-    const startWord =
-        solution[0];
+let timerInterval = null;
+
+
+/* Resume */
+
+let activeGame = null;
+
+
+/* Progress */
+
+const solvedLibrary =
+    new Set();
+
+
+let dailySolved = false;
+
+let dailyBest = null;
+
+
+/* Stats */
+
+const stats = {
+
+    librarySolved: 0,
+
+    totalChecks: 0,
+
+    dailySolved: 0,
+
+    oneCheck: 0
+
+};
+
+
+
+/* ======================================================
+   SCREEN NAVIGATION
+====================================================== */
+
+
+function showScreen(screen) {
+
+    allScreens.forEach(
+        function (item) {
+
+            item.classList.remove(
+                "active"
+            );
+
+        }
+    );
+
+
+    screen.classList.add(
+        "active"
+    );
+
+
+    if (
+        screen === homeScreen
+    ) {
+
+        renderHome();
+
+    }
+
+
+    if (
+        screen === statsScreen
+    ) {
+
+        renderStats();
+
+    }
+
+}
+
+
+
+/* ======================================================
+   SHUFFLE
+====================================================== */
+
+
+function shuffleArray(array) {
+
+    const copy =
+        [...array];
+
+
+    for (
+        let i =
+            copy.length - 1;
+
+        i > 0;
+
+        i--
+    ) {
+
+        const randomIndex =
+            Math.floor(
+                Math.random() *
+                (i + 1)
+            );
+
+
+        [
+            copy[i],
+            copy[randomIndex]
+
+        ] = [
+
+            copy[randomIndex],
+            copy[i]
+
+        ];
+
+    }
+
+
+    return copy;
+
+}
+
+
+
+/* ======================================================
+   LIBRARY SCRAMBLE
+====================================================== */
+
+
+function createLibraryScramble(
+    solution
+) {
 
     const remaining =
         solution.slice(1);
 
+
     let shuffled;
 
-
-    /*
-        Shuffle until the remaining words
-        are NOT accidentally already solved.
-    */
 
     do {
 
         shuffled =
-            [...remaining];
-
-
-        for (
-            let i = shuffled.length - 1;
-            i > 0;
-            i--
-        ) {
-
-            const randomIndex =
-                Math.floor(
-                    Math.random() * (i + 1)
-                );
-
-
-            [
-                shuffled[i],
-                shuffled[randomIndex]
-            ] = [
-                shuffled[randomIndex],
-                shuffled[i]
-            ];
-
-        }
+            shuffleArray(
+                remaining
+            );
 
     }
 
     while (
 
         shuffled.every(
-            (word, index) =>
-                word === remaining[index]
+            function (
+                word,
+                index
+            ) {
+
+                return (
+                    word ===
+                    remaining[index]
+                );
+
+            }
         )
 
     );
 
 
-    order = [
-        startWord,
+    return [
+
+        solution[0],
+
         ...shuffled
+
     ];
 
 }
 
 
-/*
-================================================
-CORRECT ANSWERS
-================================================
-*/
+
+/* ======================================================
+   TIME FORMAT
+====================================================== */
+
+
+function formatTime(
+    milliseconds
+) {
+
+    const totalSeconds =
+        Math.max(
+            0,
+            milliseconds
+        ) / 1000;
+
+
+    const minutes =
+        Math.floor(
+            totalSeconds / 60
+        );
+
+
+    const seconds =
+        Math.floor(
+            totalSeconds % 60
+        );
+
+
+    const tenths =
+        Math.floor(
+            (totalSeconds % 1) *
+            10
+        );
+
+
+    return (
+        minutes +
+        ":" +
+        String(seconds)
+            .padStart(
+                2,
+                "0"
+            ) +
+        "." +
+        tenths
+    );
+
+}
+
+
+
+/* ======================================================
+   TIMER
+====================================================== */
+
+
+function startTimer() {
+
+    if (
+        !dailyMode ||
+        timerStart !== null ||
+        completed
+    ) {
+
+        return;
+
+    }
+
+
+    timerStart =
+        Date.now();
+
+
+    timerInterval =
+        setInterval(
+            function () {
+
+                elapsedMilliseconds =
+                    Date.now() -
+                    timerStart;
+
+
+                timerElement.textContent =
+                    formatTime(
+                        elapsedMilliseconds
+                    );
+
+
+                saveActiveGame();
+
+            },
+
+            100
+        );
+
+}
+
+
+
+function stopTimer() {
+
+    if (
+        timerInterval
+    ) {
+
+        clearInterval(
+            timerInterval
+        );
+
+
+        timerInterval =
+            null;
+
+    }
+
+}
+
+
+
+/* ======================================================
+   CORRECT COUNT
+====================================================== */
+
 
 function correctCount() {
 
-    const solution =
-        puzzles[currentPuzzle].solution;
+    if (
+        !currentPuzzle
+    ) {
+
+        return 0;
+
+    }
 
 
-    let total = 0;
-
-
-    order.forEach(
-        (word, index) => {
+    return order.reduce(
+        function (
+            total,
+            word,
+            index
+        ) {
 
             if (
-                word === solution[index]
+                word ===
+                currentPuzzle
+                    .solution[index]
             ) {
 
-                total++;
+                return total + 1;
 
             }
 
-        }
+
+            return total;
+
+        },
+
+        0
     );
 
-
-    return total;
-
 }
+
 
 
 function isSolved() {
 
     return (
-        correctCount() ===
-        puzzles[currentPuzzle].solution.length
+        order.length === 11 &&
+        correctCount() === 11
     );
 
 }
 
 
-/*
-================================================
-CLEAR CHECK COLORS
-================================================
-*/
 
-function clearCheck() {
+/* ======================================================
+   HOME
+====================================================== */
 
-    checked = false;
 
-    legend.classList.remove("show");
+function renderHome() {
 
-    complete.classList.remove("show");
 
-    nextButton.classList.remove("show");
+    /*
+        Resume
+    */
+
+    const canResume =
+
+        activeGame &&
+        !activeGame.completed;
+
+
+    resumeButton.classList.toggle(
+        "show",
+        Boolean(canResume)
+    );
+
+
+    /*
+        Daily status
+    */
+
+    if (
+        dailySolved
+    ) {
+
+        dailyStatus.textContent =
+            "✓ Daily #001 completed · Best " +
+            formatTime(
+                dailyBest
+            );
+
+    }
+
+    else if (
+
+        activeGame &&
+        activeGame.dailyMode &&
+        !activeGame.completed
+
+    ) {
+
+        dailyStatus.textContent =
+            "Daily #001: In progress";
+
+    }
+
+    else {
+
+        dailyStatus.textContent =
+            "Today's Relay: Not played";
+
+    }
+
+
+    /*
+        Library
+    */
+
+    relayList.innerHTML = "";
+
+
+    library.forEach(
+        function (
+            puzzle,
+            index
+        ) {
+
+            const button =
+                document.createElement(
+                    "button"
+                );
+
+
+            button.type =
+                "button";
+
+
+            button.className =
+                "relay";
+
+
+            const finished =
+                solvedLibrary.has(
+                    index
+                );
+
+
+            button.innerHTML =
+
+                '<span class="relay-left">' +
+
+                    '<span class="relay-number">' +
+
+                        String(index + 1)
+                            .padStart(
+                                2,
+                                "0"
+                            ) +
+
+                    '</span>' +
+
+                    '<span>' +
+
+                        '<span class="relay-name">' +
+                            puzzle.name +
+                        '</span>' +
+
+                        '<span class="relay-subtitle">' +
+                            'Untimed Relay' +
+                        '</span>' +
+
+                    '</span>' +
+
+                '</span>' +
+
+                '<span class="' +
+                    (
+                        finished
+                        ? "relay-done"
+                        : "relay-arrow"
+                    ) +
+                '">' +
+
+                    (
+                        finished
+                        ? "✓"
+                        : "›"
+                    ) +
+
+                '</span>';
+
+
+            button.addEventListener(
+                "click",
+                function () {
+
+                    openLibraryPuzzle(
+                        index
+                    );
+
+                }
+            );
+
+
+            relayList.appendChild(
+                button
+            );
+
+        }
+    );
 
 }
 
 
-/*
-================================================
-RENDER
-================================================
-*/
 
-function render() {
+/* ======================================================
+   GAME SETUP
+====================================================== */
+
+
+function setupGame({
+
+    puzzle,
+    isDaily,
+    puzzleIndex,
+    startingOrder
+
+}) {
+
+    stopTimer();
+
+
+    currentPuzzle =
+        puzzle;
+
+
+    dailyMode =
+        isDaily;
+
+
+    currentIndex =
+        puzzleIndex;
+
+
+    order =
+        [...startingOrder];
+
+
+    selectedIndex =
+        -1;
+
+
+    checked =
+        false;
+
+
+    checks =
+        0;
+
+
+    completed =
+        false;
+
+
+    timerStart =
+        null;
+
+
+    elapsedMilliseconds =
+        0;
+
+
+    timerElement.textContent =
+        "0:00.0";
+
+
+    penaltyElement.textContent =
+        "+0 sec";
+
+
+    legend.classList.remove(
+        "show"
+    );
+
+
+    scoreElement.classList.remove(
+        "show"
+    );
+
+
+    result.classList.remove(
+        "show"
+    );
+
+
+    resultButtons.classList.remove(
+        "show"
+    );
+
+
+    sharePreview.classList.remove(
+        "show"
+    );
+
+
+    timerRow.classList.toggle(
+        "show",
+        dailyMode
+    );
+
+
+    relayBadge.classList.toggle(
+        "daily",
+        dailyMode
+    );
+
+
+    if (
+        dailyMode
+    ) {
+
+        relayBadge.textContent =
+            "DAILY #001";
+
+
+        gameTitle.textContent =
+            "Daily Relay";
+
+
+        statusElement.textContent =
+            "Timer starts on your first move.";
+
+    }
+
+    else {
+
+        relayBadge.textContent =
+            "RELAY " +
+            String(
+                currentIndex + 1
+            )
+            .padStart(
+                2,
+                "0"
+            );
+
+
+        gameTitle.textContent =
+            "Build the Relay";
+
+
+        statusElement.textContent =
+            "Select a word to begin.";
+
+    }
+
+
+    activeGame = {
+
+        dailyMode:
+            dailyMode,
+
+        index:
+            currentIndex,
+
+        order:
+            [...order],
+
+        checks:
+            checks,
+
+        completed:
+            false,
+
+        timerStart:
+            null,
+
+        elapsedMilliseconds:
+            0
+
+    };
+
+
+    showScreen(
+        gameScreen
+    );
+
+
+    renderGame();
+
+}
+
+
+
+/* ======================================================
+   OPEN DAILY
+====================================================== */
+
+
+function openDailyRelay() {
+
+
+    /*
+        If the Daily Relay is already
+        in progress, resume it.
+    */
+
+    if (
+
+        activeGame &&
+        activeGame.dailyMode &&
+        !activeGame.completed
+
+    ) {
+
+        resumeGame();
+
+        return;
+
+    }
+
+
+    setupGame({
+
+        puzzle:
+            dailyRelay,
+
+        isDaily:
+            true,
+
+        puzzleIndex:
+            -1,
+
+        startingOrder:
+            dailyRelay.scramble
+
+    });
+
+}
+
+
+
+/* ======================================================
+   OPEN LIBRARY
+====================================================== */
+
+
+function openLibraryPuzzle(
+    index
+) {
 
     const puzzle =
-        puzzles[currentPuzzle];
-
-    const solution =
-        puzzle.solution;
-
-    const solved =
-        isSolved();
+        library[index];
 
 
-    puzzleNumber.textContent =
-        "Puzzle " +
-        (currentPuzzle + 1) +
-        " of " +
-        puzzles.length;
+    setupGame({
+
+        puzzle:
+            puzzle,
+
+        isDaily:
+            false,
+
+        puzzleIndex:
+            index,
+
+        startingOrder:
+            createLibraryScramble(
+                puzzle.solution
+            )
+
+    });
+
+}
 
 
-    startMessage.innerHTML =
-        "<strong>" +
-        puzzle.start +
-        "</strong> is locked in as your starting word.";
+
+/* ======================================================
+   SAVE ACTIVE GAME
+====================================================== */
 
 
-    chain.innerHTML = "";
+function saveActiveGame() {
+
+    if (
+        !currentPuzzle
+    ) {
+
+        return;
+
+    }
+
+
+    activeGame = {
+
+        dailyMode:
+            dailyMode,
+
+        index:
+            currentIndex,
+
+        order:
+            [...order],
+
+        checks:
+            checks,
+
+        completed:
+            completed,
+
+        timerStart:
+            timerStart,
+
+        elapsedMilliseconds:
+            elapsedMilliseconds
+
+    };
+
+}
+
+
+
+/* ======================================================
+   RESUME GAME
+====================================================== */
+
+
+function resumeGame() {
+
+    if (
+        !activeGame
+    ) {
+
+        return;
+
+    }
+
+
+    stopTimer();
+
+
+    dailyMode =
+        activeGame.dailyMode;
+
+
+    currentIndex =
+        activeGame.index;
+
+
+    currentPuzzle =
+        dailyMode
+
+        ? dailyRelay
+
+        : library[
+            currentIndex
+        ];
+
+
+    order =
+        [...activeGame.order];
+
+
+    checks =
+        activeGame.checks;
+
+
+    completed =
+        activeGame.completed;
+
+
+    selectedIndex =
+        -1;
+
+
+    checked =
+        false;
+
+
+    timerStart =
+        activeGame.timerStart;
+
+
+    elapsedMilliseconds =
+        activeGame
+            .elapsedMilliseconds;
+
+
+    timerRow.classList.toggle(
+        "show",
+        dailyMode
+    );
+
+
+    relayBadge.classList.toggle(
+        "daily",
+        dailyMode
+    );
+
+
+    if (
+        dailyMode
+    ) {
+
+        relayBadge.textContent =
+            "DAILY #001";
+
+
+        gameTitle.textContent =
+            "Daily Relay";
+
+    }
+
+    else {
+
+        relayBadge.textContent =
+            "RELAY " +
+            String(
+                currentIndex + 1
+            )
+            .padStart(
+                2,
+                "0"
+            );
+
+
+        gameTitle.textContent =
+            "Build the Relay";
+
+    }
+
+
+    timerElement.textContent =
+        formatTime(
+            elapsedMilliseconds
+        );
+
+
+    penaltyElement.textContent =
+        "+" +
+        (
+            dailyMode
+            ? checks * 5
+            : 0
+        ) +
+        " sec";
+
+
+    legend.classList.remove(
+        "show"
+    );
+
+
+    scoreElement.classList.remove(
+        "show"
+    );
+
+
+    result.classList.remove(
+        "show"
+    );
+
+
+    resultButtons.classList.remove(
+        "show"
+    );
+
+
+    sharePreview.classList.remove(
+        "show"
+    );
+
+
+    statusElement.textContent =
+        "Welcome back. Keep building.";
+
+
+    /*
+        Resume running Daily clock.
+    */
+
+    if (
+
+        dailyMode &&
+        timerStart !== null &&
+        !completed
+
+    ) {
+
+        const savedElapsed =
+            elapsedMilliseconds;
+
+
+        const resumedAt =
+            Date.now();
+
+
+        timerInterval =
+            setInterval(
+                function () {
+
+                    elapsedMilliseconds =
+
+                        savedElapsed +
+
+                        (
+                            Date.now() -
+                            resumedAt
+                        );
+
+
+                    timerElement.textContent =
+                        formatTime(
+                            elapsedMilliseconds
+                        );
+
+
+                    saveActiveGame();
+
+                },
+
+                100
+            );
+
+    }
+
+
+    showScreen(
+        gameScreen
+    );
+
+
+    renderGame();
+
+}
+
+
+
+/* ======================================================
+   CLEAR CHECK FEEDBACK
+====================================================== */
+
+
+function clearFeedback() {
+
+    checked =
+        false;
+
+
+    legend.classList.remove(
+        "show"
+    );
+
+
+    scoreElement.classList.remove(
+        "show"
+    );
+
+
+    sharePreview.classList.remove(
+        "show"
+    );
+
+}
+
+
+
+/* ======================================================
+   RENDER GAME
+====================================================== */
+
+
+function renderGame() {
+
+    if (
+        !currentPuzzle
+    ) {
+
+        return;
+
+    }
+
+
+    startNote.innerHTML =
+
+        '<span class="start-word">' +
+
+            currentPuzzle.name +
+
+        '</span>' +
+
+        ' is your locked starting word. ' +
+
+        'Build outward from there.';
+
+
+    wordChain.innerHTML = "";
 
 
     order.forEach(
-        (word, index) => {
+        function (
+            word,
+            index
+        ) {
 
             const tile =
-                document.createElement("div");
+                document.createElement(
+                    "button"
+                );
+
+
+            tile.type =
+                "button";
 
 
             tile.className =
-                "word";
+                "word-tile";
 
 
             tile.textContent =
@@ -964,10 +3347,12 @@ function render() {
 
 
             /*
-                FIRST WORD LOCKED
+                Locked first word
             */
 
-            if (index === 0) {
+            if (
+                index === 0
+            ) {
 
                 tile.classList.add(
                     "locked"
@@ -977,14 +3362,20 @@ function render() {
 
 
             /*
-                SELECTED WORD
+                Selected word
             */
 
             if (
-                index === selectedIndex &&
-                index !== 0 &&
+
+                index ===
+                    selectedIndex &&
+
                 !checked &&
-                !solved
+
+                !completed &&
+
+                index !== 0
+
             ) {
 
                 tile.classList.add(
@@ -995,13 +3386,19 @@ function render() {
 
 
             /*
-                CHECK COLORS
+                Check colors
             */
 
-            if (checked) {
+            if (
+                checked
+            ) {
 
                 if (
-                    word === solution[index]
+
+                    word ===
+                    currentPuzzle
+                        .solution[index]
+
                 ) {
 
                     tile.classList.add(
@@ -1013,7 +3410,7 @@ function render() {
                 else {
 
                     tile.classList.add(
-                        "incorrect"
+                        "wrong"
                     );
 
                 }
@@ -1022,7 +3419,7 @@ function render() {
 
 
             /*
-                SELECT TILE
+                Select tile
             */
 
             tile.addEventListener(
@@ -1030,50 +3427,57 @@ function render() {
                 function () {
 
                     if (
+                        completed
+                    ) {
+
+                        return;
+
+                    }
+
+
+                    if (
                         index === 0
                     ) {
 
-                        status.textContent =
-                            puzzle.start +
+                        statusElement.textContent =
+
+                            currentPuzzle.name +
+
                             " is locked as the starting word.";
 
-                        return;
-
-                    }
-
-
-                    if (solved) {
 
                         return;
 
                     }
 
 
-                    clearCheck();
+                    clearFeedback();
 
 
                     selectedIndex =
                         index;
 
 
-                    status.textContent =
+                    statusElement.textContent =
+
                         word +
+
                         " selected.";
 
 
-                    render();
+                    renderGame();
 
                 }
             );
 
 
-            chain.appendChild(
+            wordChain.appendChild(
                 tile
             );
 
 
             /*
-                ARROW
+                Arrow
             */
 
             if (
@@ -1095,7 +3499,7 @@ function render() {
                     "›";
 
 
-                chain.appendChild(
+                wordChain.appendChild(
                     arrow
                 );
 
@@ -1106,33 +3510,43 @@ function render() {
 
 
     /*
-        BUTTON STATES
+        Button state
     */
 
     moveLeft.disabled =
-        solved ||
+
+        completed ||
+
         selectedIndex <= 1;
 
 
     moveRight.disabled =
-        solved ||
+
+        completed ||
+
         selectedIndex < 1 ||
+
         selectedIndex >=
-        order.length - 1;
+            order.length - 1;
 
 }
 
 
-/*
-================================================
-MOVE WORD
-================================================
-*/
 
-function moveSelected(direction) {
+/* ======================================================
+   MOVE WORD
+====================================================== */
+
+
+function moveWord(
+    direction
+) {
 
     if (
-        selectedIndex < 1
+
+        selectedIndex < 1 ||
+        completed
+
     ) {
 
         return;
@@ -1141,18 +3555,17 @@ function moveSelected(direction) {
 
 
     const targetIndex =
+
         selectedIndex +
         direction;
 
 
-    /*
-        Never move before
-        locked starter word.
-    */
-
     if (
+
         targetIndex < 1 ||
-        targetIndex >= order.length
+        targetIndex >=
+            order.length
+
     ) {
 
         return;
@@ -1160,15 +3573,26 @@ function moveSelected(direction) {
     }
 
 
-    clearCheck();
+    /*
+        Daily timer begins
+        on first actual move.
+    */
+
+    startTimer();
+
+
+    clearFeedback();
 
 
     [
         order[selectedIndex],
         order[targetIndex]
+
     ] = [
+
         order[targetIndex],
         order[selectedIndex]
+
     ];
 
 
@@ -1176,26 +3600,29 @@ function moveSelected(direction) {
         targetIndex;
 
 
-    status.textContent =
+    statusElement.textContent =
         "Moved. Check whenever you're ready.";
 
 
-    render();
+    saveActiveGame();
+
+
+    renderGame();
 
 }
 
 
-/*
-================================================
-MOVE BUTTONS
-================================================
-*/
+
+/* ======================================================
+   MOVE BUTTONS
+====================================================== */
+
 
 moveLeft.addEventListener(
     "click",
     function () {
 
-        moveSelected(-1);
+        moveWord(-1);
 
     }
 );
@@ -1205,25 +3632,51 @@ moveRight.addEventListener(
     "click",
     function () {
 
-        moveSelected(1);
+        moveWord(1);
 
     }
 );
 
 
-/*
-================================================
-CHECK BUTTON
-================================================
-*/
+
+/* ======================================================
+   CHECK
+====================================================== */
+
 
 checkButton.addEventListener(
     "click",
     function () {
 
-        checked = true;
+        if (
+            completed
+        ) {
 
-        selectedIndex = -1;
+            return;
+
+        }
+
+
+        /*
+            Daily clock starts if the
+            player checks before moving.
+        */
+
+        startTimer();
+
+
+        checks++;
+
+
+        stats.totalChecks++;
+
+
+        checked =
+            true;
+
+
+        selectedIndex =
+            -1;
 
 
         legend.classList.add(
@@ -1231,161 +3684,600 @@ checkButton.addEventListener(
         );
 
 
+        if (
+            dailyMode
+        ) {
+
+            penaltyElement.textContent =
+
+                "+" +
+
+                (
+                    checks * 5
+                ) +
+
+                " sec";
+
+        }
+
+
         const correct =
             correctCount();
 
 
-        const total =
-            puzzles[currentPuzzle]
-                .solution.length;
+        scoreElement.textContent =
 
+            correct +
+
+            " / 11 CORRECT";
+
+
+        scoreElement.classList.add(
+            "show"
+        );
+
+
+        /*
+            SOLVED
+        */
 
         if (
-            correct === total
+            correct === 11
         ) {
 
-            status.textContent =
-                total +
-                " of " +
-                total +
-                " correct! 🔥";
+            completed =
+                true;
 
 
-            completeTitle.textContent =
-                "🎉 SOLVED!";
+            stopTimer();
 
 
             if (
-                currentPuzzle <
-                puzzles.length - 1
+
+                dailyMode &&
+                timerStart !== null
+
             ) {
 
-                completeSubtitle.textContent =
-                    "Nice work. Ready for the next relay?";
+                elapsedMilliseconds =
 
-
-                nextButton.textContent =
-                    "Next Puzzle →";
+                    Date.now() -
+                    timerStart;
 
             }
+
+
+            statusElement.textContent =
+                "Full Relay solved. 🔥";
+
+
+            result.classList.add(
+                "show"
+            );
+
+
+            resultButtons.classList.add(
+                "show"
+            );
+
+
+            /*
+                DAILY RESULT
+            */
+
+            if (
+                dailyMode
+            ) {
+
+                const penaltyMilliseconds =
+                    checks *
+                    5000;
+
+
+                const finalMilliseconds =
+
+                    elapsedMilliseconds +
+
+                    penaltyMilliseconds;
+
+
+                finalTime.textContent =
+                    formatTime(
+                        finalMilliseconds
+                    );
+
+
+                resultDetail.textContent =
+
+                    "Raw " +
+
+                    formatTime(
+                        elapsedMilliseconds
+                    ) +
+
+                    " · " +
+
+                    checks +
+
+                    (
+                        checks === 1
+                        ? " check"
+                        : " checks"
+                    ) +
+
+                    " · +" +
+
+                    (
+                        checks * 5
+                    ) +
+
+                    " sec";
+
+
+                if (
+                    !dailySolved
+                ) {
+
+                    dailySolved =
+                        true;
+
+
+                    stats.dailySolved++;
+
+                }
+
+
+                if (
+
+                    dailyBest === null ||
+
+                    finalMilliseconds <
+                        dailyBest
+
+                ) {
+
+                    dailyBest =
+                        finalMilliseconds;
+
+                }
+
+            }
+
+
+            /*
+                LIBRARY RESULT
+            */
 
             else {
 
-                completeSubtitle.textContent =
-                    "You solved every Word Relay!";
+                finalTime.textContent =
+                    "SOLVED";
 
 
-                nextButton.textContent =
-                    "Play Again ↻";
+                resultDetail.textContent =
+
+                    checks +
+
+                    (
+                        checks === 1
+                        ? " check"
+                        : " checks"
+                    ) +
+
+                    " · Untimed Relay";
+
+
+                if (
+                    !solvedLibrary.has(
+                        currentIndex
+                    )
+                ) {
+
+                    solvedLibrary.add(
+                        currentIndex
+                    );
+
+
+                    stats.librarySolved++;
+
+                }
 
             }
 
 
-            complete.classList.add(
-                "show"
-            );
+            /*
+                One-check stat
+            */
+
+            if (
+                checks === 1
+            ) {
+
+                stats.oneCheck++;
+
+            }
 
 
-            nextButton.classList.add(
-                "show"
-            );
+            saveActiveGame();
 
         }
+
+
+        /*
+            NOT SOLVED
+        */
 
         else {
 
-            status.textContent =
-                correct +
-                " of " +
-                total +
-                " words are correct.";
+            statusElement.textContent =
+                "Use the colors to plan your next move.";
+
+
+            saveActiveGame();
 
         }
 
 
-        render();
+        renderGame();
 
     }
 );
 
 
-/*
-================================================
-NEXT PUZZLE
-================================================
-*/
 
-nextButton.addEventListener(
+/* ======================================================
+   SHARE
+====================================================== */
+
+
+shareButton.addEventListener(
     "click",
-    function () {
+    async function () {
+
+
+        let shareText;
+
+
+        if (
+            dailyMode
+        ) {
+
+            const finalMilliseconds =
+
+                elapsedMilliseconds +
+
+                (
+                    checks *
+                    5000
+                );
+
+
+            shareText =
+
+                "WORD RELAY DAILY #001\n" +
+
+                "⏱ " +
+
+                formatTime(
+                    finalMilliseconds
+                ) +
+
+                "\n" +
+
+                "✓ " +
+
+                checks +
+
+                (
+                    checks === 1
+                    ? " check"
+                    : " checks"
+                ) +
+
+                "\n" +
+
+                "🔗 Can you beat me?";
+
+        }
+
+        else {
+
+            shareText =
+
+                "WORD RELAY · RELAY " +
+
+                String(
+                    currentIndex + 1
+                )
+                .padStart(
+                    2,
+                    "0"
+                ) +
+
+                "\n" +
+
+                "🔗 Solved in " +
+
+                checks +
+
+                (
+                    checks === 1
+                    ? " check"
+                    : " checks"
+                );
+
+        }
+
 
         /*
-            Puzzle 1 -> Puzzle 2
+            On phones that support
+            native sharing, open the
+            phone Share Sheet.
         */
 
         if (
-            currentPuzzle <
-            puzzles.length - 1
+            navigator.share
         ) {
 
-            currentPuzzle++;
+            try {
+
+                await navigator.share({
+
+                    title:
+                        "Word Relay",
+
+                    text:
+                        shareText,
+
+                    url:
+                        window.location.href
+
+                });
+
+
+                return;
+
+            }
+
+            catch (error) {
+
+                /*
+                    User may simply
+                    cancel the share.
+                */
+
+            }
 
         }
+
 
         /*
-            Finished everything.
-            Return to Puzzle 1.
+            Fallback preview.
         */
 
-        else {
-
-            currentPuzzle = 0;
-
-        }
+        sharePreview.textContent =
+            shareText;
 
 
-        selectedIndex = -1;
-
-        checked = false;
-
-
-        legend.classList.remove(
+        sharePreview.classList.add(
             "show"
         );
-
-
-        complete.classList.remove(
-            "show"
-        );
-
-
-        nextButton.classList.remove(
-            "show"
-        );
-
-
-        shufflePuzzle();
-
-
-        status.textContent =
-            "Fresh scramble. Good luck 😈";
-
-
-        render();
 
     }
 );
 
 
-/*
-================================================
-START GAME
-================================================
-*/
 
-shufflePuzzle();
+/* ======================================================
+   RESULT HOME
+====================================================== */
 
-render();
+
+resultHomeButton.addEventListener(
+    "click",
+    function () {
+
+        showScreen(
+            homeScreen
+        );
+
+    }
+);
+
+
+
+/* ======================================================
+   GAME BACK
+====================================================== */
+
+
+document
+.getElementById(
+    "gameBackButton"
+)
+.addEventListener(
+    "click",
+    function () {
+
+        saveActiveGame();
+
+
+        showScreen(
+            homeScreen
+        );
+
+    }
+);
+
+
+
+/* ======================================================
+   DAILY BUTTON
+====================================================== */
+
+
+dailyPlay.addEventListener(
+    "click",
+    function () {
+
+        openDailyRelay();
+
+    }
+);
+
+
+
+/* ======================================================
+   RESUME BUTTON
+====================================================== */
+
+
+resumeButton.addEventListener(
+    "click",
+    function () {
+
+        resumeGame();
+
+    }
+);
+
+
+
+/* ======================================================
+   HOW TO PLAY
+====================================================== */
+
+
+document
+.getElementById(
+    "howButton"
+)
+.addEventListener(
+    "click",
+    function () {
+
+        showScreen(
+            howScreen
+        );
+
+    }
+);
+
+
+document
+.getElementById(
+    "howBackButton"
+)
+.addEventListener(
+    "click",
+    function () {
+
+        showScreen(
+            homeScreen
+        );
+
+    }
+);
+
+
+
+/* ======================================================
+   STATS
+====================================================== */
+
+
+document
+.getElementById(
+    "statsButton"
+)
+.addEventListener(
+    "click",
+    function () {
+
+        showScreen(
+            statsScreen
+        );
+
+    }
+);
+
+
+document
+.getElementById(
+    "statsBackButton"
+)
+.addEventListener(
+    "click",
+    function () {
+
+        showScreen(
+            homeScreen
+        );
+
+    }
+);
+
+
+
+function renderStats() {
+
+    document
+    .getElementById(
+        "librarySolvedStat"
+    )
+    .textContent =
+        stats.librarySolved;
+
+
+    document
+    .getElementById(
+        "totalChecksStat"
+    )
+    .textContent =
+        stats.totalChecks;
+
+
+    document
+    .getElementById(
+        "dailySolvedStat"
+    )
+    .textContent =
+        stats.dailySolved;
+
+
+    document
+    .getElementById(
+        "oneCheckStat"
+    )
+    .textContent =
+        stats.oneCheck;
+
+
+    document
+    .getElementById(
+        "bestTime"
+    )
+    .textContent =
+
+        dailyBest === null
+
+        ? "—"
+
+        : formatTime(
+            dailyBest
+        );
+
+}
+
+
+
+/* ======================================================
+   INITIALIZE
+====================================================== */
+
+
+renderHome();
+
 
 </script>
 
