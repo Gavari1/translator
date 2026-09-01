@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,16 +8,24 @@
 <title>Word Relay</title>
 
 <style>
+
 * {
     box-sizing: border-box;
 }
 
 body {
     margin: 0;
-    padding: 24px 14px 40px;
+    min-height: 100vh;
+    padding: 28px 14px 45px;
+
     font-family: Arial, Helvetica, sans-serif;
-    background: #f4f5f7;
-    color: #171717;
+
+    background:
+        radial-gradient(circle at top left, #69b7ff 0%, transparent 32%),
+        radial-gradient(circle at bottom right, #ffd84d 0%, transparent 25%),
+        linear-gradient(145deg, #1976d2, #0d47a1);
+
+    color: #111;
 }
 
 .game {
@@ -24,195 +33,236 @@ body {
     margin: 0 auto;
 }
 
+/* HEADER */
+
+.header {
+    background: #ffffff;
+    border: 4px solid #111;
+    border-radius: 22px;
+    overflow: hidden;
+    margin-bottom: 18px;
+    box-shadow: 0 8px 0 rgba(0,0,0,.18);
+}
+
+.yellow-bar {
+    height: 12px;
+    background: #ffd400;
+}
+
+.header-content {
+    padding: 22px;
+}
+
 .kicker {
-    text-transform: uppercase;
+    display: inline-block;
+
+    background: #ffd400;
+    color: #111;
+
     font-size: 12px;
+    font-weight: 900;
     letter-spacing: 2px;
-    font-weight: 800;
-    color: #777;
+
+    padding: 7px 10px;
+    border: 2px solid #111;
+    border-radius: 8px;
+
+    text-transform: uppercase;
 }
 
 h1 {
-    margin: 6px 0 6px;
-    font-size: 36px;
+    margin: 12px 0 4px;
+    font-size: 42px;
+    line-height: 1;
 }
 
-.instructions {
-    color: #666;
+.subtitle {
+    color: #555;
     line-height: 1.5;
-    margin-bottom: 22px;
+    margin-top: 10px;
 }
+
+/* MAIN CARD */
 
 .card {
-    background: white;
-    border: 1px solid #ddd;
-    border-radius: 18px;
-    padding: 18px;
+    background: #fff;
+    border: 4px solid #111;
+    border-radius: 22px;
+    padding: 20px;
+
+    box-shadow: 0 8px 0 rgba(0,0,0,.18);
 }
 
 .topbar {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
+
     gap: 15px;
+
     margin-bottom: 18px;
 }
 
 .puzzle-number {
-    font-weight: 800;
+    display: inline-block;
+
+    background: #ffd400;
+    border: 2px solid #111;
+
+    padding: 8px 12px;
+    border-radius: 10px;
+
+    font-weight: 900;
 }
 
 .status {
     font-size: 14px;
-    color: #666;
+    font-weight: 700;
+    color: #555;
     text-align: right;
 }
 
-/* WORD AREA */
+/* START WORD MESSAGE */
+
+.start-message {
+    margin-bottom: 14px;
+
+    background: #e5f2ff;
+    border-left: 6px solid #1479d4;
+
+    padding: 12px 14px;
+    border-radius: 10px;
+
+    font-size: 14px;
+    font-weight: 700;
+}
+
+/* WORD CHAIN */
 
 .chain {
     display: flex;
     flex-wrap: wrap;
-    gap: 9px;
     align-items: center;
 
-    min-height: 90px;
+    gap: 9px;
 
-    background: #f7f7f8;
-    border: 1px solid #ddd;
-    border-radius: 14px;
-    padding: 14px;
+    min-height: 100px;
+
+    background: #eef6ff;
+
+    border: 3px solid #111;
+    border-radius: 16px;
+
+    padding: 15px;
 }
 
-/* TILES */
+/* WORD TILES */
 
 .word {
-    border: 2px solid #ddd;
-    background: white;
-    border-radius: 11px;
-
-    padding: 12px 15px;
-
-    font-size: 16px;
-    font-weight: 900;
-    letter-spacing: .5px;
-
     min-height: 48px;
 
     display: flex;
     align-items: center;
     justify-content: center;
 
+    padding: 11px 15px;
+
+    background: white;
+
+    border: 2px solid #111;
+    border-radius: 11px;
+
+    font-size: 16px;
+    font-weight: 900;
+    letter-spacing: .5px;
+
     cursor: pointer;
     user-select: none;
 
+    box-shadow: 0 3px 0 #111;
+
     transition:
+        transform .1s,
         background .15s,
         color .15s,
-        border-color .15s,
-        transform .08s;
+        border-color .15s;
 }
 
 .word:active {
-    transform: scale(.97);
+    transform: translateY(2px);
+    box-shadow: 0 1px 0 #111;
 }
 
-/* Starting word */
+/* LOCKED START */
 
 .word.locked {
-    background: #222;
-    color: white;
-    border-color: #222;
+    background: #111;
+    color: #ffd400;
+
     cursor: default;
 }
 
 .word.locked::after {
     content: " START";
-    font-size: 9px;
-    margin-left: 5px;
-    opacity: .65;
+
+    font-size: 8px;
+    margin-left: 6px;
+
+    color: white;
+    opacity: .7;
 }
 
-/* Selected */
+/* SELECTED */
 
 .word.selected {
-    border-color: #3278ff;
-    outline: 3px solid rgba(50,120,255,.18);
+    background: #ffd400;
+    color: #111;
+
+    outline: 4px solid #1479d4;
+    outline-offset: 2px;
 }
 
-/* CHECK RESULTS */
+/* CHECK COLORS */
 
 .word.correct {
-    background: #1faa59;
+    background: #1fab54;
     color: white;
-    border-color: #1faa59;
+    border-color: #0c6d30;
+    box-shadow: 0 3px 0 #0c6d30;
 }
 
 .word.incorrect {
-    background: #e13c3c;
+    background: #e43d3d;
     color: white;
-    border-color: #e13c3c;
+    border-color: #981d1d;
+    box-shadow: 0 3px 0 #981d1d;
 }
-
-/* Keep COAT dark until solved */
 
 .word.locked.correct {
-    background: #1faa59;
-    border-color: #1faa59;
+    background: #1fab54;
+    color: white;
 }
 
-/* ARROWS BETWEEN WORDS */
+/* ARROWS */
 
 .arrow {
-    font-size: 20px;
-    font-weight: bold;
-    color: #aaa;
+    font-size: 22px;
+    font-weight: 900;
+    color: #1479d4;
 }
 
-/* BUTTONS */
-
-.controls {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 18px;
-}
-
-button {
-    min-height: 48px;
-    border-radius: 12px;
-    border: 1px solid #ccc;
-    padding: 0 18px;
-
-    background: white;
-    color: #222;
-
-    font-size: 15px;
-    font-weight: 800;
-
-    cursor: pointer;
-}
-
-button:disabled {
-    opacity: .35;
-    cursor: default;
-}
-
-#checkButton {
-    background: #222;
-    color: white;
-    border-color: #222;
-}
+/* LEGEND */
 
 .legend {
     display: none;
+
     gap: 18px;
     flex-wrap: wrap;
+
     margin-top: 16px;
 
     font-size: 13px;
-    font-weight: bold;
-    color: #555;
+    font-weight: 800;
 }
 
 .legend.show {
@@ -226,33 +276,90 @@ button:disabled {
 }
 
 .dot {
-    width: 12px;
-    height: 12px;
+    width: 13px;
+    height: 13px;
+
     border-radius: 50%;
+    border: 2px solid #111;
 }
 
 .green-dot {
-    background: #1faa59;
+    background: #1fab54;
 }
 
 .red-dot {
-    background: #e13c3c;
+    background: #e43d3d;
 }
 
-/* WIN MESSAGE */
+/* CONTROLS */
+
+.controls {
+    display: flex;
+    flex-wrap: wrap;
+
+    gap: 10px;
+
+    margin-top: 18px;
+}
+
+button {
+    min-height: 50px;
+
+    padding: 0 20px;
+
+    border: 3px solid #111;
+    border-radius: 12px;
+
+    background: #fff;
+
+    color: #111;
+
+    font-size: 15px;
+    font-weight: 900;
+
+    cursor: pointer;
+
+    box-shadow: 0 4px 0 #111;
+
+    transition:
+        transform .08s,
+        background .12s;
+}
+
+button:active:not(:disabled) {
+    transform: translateY(3px);
+    box-shadow: 0 1px 0 #111;
+}
+
+button:disabled {
+    opacity: .35;
+    cursor: default;
+}
+
+.move-button {
+    background: #69b7ff;
+}
+
+#checkButton {
+    background: #ffd400;
+    color: #111;
+}
+
+/* COMPLETION */
 
 .complete {
     display: none;
 
-    margin-top: 18px;
-    padding: 18px;
-
-    background: #1faa59;
-    color: white;
-
-    border-radius: 14px;
+    margin-top: 20px;
+    padding: 22px;
 
     text-align: center;
+
+    background: #111;
+    color: white;
+
+    border-radius: 16px;
+    border: 4px solid #ffd400;
 }
 
 .complete.show {
@@ -260,13 +367,32 @@ button:disabled {
 }
 
 .complete-title {
-    font-size: 24px;
+    font-size: 27px;
     font-weight: 900;
+
+    color: #ffd400;
 }
 
 .complete-subtitle {
-    margin-top: 5px;
+    margin-top: 7px;
     opacity: .9;
+}
+
+.next-button {
+    display: none;
+
+    width: 100%;
+
+    margin-top: 16px;
+
+    background: #ffd400;
+    color: #111;
+
+    font-size: 17px;
+}
+
+.next-button.show {
+    display: block;
 }
 
 /* RULES */
@@ -274,51 +400,69 @@ button:disabled {
 .rules {
     margin-top: 18px;
 
-    background: white;
-    border: 1px solid #ddd;
-    border-radius: 18px;
+    padding: 20px;
 
-    padding: 18px;
+    background: #fff;
+
+    border: 4px solid #111;
+    border-radius: 22px;
+
+    box-shadow: 0 8px 0 rgba(0,0,0,.18);
 }
 
 .rules h2 {
     margin: 0 0 8px;
-    font-size: 18px;
+
+    font-size: 19px;
 }
 
 .rules p {
     margin: 0;
-    color: #666;
-    line-height: 1.5;
+
+    color: #555;
+
+    line-height: 1.6;
 }
+
+/* MOBILE */
 
 @media (max-width: 520px) {
 
     body {
-        padding: 18px 10px 32px;
+        padding: 18px 10px 35px;
+    }
+
+    .header-content {
+        padding: 18px;
     }
 
     h1 {
-        font-size: 30px;
+        font-size: 35px;
     }
 
     .card {
         padding: 13px;
     }
 
+    .topbar {
+        align-items: flex-start;
+    }
+
     .chain {
         gap: 7px;
-        padding: 10px;
+        padding: 11px;
     }
 
     .word {
-        font-size: 14px;
-        padding: 10px 12px;
         min-height: 44px;
+
+        padding: 9px 11px;
+
+        font-size: 14px;
     }
 
     .arrow {
-        font-size: 16px;
+        font-size: 17px;
     }
 
     .controls {
@@ -332,94 +476,162 @@ button:disabled {
 
     button {
         width: 100%;
+        padding: 0 10px;
     }
+
 }
+
 </style>
 </head>
+
 
 <body>
 
 <div class="game">
 
-    <div class="kicker">Solo Word Puzzle</div>
+    <div class="header">
 
-    <h1>Word Relay</h1>
+        <div class="yellow-bar"></div>
 
-    <div class="instructions">
-        Put the words in the correct order so every two neighboring
-        words form a familiar phrase or compound word.
-        <strong>COAT is your starting word.</strong>
+        <div class="header-content">
+
+            <div class="kicker">
+                Solo Word Puzzle
+            </div>
+
+            <h1>
+                WORD RELAY
+            </h1>
+
+            <div class="subtitle">
+                Build one continuous chain.
+                Every two neighboring words must form
+                a familiar phrase or compound word.
+            </div>
+
+        </div>
+
     </div>
+
 
     <div class="card">
 
         <div class="topbar">
 
-            <div class="puzzle-number">
-                Puzzle 1
+            <div
+                class="puzzle-number"
+                id="puzzleNumber">
+                Puzzle 1 of 2
             </div>
 
-            <div class="status" id="status">
-                Select a word and start moving it.
+            <div
+                class="status"
+                id="status">
+                Select a word to begin.
             </div>
 
         </div>
 
-        <div class="chain" id="chain"></div>
 
-        <div class="legend" id="legend">
+        <div
+            class="start-message"
+            id="startMessage">
+        </div>
+
+
+        <div
+            class="chain"
+            id="chain">
+        </div>
+
+
+        <div
+            class="legend"
+            id="legend">
 
             <div class="legend-item">
+
                 <span class="dot green-dot"></span>
+
                 Correct position
+
             </div>
 
             <div class="legend-item">
+
                 <span class="dot red-dot"></span>
+
                 Wrong position
+
             </div>
 
         </div>
+
 
         <div class="controls">
 
-            <button id="moveLeft" disabled>
+            <button
+                class="move-button"
+                id="moveLeft"
+                disabled>
                 ← Move
             </button>
 
-            <button id="moveRight" disabled>
+            <button
+                class="move-button"
+                id="moveRight"
+                disabled>
                 Move →
             </button>
 
-            <button id="checkButton">
+            <button
+                id="checkButton">
                 ✓ Check
             </button>
 
         </div>
 
-        <div class="complete" id="complete">
 
-            <div class="complete-title">
+        <div
+            class="complete"
+            id="complete">
+
+            <div
+                class="complete-title"
+                id="completeTitle">
                 🎉 SOLVED!
             </div>
 
-            <div class="complete-subtitle">
-                Every word is in the correct position.
+            <div
+                class="complete-subtitle"
+                id="completeSubtitle">
             </div>
 
         </div>
 
+
+        <button
+            class="next-button"
+            id="nextButton">
+            Next Puzzle →
+        </button>
+
     </div>
+
 
     <div class="rules">
 
-        <h2>How to play</h2>
+        <h2>
+            How to play
+        </h2>
 
         <p>
-            COAT always stays first. Tap another word to select it,
-            then use the Move buttons to change its position.
-            Press Check whenever you want to see your progress.
-            Green words are correct. Red words are in the wrong position.
+            The first word is already given to you.
+            Tap another word to select it, then use
+            the Move buttons to change its position.
+            Press Check at any time.
+            Green words are in the correct position.
+            Red words need to move.
         </p>
 
     </div>
@@ -430,102 +642,115 @@ button:disabled {
 <script>
 
 /*
-    CORRECT CHAIN:
-
-    COAT
-    CHECK
-    BOX
-    OFFICE
-    SPACE
-    BAR
-    CODE
-    WORD
-    PLAY
-    GROUND
-    BEEF
+================================================
+PUZZLES
+================================================
 */
 
-const solution = [
-    "COAT",
-    "CHECK",
-    "BOX",
-    "OFFICE",
-    "SPACE",
-    "BAR",
-    "CODE",
-    "WORD",
-    "PLAY",
-    "GROUND",
-    "BEEF"
+const puzzles = [
+
+    /*
+        PUZZLE 1
+
+        COAT CHECK
+        CHECK BOX
+        BOX OFFICE
+        OFFICE SPACE
+        SPACE BAR
+        BAR CODE
+        CODE WORD
+        WORD PLAY
+        PLAY GROUND
+        GROUND BEEF
+    */
+
+    {
+        start: "COAT",
+
+        solution: [
+            "COAT",
+            "CHECK",
+            "BOX",
+            "OFFICE",
+            "SPACE",
+            "BAR",
+            "CODE",
+            "WORD",
+            "PLAY",
+            "GROUND",
+            "BEEF"
+        ]
+    },
+
+
+    /*
+        PUZZLE 2
+
+        RAIN BOW
+        BOW TIE
+        TIE BREAKER
+        BREAKER BOX
+        BOX SPRING
+        SPRING BREAK
+        BREAK ROOM
+        ROOM SERVICE
+        SERVICE DOG
+        DOG HOUSE
+    */
+
+    {
+        start: "RAIN",
+
+        solution: [
+            "RAIN",
+            "BOW",
+            "TIE",
+            "BREAKER",
+            "BOX",
+            "SPRING",
+            "BREAK",
+            "ROOM",
+            "SERVICE",
+            "DOG",
+            "HOUSE"
+        ]
+    }
+
 ];
 
 
 /*
-    COAT is fixed.
-
-    Everything else gets randomized
-    whenever the page loads.
+================================================
+GAME STATE
+================================================
 */
 
-function shuffleWords() {
+let currentPuzzle = 0;
 
-    const remaining = solution.slice(1);
-
-    let shuffled;
-
-    do {
-
-        shuffled = [...remaining];
-
-        for (let i = shuffled.length - 1; i > 0; i--) {
-
-            const randomIndex =
-                Math.floor(Math.random() * (i + 1));
-
-            [
-                shuffled[i],
-                shuffled[randomIndex]
-            ] = [
-                shuffled[randomIndex],
-                shuffled[i]
-            ];
-
-        }
-
-    }
-
-    /*
-        Don't accidentally start with
-        the entire puzzle already solved.
-    */
-
-    while (
-        shuffled.every(
-            (word, index) =>
-                word === remaining[index]
-        )
-    );
-
-    return [
-        "COAT",
-        ...shuffled
-    ];
-
-}
-
-
-let order = shuffleWords();
+let order = [];
 
 let selectedIndex = -1;
 
 let checked = false;
 
 
+/*
+================================================
+ELEMENTS
+================================================
+*/
+
 const chain =
     document.getElementById("chain");
 
 const status =
     document.getElementById("status");
+
+const puzzleNumber =
+    document.getElementById("puzzleNumber");
+
+const startMessage =
+    document.getElementById("startMessage");
 
 const moveLeft =
     document.getElementById("moveLeft");
@@ -542,32 +767,141 @@ const legend =
 const complete =
     document.getElementById("complete");
 
+const completeTitle =
+    document.getElementById("completeTitle");
+
+const completeSubtitle =
+    document.getElementById("completeSubtitle");
+
+const nextButton =
+    document.getElementById("nextButton");
+
+
+/*
+================================================
+SHUFFLE
+================================================
+*/
+
+function shufflePuzzle() {
+
+    const solution =
+        puzzles[currentPuzzle].solution;
+
+    const startWord =
+        solution[0];
+
+    const remaining =
+        solution.slice(1);
+
+    let shuffled;
+
+
+    /*
+        Shuffle until the remaining words
+        are NOT accidentally already solved.
+    */
+
+    do {
+
+        shuffled =
+            [...remaining];
+
+
+        for (
+            let i = shuffled.length - 1;
+            i > 0;
+            i--
+        ) {
+
+            const randomIndex =
+                Math.floor(
+                    Math.random() * (i + 1)
+                );
+
+
+            [
+                shuffled[i],
+                shuffled[randomIndex]
+            ] = [
+                shuffled[randomIndex],
+                shuffled[i]
+            ];
+
+        }
+
+    }
+
+    while (
+
+        shuffled.every(
+            (word, index) =>
+                word === remaining[index]
+        )
+
+    );
+
+
+    order = [
+        startWord,
+        ...shuffled
+    ];
+
+}
+
+
+/*
+================================================
+CORRECT ANSWERS
+================================================
+*/
 
 function correctCount() {
 
-    let count = 0;
+    const solution =
+        puzzles[currentPuzzle].solution;
 
-    order.forEach((word, index) => {
 
-        if (word === solution[index]) {
-            count++;
+    let total = 0;
+
+
+    order.forEach(
+        (word, index) => {
+
+            if (
+                word === solution[index]
+            ) {
+
+                total++;
+
+            }
+
         }
+    );
 
-    });
 
-    return count;
+    return total;
 
 }
 
 
 function isSolved() {
 
-    return correctCount() === solution.length;
+    return (
+        correctCount() ===
+        puzzles[currentPuzzle].solution.length
+    );
 
 }
 
 
-function clearCheckColors() {
+/*
+================================================
+CLEAR CHECK COLORS
+================================================
+*/
+
+function clearCheck() {
 
     checked = false;
 
@@ -575,136 +909,204 @@ function clearCheckColors() {
 
     complete.classList.remove("show");
 
+    nextButton.classList.remove("show");
+
 }
 
 
+/*
+================================================
+RENDER
+================================================
+*/
+
 function render() {
+
+    const puzzle =
+        puzzles[currentPuzzle];
+
+    const solution =
+        puzzle.solution;
+
+    const solved =
+        isSolved();
+
+
+    puzzleNumber.textContent =
+        "Puzzle " +
+        (currentPuzzle + 1) +
+        " of " +
+        puzzles.length;
+
+
+    startMessage.innerHTML =
+        "<strong>" +
+        puzzle.start +
+        "</strong> is locked in as your starting word.";
+
 
     chain.innerHTML = "";
 
-    const solved = isSolved();
+
+    order.forEach(
+        (word, index) => {
+
+            const tile =
+                document.createElement("div");
 
 
-    order.forEach((word, index) => {
-
-        const tile =
-            document.createElement("div");
-
-        tile.className = "word";
-
-        tile.textContent = word;
-
-        tile.dataset.index = index;
+            tile.className =
+                "word";
 
 
-        /*
-            COAT is permanently locked.
-        */
-
-        if (index === 0) {
-
-            tile.classList.add("locked");
-
-        }
+            tile.textContent =
+                word;
 
 
-        /*
-            Highlight selected tile.
-        */
+            /*
+                FIRST WORD LOCKED
+            */
 
-        if (
-            index === selectedIndex &&
-            index !== 0 &&
-            !checked &&
-            !solved
-        ) {
+            if (index === 0) {
 
-            tile.classList.add("selected");
-
-        }
-
-
-        /*
-            CHECK RESULTS
-        */
-
-        if (checked) {
-
-            if (word === solution[index]) {
-
-                tile.classList.add("correct");
+                tile.classList.add(
+                    "locked"
+                );
 
             }
 
-            else {
 
-                tile.classList.add("incorrect");
+            /*
+                SELECTED WORD
+            */
+
+            if (
+                index === selectedIndex &&
+                index !== 0 &&
+                !checked &&
+                !solved
+            ) {
+
+                tile.classList.add(
+                    "selected"
+                );
 
             }
 
-        }
+
+            /*
+                CHECK COLORS
+            */
+
+            if (checked) {
+
+                if (
+                    word === solution[index]
+                ) {
+
+                    tile.classList.add(
+                        "correct"
+                    );
+
+                }
+
+                else {
+
+                    tile.classList.add(
+                        "incorrect"
+                    );
+
+                }
+
+            }
 
 
-        /*
-            CLICK TO SELECT
-        */
+            /*
+                SELECT TILE
+            */
 
-        tile.addEventListener(
-            "click",
-            function () {
+            tile.addEventListener(
+                "click",
+                function () {
 
-                if (index === 0) {
+                    if (
+                        index === 0
+                    ) {
+
+                        status.textContent =
+                            puzzle.start +
+                            " is locked as the starting word.";
+
+                        return;
+
+                    }
+
+
+                    if (solved) {
+
+                        return;
+
+                    }
+
+
+                    clearCheck();
+
+
+                    selectedIndex =
+                        index;
+
 
                     status.textContent =
-                        "COAT is locked as the starting word.";
+                        word +
+                        " selected.";
 
-                    return;
+
+                    render();
 
                 }
+            );
 
-                if (solved) {
-                    return;
-                }
 
-                clearCheckColors();
+            chain.appendChild(
+                tile
+            );
 
-                selectedIndex = index;
 
-                status.textContent =
-                    word + " selected.";
+            /*
+                ARROW
+            */
 
-                render();
+            if (
+                index <
+                order.length - 1
+            ) {
+
+                const arrow =
+                    document.createElement(
+                        "span"
+                    );
+
+
+                arrow.className =
+                    "arrow";
+
+
+                arrow.textContent =
+                    "›";
+
+
+                chain.appendChild(
+                    arrow
+                );
 
             }
-        );
-
-
-        chain.appendChild(tile);
-
-
-        /*
-            Add arrows between words.
-        */
-
-        if (index < order.length - 1) {
-
-            const arrow =
-                document.createElement("span");
-
-            arrow.className = "arrow";
-
-            arrow.textContent = "›";
-
-            chain.appendChild(arrow);
 
         }
-
-    });
+    );
 
 
     /*
-        Don't allow anything
-        to move before COAT.
+        BUTTON STATES
     */
 
     moveLeft.disabled =
@@ -715,41 +1117,50 @@ function render() {
     moveRight.disabled =
         solved ||
         selectedIndex < 1 ||
-        selectedIndex >= order.length - 1;
+        selectedIndex >=
+        order.length - 1;
 
 }
 
 
 /*
-    MOVE SELECTED WORD
+================================================
+MOVE WORD
+================================================
 */
 
 function moveSelected(direction) {
 
-    if (selectedIndex < 1) {
+    if (
+        selectedIndex < 1
+    ) {
+
         return;
+
     }
 
 
     const targetIndex =
-        selectedIndex + direction;
+        selectedIndex +
+        direction;
 
 
     /*
-        COAT cannot move.
+        Never move before
+        locked starter word.
     */
 
-    if (targetIndex < 1) {
+    if (
+        targetIndex < 1 ||
+        targetIndex >= order.length
+    ) {
+
         return;
+
     }
 
 
-    if (targetIndex >= order.length) {
-        return;
-    }
-
-
-    clearCheckColors();
+    clearCheck();
 
 
     [
@@ -766,13 +1177,19 @@ function moveSelected(direction) {
 
 
     status.textContent =
-        "Moved. Press Check whenever you're ready.";
+        "Moved. Check whenever you're ready.";
 
 
     render();
 
 }
 
+
+/*
+================================================
+MOVE BUTTONS
+================================================
+*/
 
 moveLeft.addEventListener(
     "click",
@@ -795,7 +1212,9 @@ moveRight.addEventListener(
 
 
 /*
-    CHECK ANSWERS
+================================================
+CHECK BUTTON
+================================================
 */
 
 checkButton.addEventListener(
@@ -806,19 +1225,70 @@ checkButton.addEventListener(
 
         selectedIndex = -1;
 
-        legend.classList.add("show");
+
+        legend.classList.add(
+            "show"
+        );
 
 
         const correct =
             correctCount();
 
 
-        if (correct === solution.length) {
+        const total =
+            puzzles[currentPuzzle]
+                .solution.length;
+
+
+        if (
+            correct === total
+        ) {
 
             status.textContent =
-                "11 of 11 correct! 🔥";
+                total +
+                " of " +
+                total +
+                " correct! 🔥";
 
-            complete.classList.add("show");
+
+            completeTitle.textContent =
+                "🎉 SOLVED!";
+
+
+            if (
+                currentPuzzle <
+                puzzles.length - 1
+            ) {
+
+                completeSubtitle.textContent =
+                    "Nice work. Ready for the next relay?";
+
+
+                nextButton.textContent =
+                    "Next Puzzle →";
+
+            }
+
+            else {
+
+                completeSubtitle.textContent =
+                    "You solved every Word Relay!";
+
+
+                nextButton.textContent =
+                    "Play Again ↻";
+
+            }
+
+
+            complete.classList.add(
+                "show"
+            );
+
+
+            nextButton.classList.add(
+                "show"
+            );
 
         }
 
@@ -827,7 +1297,7 @@ checkButton.addEventListener(
             status.textContent =
                 correct +
                 " of " +
-                solution.length +
+                total +
                 " words are correct.";
 
         }
@@ -840,8 +1310,80 @@ checkButton.addEventListener(
 
 
 /*
-    START GAME
+================================================
+NEXT PUZZLE
+================================================
 */
+
+nextButton.addEventListener(
+    "click",
+    function () {
+
+        /*
+            Puzzle 1 -> Puzzle 2
+        */
+
+        if (
+            currentPuzzle <
+            puzzles.length - 1
+        ) {
+
+            currentPuzzle++;
+
+        }
+
+        /*
+            Finished everything.
+            Return to Puzzle 1.
+        */
+
+        else {
+
+            currentPuzzle = 0;
+
+        }
+
+
+        selectedIndex = -1;
+
+        checked = false;
+
+
+        legend.classList.remove(
+            "show"
+        );
+
+
+        complete.classList.remove(
+            "show"
+        );
+
+
+        nextButton.classList.remove(
+            "show"
+        );
+
+
+        shufflePuzzle();
+
+
+        status.textContent =
+            "Fresh scramble. Good luck 😈";
+
+
+        render();
+
+    }
+);
+
+
+/*
+================================================
+START GAME
+================================================
+*/
+
+shufflePuzzle();
 
 render();
 
